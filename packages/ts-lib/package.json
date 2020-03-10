@@ -1,0 +1,68 @@
+{
+  "name": "@m-fe/ts-lib",
+  "version": "0.0.1",
+  "description": "@m-fe/ts-lib",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FE-Kits/fe-boilerplates"
+  },
+  "author": "wx-chevalier@github",
+  "license": "MIT",
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "keywords": [
+    "webpack",
+    "react"
+  ],
+  "scripts": {
+    "build": "npm run build:es && npm run build:cjs && npm run build:umd",
+    "build:cjs": "tsc --project ./tsconfig.cjs.json",
+    "build:es": "tsc --project ./tsconfig.es.json",
+    "build:umd": "cross-env NODE_ENV=production webpack -p --config ./scripts/webpack/webpack.config.umd.js",
+    "clean": "rimraf dist",
+    "dev": "tsc -w --project ./tsconfig.cjs.json",
+    "lint": "run-p lint:*",
+    "lint:es": "cross-env PARSER_NO_WATCH=true eslint . --cache --ext js,md,ts,tsx -f friendly --max-warnings 10",
+    "lint:ts": "tslint -p . -t stylish",
+    "lint:tsc": "tsc -p tsconfig.json --incremental false --noEmit",
+    "test": "jest --config ./scripts/jest/jest.config.js",
+    "test:cov": "npm run cleanCov && npm test -- --coverage",
+    "test:watch": "npm test -- --watch"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@wx-fc/app-config": "^0.2.6",
+    "cross-env": "^6.0.3",
+    "webpack": "^4.41.2"
+  },
+  "browserslist": [
+    "extends @wx-fc/browserslist-config/modern"
+  ],
+  "commitlint": {
+    "extends": [
+      "@wx-fc"
+    ]
+  },
+  "prettier": "@wx-fc/prettier-config/semi",
+  "remarkConfig": {
+    "plugins": [
+      "@wx-fc/remark-config"
+    ]
+  },
+  "stylelint": {
+    "extends": [
+      "@wx-fc/stylelint-config",
+      "@wx-fc/stylelint-config/modules"
+    ],
+    "rules": {
+      "font-family-no-missing-generic-family-keyword": null,
+      "no-descending-specificity": null,
+      "plugin/no-unsupported-browser-features": null,
+      "plugin/no-low-performance-animation-properties": null
+    }
+  }
+}

@@ -1,0 +1,6 @@
+!/.vscode/settings.json
+*.min.*
+*.production.*
+coverage
+dist
+node_modules

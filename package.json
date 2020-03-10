@@ -1,0 +1,67 @@
+{
+  "name": "@m-fe/stl-viewer",
+  "version": "0.0.1",
+  "description": "Micro-Frontend Libs, with React & TS & Webpack",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FE-Kits/m-fe-libs"
+  },
+  "author": "wx-chevalier@github",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/react-lib"
+  ],
+  "keywords": [
+    "react",
+    "redux",
+    "mobx",
+    "webpack",
+    "typescript"
+  ],
+  "scripts": {
+    "bootstrap": "yarn install && yarn run build",
+    "build": "npm run clean && yarn workspaces run build",
+    "clean": "yarn workspaces run clean",
+    "clean:cov": "yarn workspaces run clean:cov",
+    "dev": "npm start",
+    "lint": "./scripts/tools/lint_all.sh",
+    "lint-staged": "lint-staged",
+    "postinstall": "node ./node_modules/husky/lib/installer/bin install",
+    "prettier-all": "prettier --write 'packages/**/src/**/*.{ts,tsx}' '!src/{assets,datas}/**'",
+    "test": "yarn workspaces run test",
+    "test:cov": "yarn workspaces run test:cov",
+    "test:watch": "yarn workspaces run test:watch",
+    "upgrade": "./scripts/tools/upgrade_pkgs.sh"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "^5.1.0",
+    "@wx-fc/app-config": "^0.3.1"
+  },
+  "browserslist": [
+    "extends @wx-fc/browserslist-config/modern"
+  ],
+  "commitlint": {
+    "extends": [
+      "@wx-fc"
+    ]
+  },
+  "prettier": "@wx-fc/prettier-config/semi",
+  "remarkConfig": {
+    "plugins": [
+      "@wx-fc/remark-config"
+    ]
+  },
+  "stylelint": {
+    "extends": [
+      "@wx-fc/stylelint-config",
+      "@wx-fc/stylelint-config/modules"
+    ],
+    "rules": {
+      "font-family-no-missing-generic-family-keyword": null,
+      "no-descending-specificity": null,
+      "plugin/no-unsupported-browser-features": null,
+      "plugin/no-low-performance-animation-properties": null
+    }
+  }
+}

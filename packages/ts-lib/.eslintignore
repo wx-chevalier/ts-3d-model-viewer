@@ -1,0 +1,12 @@
+!/.*.js
+*.min.*
+*.production.*
+*.md
+*.js
+*.json
+
+coverage
+dist
+node_modules
+build
+scripts

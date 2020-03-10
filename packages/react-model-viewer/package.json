@@ -1,0 +1,70 @@
+{
+  "name": "@m-fe/react-model-viewer",
+  "version": "0.0.1",
+  "description": "Micro Front-end Libs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FE-Kits/stl-tools"
+  },
+  "author": "wx-chevalier@github",
+  "license": "MIT",
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
+  "types": "dist/types/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist/"
+  ],
+  "keywords": [
+    "webpack",
+    "react"
+  ],
+  "scripts": {
+    "build": "npm run clean && run-p build:* && run-p copy:*",
+    "build-storybook": "build-storybook",
+    "build:cjs": "tsc --project ./tsconfig.cjs.json",
+    "build:es": "tsc --project ./tsconfig.es.json",
+    "build:umd": "NODE_ENV=production webpack --config ./scripts/webpack/webpack.config.umd.js -p",
+    "clean": "rimraf dist",
+    "copy:cjs": "copyfiles -u 1 './src/**/*.{less,svg,css}' dist/cjs/",
+    "copy:es": "copyfiles -u 1 './src/**/*.{less,svg,css}' dist/es/",
+    "dev": "webpack-dev-server --config ./scripts/webpack/webpack.config.dev.js --hot",
+    "lint": "run-p lint:*",
+    "lint:es": "cross-env PARSER_NO_WATCH=true eslint . --cache --ext js,md,ts,tsx -f friendly --max-warnings 10",
+    "lint:style": "stylelint **/*.less --cache",
+    "lint:ts": "tslint -p . -t stylish",
+    "lint:tsc": "tsc -p tsconfig.json --incremental false --noEmit",
+    "start": "npm run dev",
+    "storybook": "start-storybook -p 6006"
+  },
+  "dependencies": {
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-loader-spinner": "^3.1.5",
+    "three": "^0.114.0",
+    "ueact-utils": "^0.1.2"
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^5.3.14",
+    "@storybook/addon-info": "^5.3.14",
+    "@storybook/addon-links": "^5.3.14",
+    "@storybook/addons": "^5.3.14",
+    "@storybook/react": "^5.3.14",
+    "@wx-fc/app-config": "^0.3.6",
+    "cross-env": "^7.0.2",
+    "webpack": "^4.42.0",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,scss,less,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true
+  }
+}

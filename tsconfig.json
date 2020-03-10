@@ -1,0 +1,13 @@
+{
+  "extends": "@wx-fc/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["packages/rtw-host-app/src/*"]
+    },
+    "strictFunctionTypes": false,
+    "strictNullChecks": false,
+    "suppressImplicitAnyIndexErrors": true
+  },
+  "include": ["**/*.ts", "**/*.tsx"]
+}
