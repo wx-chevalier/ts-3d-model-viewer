@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import Simple from './Simple';
+import { NetworkStl } from './NetworkStl';
 
-ReactDOM.render(<Simple />, document.getElementById('root'));
+ReactDOM.render(<NetworkStl />, document.getElementById('root'));

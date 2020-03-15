@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { GoogleModelViewer } from '../../src';
 
-export default function Simple() {
+export function NetworkStl() {
   return (
     <div>
       <GoogleModelViewer
