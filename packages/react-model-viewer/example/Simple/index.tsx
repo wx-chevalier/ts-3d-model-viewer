@@ -13,7 +13,7 @@ export default function Simple() {
       <GoogleModelViewer
         key="2"
         type="stl"
-        src="https://ufc-assets.oss-cn-shanghai.aliyuncs.com/test/pr2_head_pan.stl"
+        src="/test.stl"
         onTopology={m => {
           console.log(m);
         }}
