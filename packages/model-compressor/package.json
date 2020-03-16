@@ -1,7 +1,7 @@
 {
-  "name": "@m-fe/ts-lib",
+  "name": "@m-fe/model-compressor",
   "version": "0.0.1",
-  "description": "@m-fe/ts-lib",
+  "description": "@m-fe/model-compressor",
   "repository": {
     "type": "git",
     "url": "https://github.com/FE-Kits/fe-boilerplates"

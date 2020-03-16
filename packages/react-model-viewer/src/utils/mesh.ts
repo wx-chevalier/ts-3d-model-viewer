@@ -2,6 +2,7 @@ import * as THREE from 'three';
 
 import { ModelAttr } from '../types/ModelAttr';
 
+/** 计算某个 Mesh 的拓扑信息 */
 export async function calcTopology(mesh: THREE.Mesh): Promise<ModelAttr> {
   return new Promise(resolve => {
     const attr = new ModelAttr();
@@ -43,6 +44,7 @@ export async function calcTopology(mesh: THREE.Mesh): Promise<ModelAttr> {
   });
 }
 
+/** 计算某个面片的信息 */
 function signedVolumeOfTriangle(p1: any, p2: any, p3: any) {
   const v321 = p3.x * p2.y * p1.z;
   const v231 = p2.x * p3.y * p1.z;

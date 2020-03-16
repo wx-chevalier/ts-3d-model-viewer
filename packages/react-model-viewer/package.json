@@ -40,11 +40,14 @@
     "storybook": "start-storybook -p 6006"
   },
   "dependencies": {
+    "axios": "^0.19.2",
+    "pako": "^1.0.11",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-loader-spinner": "^3.1.5",
     "three": "^0.114.0",
-    "ueact-utils": "^0.1.2"
+    "ueact-utils": "^0.2.2",
+    "uzip": "^0.20200316.0"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^5.3.14",
@@ -52,6 +55,7 @@
     "@storybook/addon-links": "^5.3.14",
     "@storybook/addons": "^5.3.14",
     "@storybook/react": "^5.3.14",
+    "@types/pako": "^1.0.1",
     "@wx-fc/app-config": "^0.3.6",
     "cross-env": "^7.0.2",
     "webpack": "^4.42.0",

@@ -52,7 +52,6 @@ export function transformToGLTF(
         exporter.parse(
           mesh,
           gltf => {
-            console.log(gltf);
             resolve({ gltf: createURL(gltf), mesh });
           },
           {}

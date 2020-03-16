@@ -1,3 +1,4 @@
+import UZIP from 'pako';
 import * as React from 'react';
 import Loader from 'react-loader-spinner';
 import * as THREE from 'three';
@@ -9,6 +10,7 @@ import {
   ModelType,
   defaultModelViewerProps
 } from '../../types/IModelViewerProps';
+import { getFileObjFromModelSrc } from '../../utils/file';
 import { calcTopology } from '../../utils/mesh';
 import { transformToGLTF } from '../../utils/GLTF';
 
@@ -43,12 +45,31 @@ export class GoogleModelViewer extends React.Component<
 
   /** 这里根据传入的文件类型，进行不同的文件转化 */
   private async _setInnerSrc(props: GoogleModelViewerProps) {
-    const { gltf: gltfSrc, mesh } = await transformToGLTF(props.src, props.type);
+    const modelFile = await getFileObjFromModelSrc(props);
 
-    this.setState({ gltfSrc, mesh }, () => {
-      this.$ref = document.getElementById(this.id);
-      if (this.$ref) {
-        this.$ref.addEventListener('load', this.onLoad);
+    try {
+      const { gltf: gltfSrc, mesh } = await transformToGLTF(modelFile || props.src, props.type);
+
+      this.setState({ gltfSrc, mesh }, () => {
+        this.$ref = document.getElementById(this.id);
+        if (this.$ref) {
+          this.$ref.addEventListener('load', this.onLoad);
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+
+    // 判断是否有 onZip，有的话则进行压缩并且返回
+    requestAnimationFrame(async () => {
+      // 仅在传入了 Zipped 文件的情况下调用
+      if (modelFile && props.onZip && props.src && !props.zippedSrc) {
+        const buffer = await S.readFileAsArrayBufferAsync(modelFile);
+        const intArray: Uint8Array = new Uint8Array(buffer);
+
+        const zippedFile = UZIP.deflate(intArray);
+
+        props.onZip(zippedFile);
       }
     });
   }
