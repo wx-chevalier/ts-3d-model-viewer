@@ -1,3 +1,19 @@
-.container {
+.rmv-gmv-container {
   position: relative;
+}
+
+.rmv-gmv-attr-modal {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.45);
+  height: auto;
+  right: 0;
+  top: 0;
+  padding: 0 16px;
+}
+
+.rmv-gmv-attr-modal > .item {
+  height: 20px;
+  line-height: 20px;
+  color: white;
+  font-size: 10px;
 }

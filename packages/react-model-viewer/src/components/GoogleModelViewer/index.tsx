@@ -10,9 +10,13 @@ import {
   ModelType,
   defaultModelViewerProps
 } from '../../types/IModelViewerProps';
+import { ModelAttr } from '../../types/ModelAttr';
+import { toFixedNumber } from '../../utils';
 import { getFileObjFromModelSrc } from '../../utils/file';
 import { calcTopology } from '../../utils/mesh';
 import { transformToGLTF } from '../../utils/GLTF';
+
+import './index.css';
 
 export interface GoogleModelViewerProps extends IModelViewerProps {
   type: ModelType;
@@ -21,6 +25,7 @@ export interface GoogleModelViewerProps extends IModelViewerProps {
 interface GoogleModelViewerState {
   gltfSrc?: ModelSrc;
   mesh?: THREE.Mesh;
+  topology?: ModelAttr;
 }
 
 export class GoogleModelViewer extends React.Component<
@@ -88,7 +93,10 @@ export class GoogleModelViewer extends React.Component<
     // 计算基础信息
     if (onTopology && this.state.mesh) {
       const topology = await calcTopology(this.state.mesh);
+
       onTopology(topology);
+
+      this.setState({ topology });
     }
   };
 
@@ -101,10 +109,11 @@ export class GoogleModelViewer extends React.Component<
       backgroundColor,
       width,
       height,
-      style
+      style,
+      withAttr
     } = this.props;
 
-    const { gltfSrc } = this.state;
+    const { gltfSrc, topology } = this.state;
 
     if (!gltfSrc) {
       return <Loader type="Puff" color="#00BFFF" height={100} width={100} />;
@@ -128,12 +137,21 @@ export class GoogleModelViewer extends React.Component<
       <div className="rmv-gmv-container" style={{ width, height, ...style }}>
         <model-viewer
           id={this.id}
+          className="rmv-gmv-model-viewer"
           src={gltfSrc}
           shadow-intensity={shadowIntensity}
-          width={width}
-          height={height}
+          style={{ width: '100%', height: '100%' }}
           {...attrs}
         />
+        {withAttr && topology && (
+          <div className="rmv-gmv-attr-modal">
+            <div className="item">
+              尺寸（mm）：{topology.sizeX} * {topology.sizeY} * {topology.sizeZ}
+            </div>
+            <div className="item">体积：{toFixedNumber(topology.volume)}</div>
+            <div className="item">面片：{topology.triangleCnt}</div>
+          </div>
+        )}
       </div>
     );
   }

@@ -1,6 +1,6 @@
 {
   "name": "@m-fe/react-model-viewer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Micro Front-end Libs",
   "repository": {
     "type": "git",
@@ -38,7 +38,8 @@
     "lint:ts": "tslint -p . -t stylish",
     "lint:tsc": "tsc -p tsconfig.json --incremental false --noEmit",
     "start": "npm run dev",
-    "storybook": "start-storybook -p 6006"
+    "storybook": "start-storybook -p 6006",
+    "prepublish": "npm run clean:r"
   },
   "dependencies": {
     "axios": "^0.19.2",

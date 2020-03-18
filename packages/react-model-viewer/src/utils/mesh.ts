@@ -14,6 +14,7 @@ export async function calcTopology(mesh: THREE.Mesh): Promise<ModelAttr> {
     attr.sizeY = box.max.y - box.min.y;
 
     let vol = 0;
+    let triCnt = 0;
 
     mesh.traverse(child => {
       if (child instanceof THREE.Mesh) {
@@ -34,12 +35,16 @@ export async function calcTopology(mesh: THREE.Mesh): Promise<ModelAttr> {
           t3.y = positions[i + 7];
           t3.z = positions[i + 8];
 
+          triCnt += 1;
+
           vol += signedVolumeOfTriangle(t1, t2, t3);
         }
       }
     });
 
     attr.volume = vol;
+    attr.triangleCnt = triCnt;
+
     resolve(attr);
   });
 }

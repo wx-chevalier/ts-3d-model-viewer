@@ -17,6 +17,8 @@ export interface IModelViewerProps {
   height?: number;
   backgroundColor?: string;
   style?: Record<string, string | number>;
+  // 是否展示属性浮窗
+  withAttr?: boolean;
 
   cameraControls?: boolean;
   autoplay?: boolean;
