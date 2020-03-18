@@ -2,7 +2,23 @@ import axios from 'axios';
 import pako from 'pako';
 import * as S from 'ueact-utils';
 
-import { IModelViewerProps } from '../types/IModelViewerProps';
+import { IModelViewerProps, ModelSrc, ModelType } from '../types/IModelViewerProps';
+
+export function getModelType(fileName: string, model: ModelSrc): ModelType {
+  const name: string = fileName || (model instanceof File ? model.name : model);
+
+  if (name.endsWith('.stl')) {
+    return 'stl';
+  } else if (name.endsWith('.glb')) {
+    return 'glb';
+  } else if (name.endsWith('.obj')) {
+    return 'obj';
+  } else if (name.endsWith('.ply')) {
+    return 'ply';
+  }
+
+  return 'stl';
+}
 
 /** 将模型统一转化为文件对象 */
 export async function getFileObjFromModelSrc(props: IModelViewerProps): Promise<File> {

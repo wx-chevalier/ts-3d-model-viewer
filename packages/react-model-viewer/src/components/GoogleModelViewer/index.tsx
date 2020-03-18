@@ -12,7 +12,7 @@ import {
 } from '../../types/IModelViewerProps';
 import { ModelAttr } from '../../types/ModelAttr';
 import { toFixedNumber } from '../../utils';
-import { getFileObjFromModelSrc } from '../../utils/file';
+import { getFileObjFromModelSrc, getModelType } from '../../utils/file';
 import { calcTopology } from '../../utils/mesh';
 import { transformToGLTF } from '../../utils/GLTF';
 
@@ -26,6 +26,7 @@ interface GoogleModelViewerState {
   gltfSrc?: ModelSrc;
   mesh?: THREE.Mesh;
   topology?: ModelAttr;
+  type: ModelType;
 }
 
 export class GoogleModelViewer extends React.Component<
@@ -36,7 +37,10 @@ export class GoogleModelViewer extends React.Component<
 
   id = S.genId();
   $ref: any;
-  state: GoogleModelViewerState = {};
+  state: GoogleModelViewerState = {
+    type:
+      this.props.type || getModelType(this.props.fileName, this.props.src || this.props.zippedSrc)
+  };
 
   componentDidMount() {
     this._setInnerSrc(this.props);
@@ -50,10 +54,13 @@ export class GoogleModelViewer extends React.Component<
 
   /** 这里根据传入的文件类型，进行不同的文件转化 */
   private async _setInnerSrc(props: GoogleModelViewerProps) {
-    const modelFile = await getFileObjFromModelSrc(props);
+    const modelFile = await getFileObjFromModelSrc({ ...props, type: this.state.type });
 
     try {
-      const { gltf: gltfSrc, mesh } = await transformToGLTF(modelFile || props.src, props.type);
+      const { gltf: gltfSrc, mesh } = await transformToGLTF(
+        modelFile || props.src,
+        this.state.type
+      );
 
       this.setState({ gltfSrc, mesh }, () => {
         this.$ref = document.getElementById(this.id);

@@ -24,6 +24,8 @@
     "build": "npm run clean && yarn workspaces run build",
     "clean": "yarn workspaces run clean",
     "clean:cov": "yarn workspaces run clean:cov",
+    "clean:r": "rimraf ./dist/*.map && rimraf ./dist/**/*.map && rimraf ./dist/**/*.tsbuildinfo && rimraf ./dist/**/precache-*",
+    "prepublish": "npm run clean:r",
     "dev": "npm start",
     "lint": "./scripts/tools/lint_all.sh",
     "lint-staged": "lint-staged",

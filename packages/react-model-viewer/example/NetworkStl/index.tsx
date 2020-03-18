@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as S from 'ueact-utils';
 
 import { GoogleModelViewer } from '../../src';
 

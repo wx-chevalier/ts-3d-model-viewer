@@ -1,6 +1,6 @@
 {
   "name": "@m-fe/react-model-viewer",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Micro Front-end Libs",
   "repository": {
     "type": "git",
@@ -60,6 +60,7 @@
     "@types/pako": "^1.0.1",
     "@wx-fc/app-config": "^0.3.6",
     "cross-env": "^7.0.2",
+    "rc-upload": "^3.0.0",
     "webpack": "^4.42.0",
     "webpack-dev-server": "^3.10.3"
   },
