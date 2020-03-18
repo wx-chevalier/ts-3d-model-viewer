@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import * as S from 'ueact-utils';
 import { GoogleModelViewer } from '../../src';
 
 export function NetworkStl() {
@@ -17,9 +17,6 @@ export function NetworkStl() {
         onTopology={m => {
           console.log(m);
         }}
-        onSnapshot={b => {
-          console.log(b);
-        }}
         onZip={b => {
           // S.downloadArraybuffer(b, 'application/zlib', 'stl.zlib');
         }}
@@ -33,6 +30,9 @@ export function NetworkStl() {
         withAttr={true}
         onTopology={m => {
           console.log(m);
+        }}
+        onSnapshot={b => {
+          S.downloadUrl(URL.createObjectURL(b));
         }}
       />
     </div>

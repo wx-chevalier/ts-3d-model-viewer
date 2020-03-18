@@ -92,8 +92,10 @@ export class GoogleModelViewer extends React.Component<
     if (this.$ref) {
       // 返回快照
       if (onSnapshot) {
-        const _snap = await this.$ref.toBlob({ idealAspect: true });
-        onSnapshot(_snap);
+        setTimeout(async () => {
+          const _snap = await this.$ref.toBlob({ idealAspect: true });
+          onSnapshot(_snap);
+        }, 1 * 1000);
       }
     }
 

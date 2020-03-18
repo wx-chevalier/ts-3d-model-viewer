@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-// import { NetworkStl } from './NetworkStl';
-import { UploadStl } from './UploadStl';
+import { NetworkStl } from './NetworkStl';
+// import { UploadStl } from './UploadStl';
 
-ReactDOM.render(<UploadStl />, document.getElementById('root'));
+ReactDOM.render(<NetworkStl />, document.getElementById('root'));
