@@ -87,7 +87,7 @@ export class GoogleModelViewer extends React.Component<
   }
 
   onLoad = async () => {
-    const { onSnapshot, onTopology } = this.props;
+    const { withAttr, onSnapshot, onTopology } = this.props;
 
     if (this.$ref) {
       // 返回快照
@@ -100,12 +100,14 @@ export class GoogleModelViewer extends React.Component<
     }
 
     // 计算基础信息
-    if (onTopology && this.state.mesh) {
+    if ((onTopology || withAttr) && this.state.mesh) {
       const topology = await calcTopology(this.state.mesh);
 
-      onTopology(topology);
-
       this.setState({ topology });
+
+      if (onTopology) {
+        onTopology(topology);
+      }
     }
   };
 
@@ -155,7 +157,8 @@ export class GoogleModelViewer extends React.Component<
         {withAttr && topology && (
           <div className="rmv-gmv-attr-modal">
             <div className="item">
-              尺寸（mm）：{topology.sizeX} * {topology.sizeY} * {topology.sizeZ}
+              尺寸（mm）：{toFixedNumber(topology.sizeX)} * {toFixedNumber(topology.sizeY)} *
+              {toFixedNumber(topology.sizeZ)}
             </div>
             <div className="item">体积：{toFixedNumber(topology.volume)}</div>
             <div className="item">面片：{topology.triangleCnt}</div>

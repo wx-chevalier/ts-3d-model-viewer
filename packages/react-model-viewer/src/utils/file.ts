@@ -7,13 +7,13 @@ import { IModelViewerProps, ModelSrc, ModelType } from '../types/IModelViewerPro
 export function getModelType(fileName: string, model: ModelSrc): ModelType {
   const name: string = fileName || (model instanceof File ? model.name : model);
 
-  if (name.endsWith('.stl')) {
+  if (name.indexOf('.stl') > -1) {
     return 'stl';
-  } else if (name.endsWith('.glb')) {
+  } else if (name.indexOf('.glb') > -1) {
     return 'glb';
-  } else if (name.endsWith('.obj')) {
+  } else if (name.indexOf('.obj') > -1) {
     return 'obj';
-  } else if (name.endsWith('.ply')) {
+  } else if (name.indexOf('.ply') > -1) {
     return 'ply';
   }
 
