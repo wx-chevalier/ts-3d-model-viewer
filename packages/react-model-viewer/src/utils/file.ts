@@ -1,4 +1,3 @@
-import axios from 'axios';
 import pako from 'pako';
 import * as S from 'ueact-utils';
 
@@ -30,9 +29,11 @@ export async function getFileObjFromModelSrc(props: IModelViewerProps): Promise<
       zippedFile = props.src;
     } else {
       // 将 Blob 转化为文件
-      const { data: blob } = await axios.get<Blob>(props.zippedSrc as string, {
-        responseType: 'blob'
-      });
+      const blob = await (
+        await fetch(props.zippedSrc as string, {
+          cache: 'force-cache'
+        })
+      ).blob();
 
       zippedFile = S.blobToFile(blob);
     }
@@ -50,10 +51,11 @@ export async function getFileObjFromModelSrc(props: IModelViewerProps): Promise<
     } else {
       try {
         // 将 Blob 转化为文件
-        const { data: blob } = await axios.get<Blob>(props.src, {
-          responseType: 'blob',
-          timeout: props.timeout
-        });
+        const blob = await (
+          await fetch(props.src as string, {
+            cache: 'force-cache'
+          })
+        ).blob();
 
         return S.blobToFile(blob, S.newUri(props.src).filename());
       } catch (e) {
