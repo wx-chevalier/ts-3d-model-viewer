@@ -14,9 +14,9 @@ export function NetworkStl() {
       <GoogleModelViewer
         key="2"
         type="stl"
-        src="/test.stl"
+        src="/tri-3.stl"
         onTopology={m => {
-          console.log(m);
+          // console.log(m);
         }}
         onZip={b => {
           // S.downloadArraybuffer(b, 'application/zlib', 'stl.zlib');
@@ -30,7 +30,7 @@ export function NetworkStl() {
         height={400}
         withAttr={true}
         onTopology={m => {
-          // console.log(m);
+          console.log(m);
         }}
         onSnapshot={b => {
           // S.downloadUrl(URL.createObjectURL(b));

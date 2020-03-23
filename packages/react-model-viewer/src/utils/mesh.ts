@@ -37,12 +37,14 @@ export async function calcTopology(mesh: THREE.Mesh): Promise<ModelAttr> {
 
           triCnt += 1;
 
-          vol += signedVolumeOfTriangle(t1, t2, t3);
+          const mVol = signedVolumeOfTriangle(t1, t2, t3);
+
+          vol += mVol;
         }
       }
     });
 
-    attr.volume = vol;
+    attr.volume = Math.abs(vol);
     attr.triangleCnt = triCnt;
 
     resolve(attr);
@@ -57,5 +59,6 @@ function signedVolumeOfTriangle(p1: any, p2: any, p3: any) {
   const v132 = p1.x * p3.y * p2.z;
   const v213 = p2.x * p1.y * p3.z;
   const v123 = p1.x * p2.y * p3.z;
+
   return (-v321 + v231 + v312 - v132 - v213 + v123) / 6;
 }
