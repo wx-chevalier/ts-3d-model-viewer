@@ -1,10 +1,10 @@
 {
   "name": "@m-fe/react-model-viewer",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Micro Front-end Libs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/FE-Kits/stl-tools"
+    "url": "https://github.com/FE-Kits/3d-model-viewer"
   },
   "author": "wx-chevalier@github",
   "license": "MIT",

@@ -11,9 +11,17 @@
   padding: 0 16px;
 }
 
-.rmv-gmv-attr-modal > .item {
-  height: 20px;
-  line-height: 20px;
+.rmv-gmv-attr-modal .item {
+  height: 25px;
+  line-height: 25px;
   color: white;
   font-size: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.rmv-gmv-attr-modal .item span {
+  float: right;
+  margin-top: -5px;
+  margin-left: 4px;
 }

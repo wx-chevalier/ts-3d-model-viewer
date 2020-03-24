@@ -11,6 +11,8 @@ export class ModelAttr {
   sizeZ: number;
   // 体积
   volume: number;
+  // 表面积
+  area: number;
 
   // 厚度
   thick: number;
