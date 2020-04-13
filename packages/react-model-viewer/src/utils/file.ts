@@ -1,10 +1,10 @@
+import * as S from '@m-fe/utils';
 import pako from 'pako';
-import * as S from 'ueact-utils';
 
 import { IModelViewerProps, ModelSrc, ModelType } from '../types/IModelViewerProps';
 
 export function getModelType(fileName: string, model: ModelSrc): ModelType {
-  const name: string = fileName || (model instanceof File ? model.name : model);
+  const name: string = fileName || (model instanceof File ? model.name : model) || '';
 
   if (name.indexOf('.stl') > -1) {
     return 'stl';

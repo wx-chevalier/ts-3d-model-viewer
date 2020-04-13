@@ -2,7 +2,7 @@ import UZIP from 'pako';
 import * as React from 'react';
 import Loader from 'react-loader-spinner';
 import * as THREE from 'three';
-import * as S from 'ueact-utils';
+import * as S from '@m-fe/utils';
 
 import {
   IModelViewerProps,
