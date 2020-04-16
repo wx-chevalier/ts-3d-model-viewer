@@ -1,18 +1,19 @@
+import * as S from '@m-fe/utils';
 import UZIP from 'pako';
 import * as React from 'react';
 import Loader from 'react-loader-spinner';
 import * as THREE from 'three';
-import * as S from '@m-fe/utils';
 
 import {
   IModelViewerProps,
+  ModelCompressType,
   ModelSrc,
   ModelType,
   defaultModelViewerProps
 } from '../../types/IModelViewerProps';
 import { ModelAttr } from '../../types/ModelAttr';
 import { toFixedNumber } from '../../utils';
-import { getFileObjFromModelSrc, getModelType } from '../../utils/file';
+import { getFileObjFromModelSrc, getModelCompressType, getModelType } from '../../utils/file';
 import { calcTopology } from '../../utils/mesh';
 import { transformToGLTF } from '../../utils/GLTF';
 
@@ -23,10 +24,12 @@ export interface GoogleModelViewerProps extends IModelViewerProps {
 }
 
 interface GoogleModelViewerState {
+  type: ModelType;
+  compressType: ModelCompressType;
+
   gltfSrc?: ModelSrc;
   mesh?: THREE.Mesh;
   topology?: ModelAttr;
-  type: ModelType;
 }
 
 export class GoogleModelViewer extends React.Component<
@@ -37,9 +40,11 @@ export class GoogleModelViewer extends React.Component<
 
   id = S.genId();
   $ref: any;
+
   state: GoogleModelViewerState = {
-    type:
-      this.props.type || getModelType(this.props.fileName, this.props.src || this.props.zippedSrc)
+    type: this.props.type || getModelType(this.props.fileName, this.props.src),
+    compressType:
+      this.props.compressType || getModelCompressType(this.props.fileName, this.props.src)
   };
 
   componentDidMount() {
@@ -54,7 +59,11 @@ export class GoogleModelViewer extends React.Component<
 
   /** 这里根据传入的文件类型，进行不同的文件转化 */
   private async _setInnerSrc(props: GoogleModelViewerProps) {
-    const modelFile = await getFileObjFromModelSrc({ ...props, type: this.state.type });
+    const modelFile = await getFileObjFromModelSrc({
+      ...props,
+      type: this.state.type,
+      compressType: this.state.compressType
+    });
 
     try {
       const { gltf: gltfSrc, mesh } = await transformToGLTF(
@@ -75,7 +84,7 @@ export class GoogleModelViewer extends React.Component<
     // 判断是否有 onZip，有的话则进行压缩并且返回
     requestAnimationFrame(async () => {
       // 仅在传入了 Zipped 文件的情况下调用
-      if (modelFile && props.onZip && props.src && !props.zippedSrc) {
+      if (modelFile && props.onZip && props.src && this.state.compressType === 'none') {
         const buffer = await S.readFileAsArrayBufferAsync(modelFile);
         const intArray: Uint8Array = new Uint8Array(buffer);
 

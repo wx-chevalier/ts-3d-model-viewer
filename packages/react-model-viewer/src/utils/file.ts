@@ -1,8 +1,14 @@
 import * as S from '@m-fe/utils';
 import pako from 'pako';
 
-import { IModelViewerProps, ModelSrc, ModelType } from '../types/IModelViewerProps';
+import {
+  IModelViewerProps,
+  ModelCompressType,
+  ModelSrc,
+  ModelType
+} from '../types/IModelViewerProps';
 
+/** 根据模型名称推导出可能的类型 */
 export function getModelType(fileName: string, model: ModelSrc): ModelType {
   const name: string = fileName || (model instanceof File ? model.name : model) || '';
 
@@ -19,10 +25,21 @@ export function getModelType(fileName: string, model: ModelSrc): ModelType {
   return 'stl';
 }
 
+/** 根据模型名称推导出可能的压缩类型 */
+export function getModelCompressType(fileName: string, model: ModelSrc): ModelCompressType {
+  const name: string = fileName || (model instanceof File ? model.name : model) || '';
+
+  if (name.indexOf('.zlib') > -1) {
+    return 'zlib';
+  }
+
+  return 'none';
+}
+
 /** 将模型统一转化为文件对象 */
 export async function getFileObjFromModelSrc(props: IModelViewerProps): Promise<File> {
   // 判断是否为 ZIP 文件
-  if (props.zippedSrc) {
+  if (props.compressType === 'zlib') {
     let zippedFile;
 
     if (props.src instanceof File) {
@@ -30,7 +47,7 @@ export async function getFileObjFromModelSrc(props: IModelViewerProps): Promise<
     } else {
       // 将 Blob 转化为文件
       const blob = await (
-        await fetch(props.zippedSrc as string, {
+        await fetch(props.src as string, {
           cache: 'force-cache'
         })
       ).blob();

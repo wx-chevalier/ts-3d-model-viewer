@@ -2,17 +2,17 @@ import { ModelAttr } from './ModelAttr';
 
 export type ModelSrc = File | string;
 export type ModelType = 'gltf' | 'glb' | 'obj' | 'stl' | 'ply';
+export type ModelCompressType = 'none' | 'zlib';
 export type ZippedModelMap = Record<string, Uint8Array>;
 
 // 公共的组件应该实现的 Props
 export interface IModelViewerProps {
   // 传入的源文件类型
   src: ModelSrc;
-  // 支持 GZip 的源地址
-  zippedSrc?: ModelSrc;
   type: ModelType;
-  fileName?: string;
+  compressType: ModelCompressType;
 
+  fileName?: string;
   width?: number;
   height?: number;
   backgroundColor?: string;
