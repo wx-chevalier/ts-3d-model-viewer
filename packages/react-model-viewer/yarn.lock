@@ -1369,6 +1369,20 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
+"@m-fe/react-model-viewer@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@m-fe/react-model-viewer/-/react-model-viewer-0.0.13.tgz#883b31fb9ce4203c78b6b6e14f0aa453a5207300"
+  integrity sha512-vL1XkjsrakkXqvawBVP+dvAA7e/CI8woFvs1VFM9+dD0pjKkuvBxe0SYCR/o2BYKQiJ7HmoWVu29g8tSyI6Fzw==
+  dependencies:
+    "@m-fe/utils" "^0.2.11"
+    pako "^1.0.11"
+    react "^16.13.0"
+    react-dom "^16.13.0"
+    react-loader-spinner "^3.1.5"
+    three "^0.114.0"
+    ueact-utils "^0.2.2"
+    uzip "^0.20200316.0"
+
 "@m-fe/utils@^0.2.11":
   version "0.2.11"
   resolved "https://registry.yarnpkg.com/@m-fe/utils/-/utils-0.2.11.tgz#387f743c202f6cd4029fc0159ba784cdff4fc4dc"

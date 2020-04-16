@@ -39,6 +39,7 @@
     "storybook": "start-storybook -p 6006"
   },
   "dependencies": {
+    "@m-fe/react-model-viewer": "^0.0.13",
     "@m-fe/utils": "^0.2.11",
     "pako": "^1.0.11",
     "react": "^16.13.0",
