@@ -29,7 +29,7 @@ export function getModelType(fileName: string, model: ModelSrc): ModelType {
 export function getModelCompressType(fileName: string, model: ModelSrc): ModelCompressType {
   const name: string = fileName || (model instanceof File ? model.name : model) || '';
 
-  if (name.indexOf('.zlib') > -1) {
+  if ((name || '').indexOf('.zlib') > -1) {
     return 'zlib';
   }
 
