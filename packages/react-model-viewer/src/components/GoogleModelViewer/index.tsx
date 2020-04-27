@@ -166,23 +166,17 @@ export class GoogleModelViewer extends React.Component<
         {withAttr && topology && (
           <div className="rmv-gmv-attr-modal">
             <div className="item">
-              尺寸（mm）：{toFixedNumber(topology.sizeX)} * {toFixedNumber(topology.sizeY)} *
-              {toFixedNumber(topology.sizeZ)}
+              尺寸：{toFixedNumber(topology.sizeX)} * {toFixedNumber(topology.sizeY)} *{' '}
+              {toFixedNumber(topology.sizeZ)} {' mm'}
             </div>
             <div className="item">
-              体积（
-              <span>
-                mm<sup>3</sup>
-              </span>
-              ）：{toFixedNumber(topology.volume)}{' '}
+              体积：{toFixedNumber(topology.volume)}
+              {' mm³'}
             </div>
-            <div className="item">面片：{topology.triangleCnt}</div>
+            <div className="item">面片：{topology.triangleCnt} 个</div>
             <div className="item">
-              面积（
-              <span>
-                mm<sup>2</sup>
-              </span>
-              ）：{toFixedNumber(topology.area, 2)}{' '}
+              面积：{toFixedNumber(topology.area, 2)}
+              {' mm²'}
             </div>
           </div>
         )}
