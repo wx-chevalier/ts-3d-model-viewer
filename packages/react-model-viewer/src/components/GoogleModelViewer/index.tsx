@@ -16,11 +16,13 @@ import { toFixedNumber } from '../../utils';
 import { getFileObjFromModelSrc, getModelCompressType, getModelType } from '../../utils/file';
 import { calcTopology } from '../../utils/mesh';
 import { transformToGLTF } from '../../utils/GLTF';
+import { Holdable } from '../Holdable';
 
 import './index.css';
 
 export interface GoogleModelViewerProps extends IModelViewerProps {
   type: ModelType;
+  withJoystick: boolean;
 }
 
 interface GoogleModelViewerState {
@@ -30,13 +32,17 @@ interface GoogleModelViewerState {
   gltfSrc?: ModelSrc;
   mesh?: THREE.Mesh;
   topology?: ModelAttr;
+
+  cox?: number;
+  coy?: number;
+  coz?: number;
 }
 
 export class GoogleModelViewer extends React.Component<
   GoogleModelViewerProps,
   GoogleModelViewerState
 > {
-  static defaultProps = { ...defaultModelViewerProps };
+  static defaultProps = { ...defaultModelViewerProps, withJoystick: true };
 
   id = S.genId();
   $ref: any;
@@ -44,7 +50,9 @@ export class GoogleModelViewer extends React.Component<
   state: GoogleModelViewerState = {
     type: this.props.type || getModelType(this.props.fileName, this.props.src),
     compressType:
-      this.props.compressType || getModelCompressType(this.props.fileName, this.props.src)
+      this.props.compressType || getModelCompressType(this.props.fileName, this.props.src),
+    cox: 0,
+    coy: 0
   };
 
   componentDidMount() {
@@ -99,6 +107,10 @@ export class GoogleModelViewer extends React.Component<
     const { withAttr, onSnapshot, onTopology } = this.props;
 
     if (this.$ref) {
+      const cameraTarget = this.$ref.getCameraTarget();
+
+      this.setState({ cox: cameraTarget.x, coy: cameraTarget.y });
+
       // 返回快照
       if (onSnapshot) {
         setTimeout(async () => {
@@ -130,10 +142,11 @@ export class GoogleModelViewer extends React.Component<
       width,
       height,
       style,
-      withAttr
+      withAttr,
+      withJoystick
     } = this.props;
 
-    const { gltfSrc, topology } = this.state;
+    const { gltfSrc, topology, cox, coy } = this.state;
 
     if (!gltfSrc) {
       return <Loader type="Puff" color="#00BFFF" height={100} width={100} />;
@@ -160,7 +173,8 @@ export class GoogleModelViewer extends React.Component<
           className="rmv-gmv-model-viewer"
           src={gltfSrc}
           shadow-intensity={shadowIntensity}
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: '100%', height: '100%', backgroundColor: 'rgb(55,65,92)' }}
+          camera-target={`${cox === 0 ? 'auto' : `${cox}m`} ${coy === 0 ? 'auto' : `${coy}m`} auto`}
           {...attrs}
         />
         {withAttr && topology && (
@@ -179,6 +193,59 @@ export class GoogleModelViewer extends React.Component<
               {' mm²'}
             </div>
           </div>
+        )}
+        {withJoystick && (
+          <>
+            <Holdable
+              finite={false}
+              onPress={() => {
+                console.log(111);
+                this.setState({
+                  coy: this.state.coy - (this.state.coy === 0 ? 1 : topology.sizeY / 10)
+                });
+              }}
+            >
+              <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-up">
+                <i />
+              </div>
+            </Holdable>
+            <Holdable
+              finite={false}
+              onPress={() => {
+                this.setState({
+                  coy: this.state.coy + (this.state.coy === 0 ? 1 : topology.sizeY / 10)
+                });
+              }}
+            >
+              <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-down">
+                <i />
+              </div>
+            </Holdable>
+            <Holdable
+              finite={false}
+              onPress={() => {
+                this.setState({
+                  cox: this.state.cox + (this.state.cox === 0 ? 1 : topology.sizeX / 20)
+                });
+              }}
+            >
+              <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-left">
+                <i />
+              </div>
+            </Holdable>
+            <Holdable
+              finite={false}
+              onPress={() => {
+                this.setState({
+                  cox: this.state.cox - (this.state.cox === 0 ? 1 : topology.sizeX / 20)
+                });
+              }}
+            >
+              <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-right">
+                <i />
+              </div>
+            </Holdable>
+          </>
         )}
       </div>
     );

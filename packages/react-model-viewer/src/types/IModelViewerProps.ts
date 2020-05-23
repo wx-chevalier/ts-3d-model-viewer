@@ -36,7 +36,7 @@ export const defaultModelViewerProps: Partial<IModelViewerProps> = {
   height: 200,
   cameraControls: true,
   autoplay: true,
-  autoRotate: true,
+  autoRotate: false,
   shadowIntensity: 0,
   timeout: 30 * 1000
 };
