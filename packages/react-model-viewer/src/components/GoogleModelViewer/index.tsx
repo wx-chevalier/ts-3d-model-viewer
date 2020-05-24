@@ -201,7 +201,7 @@ export class GoogleModelViewer extends React.Component<
               onPress={() => {
                 console.log(111);
                 this.setState({
-                  coy: this.state.coy - (this.state.coy === 0 ? 1 : topology.sizeY / 10)
+                  coy: this.state.coy + (this.state.coy === 0 ? 1 : topology.sizeY / 10)
                 });
               }}
             >
@@ -213,7 +213,7 @@ export class GoogleModelViewer extends React.Component<
               finite={false}
               onPress={() => {
                 this.setState({
-                  coy: this.state.coy + (this.state.coy === 0 ? 1 : topology.sizeY / 10)
+                  coy: this.state.coy - (this.state.coy === 0 ? 1 : topology.sizeY / 10)
                 });
               }}
             >
@@ -225,7 +225,7 @@ export class GoogleModelViewer extends React.Component<
               finite={false}
               onPress={() => {
                 this.setState({
-                  cox: this.state.cox + (this.state.cox === 0 ? 1 : topology.sizeX / 20)
+                  cox: this.state.cox - (this.state.cox === 0 ? 1 : topology.sizeX / 20)
                 });
               }}
             >
@@ -237,7 +237,7 @@ export class GoogleModelViewer extends React.Component<
               finite={false}
               onPress={() => {
                 this.setState({
-                  cox: this.state.cox - (this.state.cox === 0 ? 1 : topology.sizeX / 20)
+                  cox: this.state.cox + (this.state.cox === 0 ? 1 : topology.sizeX / 20)
                 });
               }}
             >
