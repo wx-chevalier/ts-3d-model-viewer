@@ -3,6 +3,7 @@ import UZIP from 'pako';
 import * as React from 'react';
 import Loader from 'react-loader-spinner';
 import * as THREE from 'three';
+import STLViewer from 'stl-viewer';
 
 import {
   IModelViewerProps,
@@ -32,6 +33,7 @@ interface GoogleModelViewerState {
   gltfSrc?: ModelSrc;
   mesh?: THREE.Mesh;
   topology?: ModelAttr;
+  srcUrl?: string;
 
   cox?: number;
   coy?: number;
@@ -52,7 +54,8 @@ export class GoogleModelViewer extends React.Component<
     compressType:
       this.props.compressType || getModelCompressType(this.props.fileName, this.props.src),
     cox: 0,
-    coy: 0
+    coy: 0,
+    coz: 0
   };
 
   componentDidMount() {
@@ -74,12 +77,12 @@ export class GoogleModelViewer extends React.Component<
     });
 
     try {
-      const { gltf: gltfSrc, mesh } = await transformToGLTF(
+      const { gltf: gltfSrc, mesh, srcUrl } = await transformToGLTF(
         modelFile || props.src,
         this.state.type
       );
 
-      this.setState({ gltfSrc, mesh }, () => {
+      this.setState({ gltfSrc, mesh, srcUrl }, () => {
         this.$ref = document.getElementById(this.id);
         if (this.$ref) {
           this.$ref.addEventListener('load', this.onLoad);
@@ -146,7 +149,7 @@ export class GoogleModelViewer extends React.Component<
       withJoystick
     } = this.props;
 
-    const { gltfSrc, topology, cox, coy } = this.state;
+    const { gltfSrc, topology, cox, coy, coz, srcUrl } = this.state;
 
     if (!gltfSrc) {
       return <Loader type="Puff" color="#00BFFF" height={100} width={100} />;
@@ -174,8 +177,21 @@ export class GoogleModelViewer extends React.Component<
           src={gltfSrc}
           shadow-intensity={shadowIntensity}
           style={{ width: '100%', height: '100%', backgroundColor: 'rgb(55,65,92)' }}
-          camera-target={`${cox === 0 ? 'auto' : `${cox}m`} ${coy === 0 ? 'auto' : `${coy}m`} auto`}
+          camera-target={`${cox === 0 ? 'auto' : `${cox}m`} ${coy === 0 ? 'auto' : `${coy}m`} ${
+            coz === 0 ? 'auto' : `${coz}m`
+          }`}
+          min-field-of-view="10deg"
+          max-field-of-view="180deg"
           {...attrs}
+        />
+        <STLViewer
+          model={srcUrl}
+          width={400}
+          height={400}
+          modelColor="white"
+          backgroundColor="rgb(55,65,92)"
+          rotate={false}
+          orbitControls={true}
         />
         {withAttr && topology && (
           <div className="rmv-gmv-attr-modal">

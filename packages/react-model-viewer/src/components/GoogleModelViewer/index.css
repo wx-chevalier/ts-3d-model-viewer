@@ -116,6 +116,22 @@
   left: 0;
 }
 
+.rmv-gmv-attr-joystick-arrow-plus {
+  position: absolute;
+  bottom: 25px;
+  right: 20px;
+  font-size: 20px;
+  color: white;
+}
+
+.rmv-gmv-attr-joystick-arrow-minus {
+  position: absolute;
+  bottom: 25px;
+  right: 5px;
+  font-size: 20px;
+  color: white;
+}
+
 .rmv-gmv-attr-joystick-arrow-down i {
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);

@@ -10,14 +10,14 @@ import { ModelSrc, ModelType } from '../types/IModelViewerProps';
 export function transformToGLTF(
   src: ModelSrc,
   type: ModelType
-): Promise<{ gltf: string; mesh?: THREE.Mesh }> {
+): Promise<{ gltf: string; mesh?: THREE.Mesh; srcUrl: string }> {
   const material = new THREE.MeshStandardMaterial();
 
   return new Promise(resolve => {
     const srcUrl = src instanceof File ? URL.createObjectURL(src) : src;
 
     if (type === 'glb' || type === 'gltf') {
-      resolve({ gltf: srcUrl });
+      resolve({ gltf: srcUrl, srcUrl });
     } else if (type === 'obj') {
       const loader = new OBJLoader();
       loader.load(srcUrl, obj => {
@@ -25,7 +25,7 @@ export function transformToGLTF(
         exporter.parse(
           obj,
           gltf => {
-            resolve({ gltf: createURL(gltf) });
+            resolve({ gltf: createURL(gltf), srcUrl });
           },
           {}
         );
@@ -38,7 +38,7 @@ export function transformToGLTF(
         exporter.parse(
           mesh,
           gltf => {
-            resolve({ gltf: createURL(gltf), mesh });
+            resolve({ gltf: createURL(gltf), mesh, srcUrl });
           },
           {}
         );
@@ -52,7 +52,7 @@ export function transformToGLTF(
         exporter.parse(
           mesh,
           gltf => {
-            resolve({ gltf: createURL(gltf), mesh });
+            resolve({ gltf: createURL(gltf), mesh, srcUrl });
           },
           {}
         );

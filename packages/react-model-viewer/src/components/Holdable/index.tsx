@@ -22,7 +22,8 @@ export class Holdable extends Component<IProps, IState> {
     longPressEnd: () => {},
     pressCallbackTimeout: 100,
     onPress: undefined,
-    finite: true
+    finite: true,
+    className: ''
   };
 
   state: IState = {

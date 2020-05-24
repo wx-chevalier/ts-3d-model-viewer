@@ -24,7 +24,8 @@ export function NetworkStl() {
       <GoogleModelViewer
         key="3"
         type="stl"
-        src="https://ufc-prod.oss-cn-shenzhen.aliyuncs.com/1/model/202003/rc-upload-1584548085737-2/5.stl.zlib"
+        // src="https://ufc-prod.oss-cn-shenzhen.aliyuncs.com/1/model/202003/rc-upload-1584548085737-2/5.stl.zlib"
+        src="/test-n.stl"
         width={600}
         height={400}
         withAttr={true}
