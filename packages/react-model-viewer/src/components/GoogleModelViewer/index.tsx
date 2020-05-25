@@ -3,7 +3,6 @@ import UZIP from 'pako';
 import * as React from 'react';
 import Loader from 'react-loader-spinner';
 import * as THREE from 'three';
-import STLViewer from 'stl-viewer';
 
 import {
   IModelViewerProps,
@@ -146,10 +145,11 @@ export class GoogleModelViewer extends React.Component<
       height,
       style,
       withAttr,
+      externalAttr,
       withJoystick
     } = this.props;
 
-    const { gltfSrc, topology, cox, coy, coz, srcUrl } = this.state;
+    const { gltfSrc, topology, cox, coy, coz } = this.state;
 
     if (!gltfSrc) {
       return <Loader type="Puff" color="#00BFFF" height={100} width={100} />;
@@ -184,15 +184,6 @@ export class GoogleModelViewer extends React.Component<
           max-field-of-view="180deg"
           {...attrs}
         />
-        <STLViewer
-          model={srcUrl}
-          width={400}
-          height={400}
-          modelColor="white"
-          backgroundColor="rgb(55,65,92)"
-          rotate={false}
-          orbitControls={true}
-        />
         {withAttr && topology && (
           <div className="rmv-gmv-attr-modal">
             <div className="item">
@@ -203,11 +194,16 @@ export class GoogleModelViewer extends React.Component<
               体积：{toFixedNumber(topology.volume)}
               {' mm³'}
             </div>
-            <div className="item">面片：{topology.triangleCnt} 个</div>
             <div className="item">
               面积：{toFixedNumber(topology.area, 2)}
               {' mm²'}
             </div>
+            <div className="item">面片：{topology.triangleCnt} 个</div>
+            {Object.keys(externalAttr).map(k => (
+              <div className="item" key={k}>
+                {k}：{externalAttr[k]}
+              </div>
+            ))}
           </div>
         )}
         {withJoystick && (

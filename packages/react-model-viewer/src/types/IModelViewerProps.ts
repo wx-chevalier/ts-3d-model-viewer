@@ -19,6 +19,7 @@ export interface IModelViewerProps {
   style?: Record<string, string | number>;
   // 是否展示属性浮窗
   withAttr?: boolean;
+  externalAttr?: Record<string, string>;
 
   cameraControls?: boolean;
   autoplay?: boolean;
@@ -38,5 +39,6 @@ export const defaultModelViewerProps: Partial<IModelViewerProps> = {
   autoplay: true,
   autoRotate: false,
   shadowIntensity: 0,
-  timeout: 30 * 1000
+  timeout: 30 * 1000,
+  externalAttr: {}
 };

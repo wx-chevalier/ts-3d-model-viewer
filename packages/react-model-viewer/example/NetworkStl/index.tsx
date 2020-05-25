@@ -29,6 +29,7 @@ export function NetworkStl() {
         width={600}
         height={400}
         withAttr={true}
+        externalAttr={{ 破损: '12' }}
         onTopology={m => {
           console.log(m);
         }}
