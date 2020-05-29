@@ -5,6 +5,7 @@ import each from 'lodash/each';
 import UZIP from 'pako';
 import React from 'react';
 import * as THREE from 'three';
+import Loader from 'react-loader-spinner';
 
 import {
   IModelViewerProps,
@@ -460,7 +461,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   render() {
     const { width, height, style, externalAttr, withJoystick } = this.props;
 
-    const { withMaterial, withWireframe, withBoundingBox, withAttr, topology } = this.state;
+    const { withMaterial, withWireframe, withBoundingBox, withAttr, topology, loaded } = this.state;
 
     return (
       <div className="rmv-sv-container" style={{ width }}>
@@ -579,7 +580,21 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             </Holdable>
           </>
         )}
-        <div className="rmv-sv-webgl" ref={this.$ref} style={{ width, height, ...style }} />
+        <div className="rmv-sv-webgl" ref={this.$ref} style={{ width, height, ...style }}>
+          {!loaded && (
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Loader type="Puff" color="#00BFFF" height={100} width={100} />
+            </div>
+          )}
+        </div>
       </div>
     );
   }
