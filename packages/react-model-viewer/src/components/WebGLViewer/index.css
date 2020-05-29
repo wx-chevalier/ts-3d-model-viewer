@@ -1,0 +1,7 @@
+.container {
+  position: relative;
+}
+
+.rmv-sv-toolbar {
+  display: flex;
+}

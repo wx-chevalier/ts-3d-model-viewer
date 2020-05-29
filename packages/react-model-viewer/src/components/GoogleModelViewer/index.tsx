@@ -20,10 +20,7 @@ import { Holdable } from '../Holdable';
 
 import './index.css';
 
-export interface GoogleModelViewerProps extends IModelViewerProps {
-  type: ModelType;
-  withJoystick: boolean;
-}
+export interface GoogleModelViewerProps extends IModelViewerProps {}
 
 interface GoogleModelViewerState {
   type: ModelType;
@@ -32,18 +29,18 @@ interface GoogleModelViewerState {
   gltfSrc?: ModelSrc;
   mesh?: THREE.Mesh;
   topology?: ModelAttr;
-  srcUrl?: string;
+  modelFile?: File;
 
-  cox?: number;
-  coy?: number;
-  coz?: number;
+  cameraX?: number;
+  cameraY?: number;
+  cameraZ?: number;
 }
 
 export class GoogleModelViewer extends React.Component<
   GoogleModelViewerProps,
   GoogleModelViewerState
 > {
-  static defaultProps = { ...defaultModelViewerProps, withJoystick: true };
+  static defaultProps = { ...defaultModelViewerProps };
 
   id = S.genId();
   $ref: any;
@@ -52,9 +49,9 @@ export class GoogleModelViewer extends React.Component<
     type: this.props.type || getModelType(this.props.fileName, this.props.src),
     compressType:
       this.props.compressType || getModelCompressType(this.props.fileName, this.props.src),
-    cox: 0,
-    coy: 0,
-    coz: 0
+    cameraX: 0,
+    cameraY: 0,
+    cameraZ: 0
   };
 
   componentDidMount() {
@@ -76,12 +73,12 @@ export class GoogleModelViewer extends React.Component<
     });
 
     try {
-      const { gltf: gltfSrc, mesh, srcUrl } = await transformToGLTF(
+      const { gltf: gltfSrc, mesh } = await transformToGLTF(
         modelFile || props.src,
         this.state.type
       );
 
-      this.setState({ gltfSrc, mesh, srcUrl }, () => {
+      this.setState({ gltfSrc, mesh, modelFile }, () => {
         this.$ref = document.getElementById(this.id);
         if (this.$ref) {
           this.$ref.addEventListener('load', this.onLoad);
@@ -90,34 +87,22 @@ export class GoogleModelViewer extends React.Component<
     } catch (e) {
       console.error(e);
     }
-
-    // 判断是否有 onZip，有的话则进行压缩并且返回
-    requestAnimationFrame(async () => {
-      // 仅在传入了 Zipped 文件的情况下调用
-      if (modelFile && props.onZip && props.src && this.state.compressType === 'none') {
-        const buffer = await S.readFileAsArrayBufferAsync(modelFile);
-        const intArray: Uint8Array = new Uint8Array(buffer);
-
-        const zippedFile = UZIP.deflate(intArray);
-
-        props.onZip(zippedFile);
-      }
-    });
   }
 
   onLoad = async () => {
-    const { withAttr, onSnapshot, onTopology } = this.props;
+    const { src, withAttr, onSnapshot, onTopology, onZip } = this.props;
+    const { modelFile } = this.state;
 
     if (this.$ref) {
-      const cameraTarget = this.$ref.getCameraTarget();
-
-      this.setState({ cox: cameraTarget.x, coy: cameraTarget.y });
-
       // 返回快照
       if (onSnapshot) {
         setTimeout(async () => {
           const _snap = await this.$ref.toBlob({ idealAspect: true });
           onSnapshot(_snap);
+
+          const cameraTarget = this.$ref.getCameraTarget();
+
+          this.setState({ cameraX: cameraTarget.x, cameraY: cameraTarget.y });
         }, 1 * 1000);
       }
     }
@@ -132,6 +117,19 @@ export class GoogleModelViewer extends React.Component<
         onTopology(topology);
       }
     }
+
+    // 判断是否有 onZip，有的话则进行压缩并且返回
+    requestAnimationFrame(async () => {
+      // 仅在传入了 Zipped 文件的情况下调用
+      if (modelFile && onZip && src && this.state.compressType === 'none') {
+        const buffer = await S.readFileAsArrayBufferAsync(modelFile);
+        const intArray: Uint8Array = new Uint8Array(buffer);
+
+        const zippedFile = UZIP.deflate(intArray);
+
+        onZip(zippedFile);
+      }
+    });
   };
 
   render() {
@@ -149,7 +147,7 @@ export class GoogleModelViewer extends React.Component<
       withJoystick
     } = this.props;
 
-    const { gltfSrc, topology, cox, coy, coz } = this.state;
+    const { gltfSrc, topology, cameraX, cameraY, cameraZ } = this.state;
 
     if (!gltfSrc) {
       return <Loader type="Puff" color="#00BFFF" height={100} width={100} />;
@@ -176,10 +174,10 @@ export class GoogleModelViewer extends React.Component<
           className="rmv-gmv-model-viewer"
           src={gltfSrc}
           shadow-intensity={shadowIntensity}
-          style={{ width: '100%', height: '100%', backgroundColor: 'rgb(55,65,92)' }}
-          camera-target={`${cox === 0 ? 'auto' : `${cox}m`} ${coy === 0 ? 'auto' : `${coy}m`} ${
-            coz === 0 ? 'auto' : `${coz}m`
-          }`}
+          style={{ width: '100%', height: '100%', backgroundColor }}
+          camera-target={`${cameraX === 0 ? 'auto' : `${cameraX}m`} ${
+            cameraY === 0 ? 'auto' : `${cameraY}m`
+          } ${cameraZ === 0 ? 'auto' : `${cameraZ}m`}`}
           min-field-of-view="10deg"
           max-field-of-view="180deg"
           {...attrs}
@@ -211,9 +209,8 @@ export class GoogleModelViewer extends React.Component<
             <Holdable
               finite={false}
               onPress={() => {
-                console.log(111);
                 this.setState({
-                  coy: this.state.coy + (this.state.coy === 0 ? 1 : topology.sizeY / 10)
+                  cameraY: this.state.cameraY + (this.state.cameraY === 0 ? 1 : topology.sizeY / 10)
                 });
               }}
             >
@@ -225,7 +222,7 @@ export class GoogleModelViewer extends React.Component<
               finite={false}
               onPress={() => {
                 this.setState({
-                  coy: this.state.coy - (this.state.coy === 0 ? 1 : topology.sizeY / 10)
+                  cameraY: this.state.cameraY - (this.state.cameraY === 0 ? 1 : topology.sizeY / 10)
                 });
               }}
             >
@@ -237,7 +234,7 @@ export class GoogleModelViewer extends React.Component<
               finite={false}
               onPress={() => {
                 this.setState({
-                  cox: this.state.cox - (this.state.cox === 0 ? 1 : topology.sizeX / 20)
+                  cameraX: this.state.cameraX - (this.state.cameraX === 0 ? 1 : topology.sizeX / 20)
                 });
               }}
             >
@@ -249,7 +246,7 @@ export class GoogleModelViewer extends React.Component<
               finite={false}
               onPress={() => {
                 this.setState({
-                  cox: this.state.cox + (this.state.cox === 0 ? 1 : topology.sizeX / 20)
+                  cameraX: this.state.cameraX + (this.state.cameraX === 0 ? 1 : topology.sizeX / 20)
                 });
               }}
             >

@@ -1,19 +1,16 @@
 import * as React from 'react';
 
-import { GoogleModelViewer } from '../../src';
+import { WebGLViewer } from '../../src';
 
-export function NetworkStl() {
+export function NetworkStlViewer() {
   return (
     <div>
-      <GoogleModelViewer
-        key="1"
-        type="gltf"
-        src="https://cdn.glitch.com/36cb8393-65c6-408d-a538-055ada20431b/Astronaut.glb?1542147958948"
-      />
-      <GoogleModelViewer
+      <WebGLViewer
         key="2"
         type="stl"
-        src="/tri-3.stl"
+        src="/test.stl"
+        width={600}
+        height={400}
         onTopology={m => {
           // console.log(m);
         }}
@@ -21,7 +18,7 @@ export function NetworkStl() {
           // S.downloadArraybuffer(b, 'application/zlib', 'stl.zlib');
         }}
       />
-      <GoogleModelViewer
+      {/* <WebGLViewer
         key="3"
         type="stl"
         src="https://ufc-prod.oss-cn-shenzhen.aliyuncs.com/1/model/202003/rc-upload-1584548085737-2/5.stl.zlib"
@@ -37,7 +34,7 @@ export function NetworkStl() {
           // S.downloadUrl(URL.createObjectURL(b));
         }}
       />
-      <GoogleModelViewer
+      <WebGLViewer
         key="4"
         type="stl"
         src="/1.stl"
@@ -51,7 +48,7 @@ export function NetworkStl() {
         onSnapshot={b => {
           // S.downloadUrl(URL.createObjectURL(b));
         }}
-      />
+      /> */}
     </div>
   );
 }

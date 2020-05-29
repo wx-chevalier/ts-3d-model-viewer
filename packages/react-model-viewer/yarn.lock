@@ -2520,6 +2520,11 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
   integrity sha512-l42BggppR6zLmpfU6fq9HEa2oGPEI8yrSPL3GITjfRInppYFahObbIQOQK3UGxEnyQpltZLaPe75046NOZQikw==
 
+"@types/tween.js@^18.5.1":
+  version "18.5.1"
+  resolved "https://registry.yarnpkg.com/@types/tween.js/-/tween.js-18.5.1.tgz#8fb4e533e8b595d272d38f1f07863a28c8055fcc"
+  integrity sha512-DWLolZlt5EsP7JnFLkyCrZppCgiA4HbiAEpZLpBTHlvE1odC40QdUNf0c0ZXKXlNYnqEzbBg9DlbX/RfzWz3yQ==
+
 "@types/unist@*", "@types/unist@^2.0.0", "@types/unist@^2.0.2":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.3.tgz#9c088679876f374eb5983f150d4787aa6fb32d7e"
@@ -15811,6 +15816,13 @@ three-orbit-controls@^72.0.0:
   resolved "https://registry.yarnpkg.com/three-orbit-controls/-/three-orbit-controls-72.0.0.tgz#13a4cbf3780cc6e5446aed0032fe1c5135e72755"
   integrity sha1-E6TL83gMxuVEau0AMv4cUTXnJ1U=
 
+three-orbitcontrols-ts@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/three-orbitcontrols-ts/-/three-orbitcontrols-ts-0.1.2.tgz#2040955904022ae19c2e9c52ffdff43168658abd"
+  integrity sha1-IECVWQQCKuGcLpxS/9/0MWhlir0=
+  dependencies:
+    three "^0.83.0"
+
 three@^0.114.0:
   version "0.114.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.114.0.tgz#754d08467a950ddeef06a0c645a1302b130e455a"
@@ -15820,6 +15832,11 @@ three@^0.72.0:
   version "0.72.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.72.0.tgz#ac4eb95fd4e5b159c0ffabb609617fec90a336b2"
   integrity sha1-rE65X9TlsVnA/6u2CWF/7JCjNrI=
+
+three@^0.83.0:
+  version "0.83.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.83.0.tgz#3b7f94790af3e021dac1f44a2617569ca2032b0b"
+  integrity sha1-O3+UeQrz4CHawfRKJhdWnKIDKws=
 
 throat@^4.0.0:
   version "4.1.0"
@@ -16132,6 +16149,16 @@ tunnel-agent@^0.6.0:
   integrity sha1-J6XeoGs2sEoKmWZ3SykIaPD8QP0=
   dependencies:
     safe-buffer "^5.0.1"
+
+tween.js@^16.6.0:
+  version "16.6.0"
+  resolved "https://registry.yarnpkg.com/tween.js/-/tween.js-16.6.0.tgz#739104c9336cc4f11ee53f9ce7cede51e6723624"
+  integrity sha1-c5EEyTNsxPEe5T+c587eUeZyNiQ=
+
+tween.ts@^18.6.1:
+  version "18.6.1"
+  resolved "https://registry.yarnpkg.com/tween.ts/-/tween.ts-18.6.1.tgz#35ecdb4194e7ec106a0d5e13b6d40eb152adae60"
+  integrity sha512-sLFXV6z9XmXr1YXLCuiVHn904TVVJPCrBenQGohBLurpZABapXU6ceEcDgDqIWVdaql+n4D0bl/Egt/wWzotAQ==
 
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"

@@ -88,6 +88,7 @@ export class Holdable extends Component<IProps, IState> {
         onMouseOut={this.onMouseOut}
         onMouseDown={this.onMouseDown}
         onMouseUp={this.onMouseOut}
+        onClick={this.props.onPress}
       >
         {this.props.children}
       </div>

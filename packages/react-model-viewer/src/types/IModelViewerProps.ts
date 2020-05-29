@@ -15,7 +15,8 @@ export interface IModelViewerProps {
   fileName?: string;
   width?: number;
   height?: number;
-  backgroundColor?: string;
+  modelColor?: string | number;
+  backgroundColor?: string | number;
   style?: Record<string, string | number>;
   // 是否展示属性浮窗
   withAttr?: boolean;
@@ -26,6 +27,10 @@ export interface IModelViewerProps {
   autoRotate?: boolean;
   shadowIntensity?: number;
   timeout?: number;
+  cameraX: number;
+  cameraY: number;
+  cameraZ: number;
+  withJoystick: boolean;
 
   onTopology?: (modelAttr: ModelAttr) => void;
   onSnapshot?: (blob: Blob) => void;
@@ -40,5 +45,8 @@ export const defaultModelViewerProps: Partial<IModelViewerProps> = {
   autoRotate: false,
   shadowIntensity: 0,
   timeout: 30 * 1000,
-  externalAttr: {}
+  modelColor: 0xb3b3b3,
+  backgroundColor: 'rgb(55,65,92)',
+  externalAttr: {},
+  withJoystick: true
 };
