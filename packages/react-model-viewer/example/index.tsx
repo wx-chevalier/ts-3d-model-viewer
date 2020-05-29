@@ -3,6 +3,6 @@ import * as ReactDOM from 'react-dom';
 
 // import { NetworkStl } from './NetworkStl';
 // import { UploadStl } from './UploadStl';
-import { NetworkStlViewer } from './NetworkStlViewer';
+import { WebGLViewerExample } from './WebGLViewerExample';
 
-ReactDOM.render(<NetworkStlViewer />, document.getElementById('root'));
+ReactDOM.render(<WebGLViewerExample />, document.getElementById('root'));

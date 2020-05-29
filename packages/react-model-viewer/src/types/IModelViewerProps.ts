@@ -48,5 +48,8 @@ export const defaultModelViewerProps: Partial<IModelViewerProps> = {
   modelColor: 0xb3b3b3,
   backgroundColor: 'rgb(55,65,92)',
   externalAttr: {},
-  withJoystick: true
+  withJoystick: true,
+  cameraX: 0,
+  cameraY: 0,
+  cameraZ: 0
 };

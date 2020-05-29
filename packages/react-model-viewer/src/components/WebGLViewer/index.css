@@ -1,7 +1,17 @@
-.container {
+@import '../GoogleModelViewer/index.css';
+
+.rmv-sv-container {
   position: relative;
 }
 
 .rmv-sv-toolbar {
   display: flex;
+  padding: 8px 4px;
+  background: black;
+  color: white;
+  position: relative;
+}
+
+.rmv-sv-toolbar-item {
+  margin-right: 8px;
 }

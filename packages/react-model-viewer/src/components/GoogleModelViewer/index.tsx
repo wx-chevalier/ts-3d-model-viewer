@@ -55,17 +55,17 @@ export class GoogleModelViewer extends React.Component<
   };
 
   componentDidMount() {
-    this._setInnerSrc(this.props);
+    this.loadModel(this.props);
   }
 
   componentWillReceiveProps(nextProps: GoogleModelViewerProps) {
     if (nextProps.src !== this.props.src) {
-      this._setInnerSrc(nextProps);
+      this.loadModel(nextProps);
     }
   }
 
   /** 这里根据传入的文件类型，进行不同的文件转化 */
-  private async _setInnerSrc(props: GoogleModelViewerProps) {
+  async loadModel(props: GoogleModelViewerProps) {
     const modelFile = await getFileObjFromModelSrc({
       ...props,
       type: this.state.type,

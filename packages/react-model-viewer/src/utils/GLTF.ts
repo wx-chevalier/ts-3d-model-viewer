@@ -22,10 +22,19 @@ export function transformToGLTF(
       const loader = new OBJLoader();
       loader.load(srcUrl, obj => {
         const exporter = new GLTFExporter();
+
         exporter.parse(
           obj,
           gltf => {
-            resolve({ gltf: createURL(gltf), srcUrl });
+            // 将 obj 转化为 mesh
+            obj.traverse(child => {
+              if (child instanceof THREE.Mesh) {
+                (child.material as THREE.Material).transparent = true;
+                // here in child the geometry and material are available
+                const mesh = new THREE.Mesh(child.geometry, child.material);
+                resolve({ gltf: createURL(gltf), mesh, srcUrl });
+              }
+            });
           },
           {}
         );

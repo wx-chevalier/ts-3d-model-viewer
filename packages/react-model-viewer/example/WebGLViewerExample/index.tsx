@@ -1,14 +1,29 @@
+import * as S from '@m-fe/utils';
 import * as React from 'react';
 
 import { WebGLViewer } from '../../src';
 
-export function NetworkStlViewer() {
+export function WebGLViewerExample() {
   return (
     <div>
       <WebGLViewer
         key="2"
         type="stl"
-        src="/test.stl"
+        src="/stl.zlib"
+        width={600}
+        height={400}
+        onTopology={m => {
+          // console.log(m);
+        }}
+        onZip={b => {
+          // S.downloadArraybuffer(b, 'application/zlib', 'stl.zlib');
+        }}
+      />
+      <br />
+      <WebGLViewer
+        key="2"
+        type="obj"
+        src="/file.obj"
         width={600}
         height={400}
         onTopology={m => {
