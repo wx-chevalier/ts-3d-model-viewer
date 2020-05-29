@@ -35,6 +35,7 @@ export interface IModelViewerProps {
   onTopology?: (modelAttr: ModelAttr) => void;
   onSnapshot?: (blob: Blob) => void;
   onZip?: (zippedArrayBuffer: ArrayBuffer) => void;
+  onLoad?: () => void;
 }
 
 export const defaultModelViewerProps: Partial<IModelViewerProps> = {

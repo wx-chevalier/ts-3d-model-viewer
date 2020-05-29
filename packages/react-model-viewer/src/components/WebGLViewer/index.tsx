@@ -372,8 +372,12 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   }
 
   onLoad = async () => {
-    const { src, withAttr, onTopology, onZip } = this.props;
+    const { src, withAttr, onTopology, onZip, onLoad } = this.props;
     const { modelFile } = this.state;
+
+    if (onLoad) {
+      onLoad();
+    }
 
     // 计算基础信息
     if ((onTopology || withAttr) && this.model) {
