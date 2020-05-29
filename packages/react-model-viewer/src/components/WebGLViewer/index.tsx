@@ -16,9 +16,9 @@ import {
 import { getFileObjFromModelSrc, getModelCompressType, getModelType } from '../../utils/file';
 import { calcTopology } from '../../utils/mesh';
 import { transformToGLTF } from '../../utils/GLTF';
+import { Holdable } from '../Holdable';
 
 import './index.css';
-import { Holdable } from '../Holdable';
 // import { OrbitControls } from 'three-orbitcontrols-ts';
 const OrbitControls = require('three-orbit-controls')(THREE);
 // import { ViewerControl, ViewerControlConfig } from './ViewerControl';
