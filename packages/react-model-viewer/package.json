@@ -1,6 +1,6 @@
 {
   "name": "@m-fe/react-model-viewer",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Micro Front-end Libs",
   "repository": {
     "type": "git",
@@ -39,7 +39,6 @@
     "storybook": "start-storybook -p 6006"
   },
   "dependencies": {
-    "@m-fe/react-model-viewer": "^0.0.13",
     "@m-fe/utils": "^0.2.20",
     "lodash": "^4.17.15",
     "pako": "^1.0.11",
