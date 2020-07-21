@@ -4,8 +4,8 @@ import * as S from '@m-fe/utils';
 import each from 'lodash/each';
 import UZIP from 'pako';
 import React from 'react';
-import * as THREE from 'three';
 import Loader from 'react-loader-spinner';
+import * as THREE from 'three';
 
 import {
   IModelViewerProps,
