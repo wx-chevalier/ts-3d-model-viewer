@@ -6,6 +6,9 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
 import { ModelSrc, ModelType } from '../types/IModelViewerProps';
 
+export const canTransformToGLTF = (type: ModelType) =>
+  type === 'glb' || type === 'gltf' || type === 'ply' || type === 'stl' || type === 'obj';
+
 /** 将其他类型的文件，转化为 GLTF 类型 */
 export function transformToGLTF(
   src: ModelSrc,

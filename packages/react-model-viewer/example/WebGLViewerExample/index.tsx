@@ -1,4 +1,5 @@
 import * as S from '@m-fe/utils';
+import pako from 'pako';
 import * as React from 'react';
 
 import { WebGLViewer } from '../../src';
@@ -21,7 +22,7 @@ export function WebGLViewerExample() {
       />
       <br />
       <WebGLViewer
-        key="2"
+        key="3"
         type="obj"
         src="/file.obj"
         width={600}
@@ -31,6 +32,22 @@ export function WebGLViewerExample() {
         }}
         onZip={b => {
           // S.downloadArraybuffer(b, 'application/zlib', 'stl.zlib');
+        }}
+      />
+      <WebGLViewer
+        key="4"
+        type="stp"
+        src="/ap203.stp"
+        width={600}
+        height={400}
+        onTopology={m => {
+          // console.log(m);
+        }}
+        onZip={b => {
+          // S.downloadArraybuffer(b, 'application/zlib', 'ap203.stp.zlib');
+          // 执行解压缩
+          const modelArray: Uint8Array = pako.inflate(new Uint8Array(b));
+          // S.downloadArraybuffer(modelArray, 'application/stp', 'ap203.stp');
         }}
       />
       {/* <WebGLViewer

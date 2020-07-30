@@ -15,7 +15,7 @@ import { ModelAttr } from '../../types/ModelAttr';
 import { toFixedNumber } from '../../utils';
 import { getFileObjFromModelSrc, getModelCompressType, getModelType } from '../../utils/file';
 import { calcTopology } from '../../utils/mesh';
-import { transformToGLTF } from '../../utils/GLTF';
+import { canTransformToGLTF, transformToGLTF } from '../../utils/GLTF';
 import { Holdable } from '../Holdable';
 
 import './index.css';
@@ -72,6 +72,13 @@ export class GoogleModelViewer extends React.Component<
       compressType: this.state.compressType
     });
 
+    // 判断是否可以进行预览
+    if (!canTransformToGLTF(this.state.type)) {
+      // 仅执行 ZIP 操作
+      this.handleZip();
+      return;
+    }
+
     try {
       const { gltf: gltfSrc, mesh } = await transformToGLTF(
         modelFile || props.src,
@@ -90,8 +97,7 @@ export class GoogleModelViewer extends React.Component<
   }
 
   onLoad = async () => {
-    const { src, withAttr, onSnapshot, onTopology, onZip } = this.props;
-    const { modelFile } = this.state;
+    const { withAttr, onSnapshot, onTopology } = this.props;
 
     if (this.$ref) {
       // 返回快照
@@ -120,16 +126,22 @@ export class GoogleModelViewer extends React.Component<
 
     // 判断是否有 onZip，有的话则进行压缩并且返回
     requestAnimationFrame(async () => {
-      // 仅在传入了 Zipped 文件的情况下调用
-      if (modelFile && onZip && src && this.state.compressType === 'none') {
-        const buffer = await S.readFileAsArrayBufferAsync(modelFile);
-        const intArray: Uint8Array = new Uint8Array(buffer);
-
-        const zippedFile = UZIP.deflate(intArray);
-
-        onZip(zippedFile);
-      }
+      await this.handleZip();
     });
+  };
+
+  handleZip = async () => {
+    const { src, onZip } = this.props;
+    const { modelFile } = this.state;
+
+    if (modelFile && onZip && src && this.state.compressType === 'none') {
+      const buffer = await S.readFileAsArrayBufferAsync(modelFile);
+      const intArray: Uint8Array = new Uint8Array(buffer);
+
+      const zippedFile = UZIP.deflate(intArray);
+
+      onZip(zippedFile);
+    }
   };
 
   render() {

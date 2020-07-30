@@ -1422,37 +1422,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@m-fe/react-model-viewer@^0.0.13":
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@m-fe/react-model-viewer/-/react-model-viewer-0.0.13.tgz#883b31fb9ce4203c78b6b6e14f0aa453a5207300"
-  integrity sha512-vL1XkjsrakkXqvawBVP+dvAA7e/CI8woFvs1VFM9+dD0pjKkuvBxe0SYCR/o2BYKQiJ7HmoWVu29g8tSyI6Fzw==
-  dependencies:
-    "@m-fe/utils" "^0.2.11"
-    pako "^1.0.11"
-    react "^16.13.0"
-    react-dom "^16.13.0"
-    react-loader-spinner "^3.1.5"
-    three "^0.114.0"
-    ueact-utils "^0.2.2"
-    uzip "^0.20200316.0"
-
-"@m-fe/utils@^0.2.11":
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/@m-fe/utils/-/utils-0.2.11.tgz#387f743c202f6cd4029fc0159ba784cdff4fc4dc"
-  integrity sha512-0obF7Hvjy/BsyhAMejEJRMIfmqLD6hT6zjkvQ4iS0anbPbVYAe2vyhIxtRZFfSPd7fP9HU7hmXF2DKx3K9n7EA==
-  dependencies:
-    dayjs "^1.8.20"
-    fast-deep-equal "^2.0.1"
-    history "^4.10.1"
-    lodash.chunk "^4.2.0"
-    lodash.upperfirst "^4.3.1"
-    urijs "^1.19.2"
-    uuid "^3.3.3"
-
-"@m-fe/utils@^0.2.20":
-  version "0.2.20"
-  resolved "https://registry.yarnpkg.com/@m-fe/utils/-/utils-0.2.20.tgz#e0986c42f94be89ca99d4ef5fd66b5950ed13666"
-  integrity sha512-pGeDIiygsrRGTGq2OWHjRLw1R2jBlSNQodvyUj+jhwiiO0M+VLMezPBTZspst2Ghuar7DJPQ4MDx0YI2pc9/mQ==
+"@m-fe/utils@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@m-fe/utils/-/utils-0.3.2.tgz#6db7767ba770911634b2a9a11ecce87a33a090f8"
+  integrity sha512-xmBoNxN8amxbXMfLGyCW4nZ4I1MEj+TqS9DIu1pHAHiINYFjWfmo01M4yqtuA/CU1zERRs0HxE7tfF56M+sugA==
   dependencies:
     dayjs "^1.8.26"
     fast-deep-equal "^2.0.1"
@@ -1461,6 +1434,7 @@
     lodash.upperfirst "^4.3.1"
     urijs "^1.19.2"
     uuid "^3.3.3"
+    uuid-random "^1.3.2"
 
 "@mdx-js/util@^1.5.7":
   version "1.5.7"
@@ -16633,6 +16607,11 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
+
+uuid-random@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/uuid-random/-/uuid-random-1.3.2.tgz#96715edbaef4e84b1dcf5024b00d16f30220e2d0"
+  integrity sha512-UOzej0Le/UgkbWEO8flm+0y+G+ljUon1QWTEZOq1rnMAsxo2+SckbiZdKzAHHlVh6gJqI1TjC/xwgR50MuCrBQ==
 
 uuid@^3.0.1, uuid@^3.1.0, uuid@^3.3.2, uuid@^3.3.3:
   version "3.4.0"

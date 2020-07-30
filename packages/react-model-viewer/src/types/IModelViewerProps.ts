@@ -1,7 +1,7 @@
 import { ModelAttr } from './ModelAttr';
 
 export type ModelSrc = File | string;
-export type ModelType = 'gltf' | 'glb' | 'obj' | 'stl' | 'ply';
+export type ModelType = 'gltf' | 'glb' | 'obj' | 'stl' | 'ply' | 'stp' | 'step';
 export type ModelCompressType = 'none' | 'zlib';
 export type ZippedModelMap = Record<string, Uint8Array>;
 
@@ -13,8 +13,8 @@ export interface IModelViewerProps {
   compressType: ModelCompressType;
 
   fileName?: string;
-  width?: number;
-  height?: number;
+  width?: number | string;
+  height?: number | string;
   modelColor?: string | number;
   backgroundColor?: string | number;
   style?: Record<string, string | number>;

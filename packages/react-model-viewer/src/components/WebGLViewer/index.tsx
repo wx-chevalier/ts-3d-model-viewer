@@ -16,7 +16,7 @@ import {
 } from '../../types';
 import { getFileObjFromModelSrc, getModelCompressType, getModelType } from '../../utils/file';
 import { calcTopology } from '../../utils/mesh';
-import { transformToGLTF } from '../../utils/GLTF';
+import { canTransformToGLTF, transformToGLTF } from '../../utils/GLTF';
 import { Holdable } from '../Holdable';
 
 import './index.css';
@@ -106,6 +106,14 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       type: 'stl',
       compressType: this.state.compressType
     });
+
+    // 判断是否可以进行预览
+    if (!canTransformToGLTF(this.state.type)) {
+      await this.setState({ modelFile });
+      // 仅执行 ZIP 操作
+      await this.handleZip();
+      return;
+    }
 
     try {
       const { mesh } = await transformToGLTF(modelFile || props.src, this.state.type);
@@ -373,8 +381,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   }
 
   onLoad = async () => {
-    const { src, withAttr, onTopology, onZip, onLoad } = this.props;
-    const { modelFile } = this.state;
+    const { withAttr, onTopology, onLoad } = this.props;
 
     if (onLoad) {
       onLoad();
@@ -393,16 +400,23 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
     // 判断是否有 onZip，有的话则进行压缩并且返回
     requestAnimationFrame(async () => {
-      // 仅在传入了 Zipped 文件的情况下调用
-      if (modelFile && onZip && src && this.state.compressType === 'none') {
-        const buffer = await S.readFileAsArrayBufferAsync(modelFile);
-        const intArray: Uint8Array = new Uint8Array(buffer);
-
-        const zippedFile = UZIP.deflate(intArray);
-
-        onZip(zippedFile);
-      }
+      this.handleZip();
     });
+  };
+
+  handleZip = async () => {
+    const { src, onZip } = this.props;
+    const { modelFile } = this.state;
+
+    // 仅在传入了 Zipped 文件的情况下调用
+    if (modelFile && onZip && src && this.state.compressType === 'none') {
+      const buffer = await S.readFileAsArrayBufferAsync(modelFile);
+      const intArray: Uint8Array = new Uint8Array(buffer);
+
+      const zippedFile = UZIP.deflate(intArray);
+
+      onZip(zippedFile);
+    }
   };
 
   /** 响应着色图变化 */
@@ -461,7 +475,39 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   render() {
     const { width, height, style, externalAttr, withJoystick } = this.props;
 
-    const { withMaterial, withWireframe, withBoundingBox, withAttr, topology, loaded } = this.state;
+    const {
+      withMaterial,
+      withWireframe,
+      withBoundingBox,
+      withAttr,
+      topology,
+      loaded,
+      type
+    } = this.state;
+
+    if (!canTransformToGLTF(type)) {
+      return (
+        <div
+          className="rmv-sv-container"
+          style={{ width, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+        >
+          <div
+            className="rmv-sv-webgl"
+            ref={this.$ref}
+            style={{
+              width,
+              height,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              ...style
+            }}
+          >
+            该类型暂不支持预览！
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div className="rmv-sv-container" style={{ width }}>
