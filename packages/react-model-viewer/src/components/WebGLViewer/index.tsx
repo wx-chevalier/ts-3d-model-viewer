@@ -286,22 +286,27 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     const camera = new THREE.PerspectiveCamera(45, width / height, 1, 4000);
 
     const { model } = this;
-    if (model) {
-      const geometry = model.geometry;
-      geometry.computeBoundingSphere();
-
-      const g = model.geometry.boundingSphere.radius;
-      const dist = g * 3;
-
-      // fudge factor so you can see the boundaries
-      camera.position.set(
-        this.props.cameraX,
-        this.props.cameraY,
-        this.props.cameraZ || dist * fudge
-      );
-    }
 
     this.camera = camera;
+
+    if (model) {
+      this._resetCamera();
+    }
+  }
+
+  private _resetCamera() {
+    const geometry = this.model.geometry;
+    geometry.computeBoundingSphere();
+
+    const g = this.model.geometry.boundingSphere.radius;
+    const dist = g * 3;
+
+    // fudge factor so you can see the boundaries
+    this.camera.position.set(
+      this.props.cameraX,
+      this.props.cameraY,
+      this.props.cameraZ || dist * fudge
+    );
   }
 
   animate(_time: number) {
@@ -622,7 +627,12 @@ export class WebGLViewer extends React.Component<IProps, IState> {
           </div>
           {withJoystick && (
             <div className="rmv-sv-joystick">
-              <div className="rmv-sv-joystick-center" />
+              <div
+                className="rmv-sv-joystick-center"
+                onClick={() => {
+                  this._resetCamera();
+                }}
+              />
               <Holdable
                 finite={false}
                 onPress={() => {
