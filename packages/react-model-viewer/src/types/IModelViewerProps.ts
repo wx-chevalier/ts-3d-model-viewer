@@ -30,7 +30,10 @@ export interface IModelViewerProps {
   cameraX: number;
   cameraY: number;
   cameraZ: number;
+
   withJoystick: boolean;
+  // 展示类型，是在 PC 上还是在移动设备上
+  layoutType: 'compact' | 'loose';
 
   onTopology?: (modelAttr: ModelAttr) => void;
   onSnapshot?: (blob: Blob) => void;
@@ -46,10 +49,12 @@ export const defaultModelViewerProps: Partial<IModelViewerProps> = {
   autoRotate: false,
   shadowIntensity: 0,
   timeout: 30 * 1000,
-  modelColor: 0xb3b3b3,
-  backgroundColor: 'rgb(55,65,92)',
+  modelColor: 'rgb(117, 117, 117)',
+  backgroundColor: 'rgb(242, 242, 242)',
+  withAttr: true,
   externalAttr: {},
   withJoystick: true,
+  layoutType: window.innerWidth > 600 ? 'loose' : 'compact',
   cameraX: 0,
   cameraY: 0,
   cameraZ: 0

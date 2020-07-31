@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import * as S from '@m-fe/utils';
 import each from 'lodash/each';
+import max from 'lodash/max';
 import UZIP from 'pako';
 import React from 'react';
 import Loader from 'react-loader-spinner';
@@ -18,6 +19,7 @@ import { getFileObjFromModelSrc, getModelCompressType, getModelType } from '../.
 import { calcTopology } from '../../utils/mesh';
 import { canTransformToGLTF, transformToGLTF } from '../../utils/GLTF';
 import { Holdable } from '../Holdable';
+import { Switch } from '../Switch';
 
 import './index.css';
 // import { OrbitControls } from 'three-orbitcontrols-ts';
@@ -70,7 +72,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     cameraY: 0,
     cameraZ: 0,
     withMaterial: true,
-    withAttr: this.props.withAttr
+    withAttr: this.props.withAttr,
+    withPlane: true,
+    withAxis: true
   };
 
   model?: THREE.Mesh;
@@ -84,6 +88,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   // controls: ViewerControl;
   orbitControls: any;
   boundingBox: THREE.BoxHelper;
+  plane: THREE.GridHelper;
 
   xDims: number;
   yDims: number;
@@ -323,6 +328,8 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   _setupDecorators() {
     const { withWireframe, withBoundingBox } = this.state;
 
+    this._setupPlane();
+
     if (withWireframe) {
       this._setupModelWireframe();
     }
@@ -356,7 +363,8 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     this.group.add(mesh);
   }
 
-  _setupBoundingBox() {
+  /** 设置包裹体 */
+  private _setupBoundingBox() {
     if (this.model) {
       if (this.boundingBox) {
         this.group.remove(this.boundingBox);
@@ -366,7 +374,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       const line = new THREE.LineSegments(wireframe);
 
       (line.material as THREE.Material).depthTest = false;
-      (line.material as THREE.Material).opacity = 0.25;
+      (line.material as THREE.Material).opacity = 0.75;
       (line.material as THREE.Material).transparent = true;
 
       // reset center point
@@ -377,6 +385,37 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       this.boundingBox = new THREE.BoxHelper(line);
 
       this.group.add(this.boundingBox);
+    }
+  }
+
+  /** 设置平面 */
+  _setupPlane() {
+    if (this.model) {
+      if (this.plane) {
+        this.group.remove(this.plane);
+      }
+
+      // Getmax dimention and add 10% overlap for plane
+      // with a gutter of 10
+      const geometry = this.model.geometry;
+      geometry.computeBoundingBox();
+      geometry.computeBoundingSphere();
+
+      let maxDimension = max([this.xDims, this.yDims, this.zDims]);
+      maxDimension = Math.ceil(~~(maxDimension * 1.1) / 10) * 50;
+
+      const plane = new THREE.GridHelper(maxDimension, 50);
+
+      // reset center point
+      const box = new THREE.Box3().setFromObject(plane);
+      box.getCenter(plane.position);
+      plane.position.multiplyScalar(-1);
+
+      // plane.position.y = geometry.boundingSphere.center.y * -1;
+      plane.position.y = this.yDims * -1;
+
+      this.plane = plane;
+      this.group.add(this.plane);
     }
   }
 
@@ -472,18 +511,178 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     }
   };
 
-  render() {
-    const { width, height, style, externalAttr, withJoystick } = this.props;
+  renderWebGL() {
+    const { width, height, style } = this.props;
 
-    const {
-      withMaterial,
-      withWireframe,
-      withBoundingBox,
-      withAttr,
-      topology,
-      loaded,
-      type
-    } = this.state;
+    const { loaded } = this.state;
+
+    return (
+      <div className="rmv-sv-webgl" ref={this.$ref} style={{ width, height, ...style }}>
+        {!loaded && (
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <Loader type="Puff" color="#00BFFF" height={100} width={100} />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  renderAttr() {
+    const { externalAttr, fileName } = this.props;
+
+    const { withAttr, topology } = this.state;
+
+    return (
+      withAttr &&
+      topology && (
+        <div className="rmv-gmv-attr-modal">
+          {fileName && (
+            <div className="item">
+              名称：{fileName.length > 5 ? `${fileName.slice(0, 5)}...` : fileName}
+            </div>
+          )}
+          <div className="item">
+            尺寸：{S.toFixedNumber(topology.sizeX)} * {S.toFixedNumber(topology.sizeY)} *{' '}
+            {S.toFixedNumber(topology.sizeZ)} {' mm'}
+          </div>
+          <div className="item">
+            体积：{S.toFixedNumber(topology.volume)}
+            {' mm³'}
+          </div>
+          <div className="item">
+            面积：{S.toFixedNumber(topology.area, 2)}
+            {' mm²'}
+          </div>
+          <div className="item">面片：{topology.triangleCnt} 个</div>
+          {Object.keys(externalAttr).map(k => (
+            <div className="item" key={k}>
+              {k}：{externalAttr[k]}
+            </div>
+          ))}
+        </div>
+      )
+    );
+  }
+
+  renderLoose() {
+    const { width, withJoystick } = this.props;
+
+    const { withMaterial, withWireframe, withBoundingBox, withAttr, topology } = this.state;
+
+    return (
+      <div className="rmv-sv-container rmv-sv-loose-container" style={{ width }}>
+        <div className="rmv-sv-toolbar">
+          <div className="rmv-sv-toolbar-item">
+            <label htmlFor="withMaterial">着色：</label>
+            <Switch
+              id="withMaterial"
+              checked={withMaterial}
+              onChange={e => {
+                this.onMaterialChange(e.target.checked);
+              }}
+            />
+          </div>
+          <div className="rmv-sv-toolbar-item">
+            <label htmlFor="withWireframe">线框：</label>
+            <Switch
+              id="withWireframe"
+              checked={withWireframe}
+              onChange={e => {
+                this.onWireframeChange(e.target.checked);
+              }}
+            />
+          </div>
+          <div className="rmv-sv-toolbar-item">
+            <label htmlFor="withBoundingBox">框体：</label>
+            <Switch
+              id="withBoundingBox"
+              checked={withBoundingBox}
+              onChange={e => {
+                this.onBoundingBoxChange(e.target.checked);
+              }}
+            />
+          </div>
+          <div className="rmv-sv-toolbar-item">
+            <label htmlFor="withAttr">信息板：</label>
+            <Switch
+              id="withAttr"
+              checked={withAttr}
+              onChange={e => {
+                this.setState({ withAttr: e.target.checked });
+              }}
+            />
+          </div>
+          {withJoystick && (
+            <div className="rmv-sv-joystick">
+              <div className="rmv-sv-joystick-center" />
+              <Holdable
+                finite={false}
+                onPress={() => {
+                  this.camera.translateY(-topology.sizeY / 10);
+                }}
+              >
+                <div
+                  className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-up"
+                  style={{ top: 0 }}
+                >
+                  <i />
+                </div>
+              </Holdable>
+              <Holdable
+                finite={false}
+                onPress={() => {
+                  this.camera.translateY(topology.sizeY / 10);
+                }}
+              >
+                <div
+                  className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-down"
+                  style={{ bottom: 0 }}
+                >
+                  <i />
+                </div>
+              </Holdable>
+              <Holdable
+                finite={false}
+                onPress={() => {
+                  this.camera.translateX(-topology.sizeX / 10);
+                }}
+              >
+                <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-left">
+                  <i />
+                </div>
+              </Holdable>
+              <Holdable
+                finite={false}
+                onPress={() => {
+                  this.camera.translateX(topology.sizeX / 10);
+                }}
+              >
+                <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-right">
+                  <i />
+                </div>
+              </Holdable>
+            </div>
+          )}
+        </div>
+        {this.renderAttr()}
+
+        {this.renderWebGL()}
+      </div>
+    );
+  }
+
+  render() {
+    const { width, height, style, layoutType, withJoystick } = this.props;
+
+    const { withMaterial, withWireframe, withBoundingBox, withAttr, topology, type } = this.state;
 
     if (!canTransformToGLTF(type)) {
       return (
@@ -507,6 +706,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
           </div>
         </div>
       );
+    }
+
+    if (layoutType === 'loose') {
+      // 宽松方式
+      return this.renderLoose();
     }
 
     return (
@@ -557,28 +761,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
         </div>
-        {withAttr && topology && (
-          <div className="rmv-gmv-attr-modal">
-            <div className="item">
-              尺寸：{S.toFixedNumber(topology.sizeX)} * {S.toFixedNumber(topology.sizeY)} *{' '}
-              {S.toFixedNumber(topology.sizeZ)} {' mm'}
-            </div>
-            <div className="item">
-              体积：{S.toFixedNumber(topology.volume)}
-              {' mm³'}
-            </div>
-            <div className="item">
-              面积：{S.toFixedNumber(topology.area, 2)}
-              {' mm²'}
-            </div>
-            <div className="item">面片：{topology.triangleCnt} 个</div>
-            {Object.keys(externalAttr).map(k => (
-              <div className="item" key={k}>
-                {k}：{externalAttr[k]}
-              </div>
-            ))}
-          </div>
-        )}
+        {this.renderAttr()}
         {withJoystick && (
           <>
             <Holdable
@@ -626,21 +809,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             </Holdable>
           </>
         )}
-        <div className="rmv-sv-webgl" ref={this.$ref} style={{ width, height, ...style }}>
-          {!loaded && (
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <Loader type="Puff" color="#00BFFF" height={100} width={100} />
-            </div>
-          )}
-        </div>
+        {this.renderWebGL()}
       </div>
     );
   }

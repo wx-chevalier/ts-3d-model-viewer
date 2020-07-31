@@ -11,7 +11,8 @@ export function WebGLViewerExample() {
         key="2"
         type="stl"
         src="/stl.zlib"
-        width={600}
+        fileName="AAA"
+        width={1000}
         height={400}
         onTopology={m => {
           // console.log(m);
@@ -25,7 +26,7 @@ export function WebGLViewerExample() {
         key="3"
         type="obj"
         src="/file.obj"
-        width={600}
+        width={1000}
         height={400}
         onTopology={m => {
           // console.log(m);

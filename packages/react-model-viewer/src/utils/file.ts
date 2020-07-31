@@ -10,7 +10,7 @@ import {
 
 /** 根据模型名称推导出可能的类型 */
 export function getModelType(fileName: string, model: ModelSrc): ModelType {
-  const name: string = fileName || (model instanceof File ? model.name : model) || '';
+  const name: string = (model instanceof File ? model.name : model) || fileName || '';
 
   if (name.indexOf('.stl') > -1) {
     return 'stl';
@@ -27,7 +27,7 @@ export function getModelType(fileName: string, model: ModelSrc): ModelType {
 
 /** 根据模型名称推导出可能的压缩类型 */
 export function getModelCompressType(fileName: string, model: ModelSrc): ModelCompressType {
-  const name: string = fileName || (model instanceof File ? model.name : model) || '';
+  const name: string = (model instanceof File ? model.name : model) || fileName || '';
 
   if ((name || '').indexOf('.zlib') > -1) {
     return 'zlib';
