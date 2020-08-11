@@ -121,7 +121,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     }
 
     try {
-      const { mesh } = await transformToGLTF(modelFile || props.src, this.state.type);
+      const { mesh } = await transformToGLTF(
+        modelFile || props.src,
+        this.state.type,
+        this.props.onError
+      );
 
       this.initGeometry(mesh.geometry);
       this.setState({ modelFile });

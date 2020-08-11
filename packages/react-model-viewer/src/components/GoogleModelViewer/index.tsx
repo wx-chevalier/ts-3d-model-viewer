@@ -82,7 +82,8 @@ export class GoogleModelViewer extends React.Component<
     try {
       const { gltf: gltfSrc, mesh } = await transformToGLTF(
         modelFile || props.src,
-        this.state.type
+        this.state.type,
+        this.props.onError
       );
 
       this.setState({ gltfSrc, mesh, modelFile }, () => {

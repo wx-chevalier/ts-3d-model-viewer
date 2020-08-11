@@ -39,6 +39,7 @@ export interface IModelViewerProps {
   onSnapshot?: (blob: Blob) => void;
   onZip?: (zippedArrayBuffer: ArrayBuffer) => void;
   onLoad?: () => void;
+  onError?: (err: Error) => void;
 }
 
 export const defaultModelViewerProps: Partial<IModelViewerProps> = {

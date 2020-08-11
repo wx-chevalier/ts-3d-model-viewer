@@ -12,7 +12,8 @@ export const canTransformToGLTF = (type: ModelType) =>
 /** 将其他类型的文件，转化为 GLTF 类型 */
 export function transformToGLTF(
   src: ModelSrc,
-  type: ModelType
+  type: ModelType,
+  onError?: (err: Error) => void
 ): Promise<{ gltf: string; mesh?: THREE.Mesh; srcUrl: string }> {
   const material = new THREE.MeshStandardMaterial();
 
@@ -23,52 +24,79 @@ export function transformToGLTF(
       resolve({ gltf: srcUrl, srcUrl });
     } else if (type === 'obj') {
       const loader = new OBJLoader();
-      loader.load(srcUrl, obj => {
-        const exporter = new GLTFExporter();
+      loader.load(
+        srcUrl,
+        obj => {
+          const exporter = new GLTFExporter();
 
-        exporter.parse(
-          obj,
-          gltf => {
-            // 将 obj 转化为 mesh
-            obj.traverse(child => {
-              if (child instanceof THREE.Mesh) {
-                (child.material as THREE.Material).transparent = true;
-                // here in child the geometry and material are available
-                const mesh = new THREE.Mesh(child.geometry, child.material);
-                resolve({ gltf: createURL(gltf), mesh, srcUrl });
-              }
-            });
-          },
-          {}
-        );
-      });
+          exporter.parse(
+            obj,
+            gltf => {
+              // 将 obj 转化为 mesh
+              obj.traverse(child => {
+                if (child instanceof THREE.Mesh) {
+                  (child.material as THREE.Material).transparent = true;
+                  // here in child the geometry and material are available
+                  const mesh = new THREE.Mesh(child.geometry, child.material);
+                  resolve({ gltf: createURL(gltf), mesh, srcUrl });
+                }
+              });
+            },
+            {}
+          );
+        },
+        () => {},
+        err => {
+          if (onError) {
+            onError(new Error(err.message));
+          }
+        }
+      );
     } else if (type === 'ply') {
       const loader = new PLYLoader();
-      loader.load(srcUrl, geometry => {
-        const mesh = new THREE.Mesh(geometry, material);
-        const exporter = new GLTFExporter();
-        exporter.parse(
-          mesh,
-          gltf => {
-            resolve({ gltf: createURL(gltf), mesh, srcUrl });
-          },
-          {}
-        );
-      });
+      loader.load(
+        srcUrl,
+        geometry => {
+          const mesh = new THREE.Mesh(geometry, material);
+          const exporter = new GLTFExporter();
+          exporter.parse(
+            mesh,
+            gltf => {
+              resolve({ gltf: createURL(gltf), mesh, srcUrl });
+            },
+            {}
+          );
+        },
+        () => {},
+        err => {
+          if (onError) {
+            onError(new Error(err.message));
+          }
+        }
+      );
     } else if (type === 'stl') {
       const loader = new STLLoader();
 
-      loader.load(srcUrl, geometry => {
-        const mesh = new THREE.Mesh(geometry, material);
-        const exporter = new GLTFExporter();
-        exporter.parse(
-          mesh,
-          gltf => {
-            resolve({ gltf: createURL(gltf), mesh, srcUrl });
-          },
-          {}
-        );
-      });
+      loader.load(
+        srcUrl,
+        geometry => {
+          const mesh = new THREE.Mesh(geometry, material);
+          const exporter = new GLTFExporter();
+          exporter.parse(
+            mesh,
+            gltf => {
+              resolve({ gltf: createURL(gltf), mesh, srcUrl });
+            },
+            {}
+          );
+        },
+        () => {},
+        err => {
+          if (onError) {
+            onError(new Error(err.message));
+          }
+        }
+      );
     }
   });
 }
