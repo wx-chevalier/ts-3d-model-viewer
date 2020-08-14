@@ -1,4 +1,3 @@
-import * as S from '@m-fe/utils';
 import pako from 'pako';
 import * as React from 'react';
 
@@ -17,8 +16,17 @@ export function WebGLViewerExample() {
         onTopology={m => {
           // console.log(m);
         }}
-        onZip={b => {
-          // S.downloadArraybuffer(b, 'application/zlib', 'stl.zlib');
+      />
+      <br />
+      <WebGLViewer
+        key="21"
+        type="stl"
+        src="/stl_text.stl"
+        fileName="BBB"
+        width={1000}
+        height={400}
+        onTopology={m => {
+          // console.log(m);
         }}
       />
       <br />
@@ -31,8 +39,23 @@ export function WebGLViewerExample() {
         onTopology={m => {
           // console.log(m);
         }}
+      />
+      <WebGLViewer
+        key="33"
+        type="stl"
+        src="/error.stl"
+        width={600}
+        height={400}
+        onTopology={m => {
+          // console.log(m);
+        }}
         onZip={b => {
-          // S.downloadArraybuffer(b, 'application/zlib', 'stl.zlib');
+          // 执行解压缩
+          const modelArray: Uint8Array = pako.inflate(new Uint8Array(b));
+          console.log(modelArray);
+        }}
+        onError={err => {
+          console.log(err);
         }}
       />
       <WebGLViewer
@@ -44,12 +67,12 @@ export function WebGLViewerExample() {
         onTopology={m => {
           // console.log(m);
         }}
-        onZip={b => {
-          // S.downloadArraybuffer(b, 'application/zlib', 'ap203.stp.zlib');
-          // 执行解压缩
-          const modelArray: Uint8Array = pako.inflate(new Uint8Array(b));
-          // S.downloadArraybuffer(modelArray, 'application/stp', 'ap203.stp');
-        }}
+        // onZip={b => {
+        //   // S.downloadArraybuffer(b, 'application/zlib', 'ap203.stp.zlib');
+        //   // 执行解压缩
+        //   const modelArray: Uint8Array = pako.inflate(new Uint8Array(b));
+        //   // S.downloadArraybuffer(modelArray, 'application/stp', 'ap203.stp');
+        // }}
       />
       {/* <WebGLViewer
         key="3"

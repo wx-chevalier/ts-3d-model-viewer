@@ -112,15 +112,19 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       compressType: this.state.compressType
     });
 
-    // 判断是否可以进行预览
+    await this.setState({ modelFile });
+    // 判断是否有 onZip，有的话则进行压缩并且返回
+    requestAnimationFrame(async () => {
+      this.handleZip();
+    });
+
+    // 判断是否可以进行预览，不可以预览则仅设置
     if (!canTransformToGLTF(this.state.type)) {
-      await this.setState({ modelFile });
-      // 仅执行 ZIP 操作
-      await this.handleZip();
       return;
     }
 
     try {
+      // 进行模型实际加载
       const { mesh } = await transformToGLTF(
         modelFile || props.src,
         this.state.type,
@@ -128,7 +132,6 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       );
 
       this.initGeometry(mesh.geometry);
-      this.setState({ modelFile });
     } catch (e) {
       console.error(e);
     }
@@ -271,23 +274,12 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     this.orbitControls.enableZoom = true;
     this.orbitControls.enablePan = true;
     this.orbitControls.addEventListener('change', this.renderScene.bind(this));
-
-    // if (this.model) {
-    //   if (this.controls) {
-    //     this.controls.destroy();
-    //     this.controls = null;
-    //   }
-
-    //   const config = (this.props as unknown) as ViewerControlConfig;
-
-    //   this.controls = new ViewerControl(this.$ref.current, this.camera, this.group, config);
-    // }
   }
 
   _setupCamera() {
     const height = this.$ref.current.clientHeight;
     const width = this.$ref.current.clientWidth;
-    const camera = new THREE.PerspectiveCamera(45, width / height, 1, 4000);
+    const camera = new THREE.PerspectiveCamera(45, width / height, 1, 99999);
 
     const { model } = this;
 
@@ -445,11 +437,6 @@ export class WebGLViewer extends React.Component<IProps, IState> {
         onTopology(topology);
       }
     }
-
-    // 判断是否有 onZip，有的话则进行压缩并且返回
-    requestAnimationFrame(async () => {
-      this.handleZip();
-    });
   };
 
   handleZip = async () => {
