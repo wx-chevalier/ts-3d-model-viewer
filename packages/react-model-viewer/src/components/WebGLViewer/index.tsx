@@ -540,29 +540,27 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       withAttr &&
       topology && (
         <div className="rmv-gmv-attr-modal">
-          {fileName && (
+          {fileName && <div className="item">名称：{fileName}</div>}
+          <div className="rmv-gmv-attr-modal-row">
             <div className="item">
-              名称：{fileName.length > 5 ? `${fileName.slice(0, 5)}...` : fileName}
+              尺寸：{S.toFixedNumber(topology.sizeX)} * {S.toFixedNumber(topology.sizeY)} *{' '}
+              {S.toFixedNumber(topology.sizeZ)} {' mm'}
             </div>
-          )}
-          <div className="item">
-            尺寸：{S.toFixedNumber(topology.sizeX)} * {S.toFixedNumber(topology.sizeY)} *{' '}
-            {S.toFixedNumber(topology.sizeZ)} {' mm'}
-          </div>
-          <div className="item">
-            体积：{S.toFixedNumber(topology.volume)}
-            {' mm³'}
-          </div>
-          <div className="item">
-            面积：{S.toFixedNumber(topology.area, 2)}
-            {' mm²'}
-          </div>
-          <div className="item">面片：{topology.triangleCnt} 个</div>
-          {Object.keys(externalAttr).map(k => (
-            <div className="item" key={k}>
-              {k}：{externalAttr[k]}
+            <div className="item">
+              体积：{S.toFixedNumber(topology.volume)}
+              {' mm³'}
             </div>
-          ))}
+            <div className="item">
+              面积：{S.toFixedNumber(topology.area, 2)}
+              {' mm²'}
+            </div>
+            <div className="item">面片：{topology.triangleCnt} 个</div>
+            {Object.keys(externalAttr).map(k => (
+              <div className="item" key={k}>
+                {k}：{externalAttr[k]}
+              </div>
+            ))}
+          </div>
         </div>
       )
     );
@@ -607,7 +605,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor="withAttr">信息板：</label>
+            <label htmlFor="withAttr">信息：</label>
             <Switch
               id="withAttr"
               checked={withAttr}
@@ -751,7 +749,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor="withAttr">信息板：</label>
+            <label htmlFor="withAttr">信息：</label>
             <input
               type="checkbox"
               name="withAttr"

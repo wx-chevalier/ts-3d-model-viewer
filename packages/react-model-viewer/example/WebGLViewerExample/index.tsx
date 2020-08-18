@@ -10,7 +10,7 @@ export function WebGLViewerExample() {
         key="2"
         type="stl"
         src="/stl.zlib"
-        fileName="AAA"
+        fileName="AAAAAAAAAAAAAAAAAAAAAAAAA"
         width={1000}
         height={400}
         onTopology={m => {
