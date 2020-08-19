@@ -373,7 +373,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   /** 设置包裹体 */
   private _setupBoundingBox() {
     if (this.model) {
-      if (this.boundingBox) {
+      if (this.boundingBox && this.group) {
         this.group.remove(this.boundingBox);
       }
 
