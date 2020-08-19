@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-require-imports */
 import * as S from '@m-fe/utils';
+import TextSprite from '@seregpie/three.text-sprite';
 import each from 'lodash/each';
 import max from 'lodash/max';
 import UZIP from 'pako';
@@ -22,6 +23,7 @@ import { Holdable } from '../Holdable';
 import { Switch } from '../Switch';
 
 import './index.css';
+
 // import { OrbitControls } from 'three-orbitcontrols-ts';
 const OrbitControls = require('three-orbit-controls')(THREE);
 // import { ViewerControl, ViewerControlConfig } from './ViewerControl';
@@ -59,6 +61,7 @@ interface IState {
 }
 
 export class WebGLViewer extends React.Component<IProps, IState> {
+  id = S.genId();
   static defaultProps = { ...defaultModelViewerProps };
 
   $ref = React.createRef<HTMLDivElement>();
@@ -88,6 +91,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   // controls: ViewerControl;
   orbitControls: any;
   boundingBox: THREE.BoxHelper;
+  xSprite: any;
+  ySprite: any;
+  zSprite: any;
   plane: THREE.GridHelper;
 
   xDims: number;
@@ -386,6 +392,33 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       this.boundingBox = new THREE.BoxHelper(line);
 
       this.group.add(this.boundingBox);
+
+      line.updateMatrix();
+      const lineBox = line.geometry.boundingBox;
+      const lineBoxMaxVertex = lineBox.max;
+      console.log(lineBoxMaxVertex);
+
+      const { topology } = this.state;
+
+      const genSprite = (len: number) =>
+        new TextSprite({
+          fillStyle: 'rgb(255, 153, 0)',
+          fontSize: 2.5,
+          fontStyle: 'italic',
+          text: `${len} mm`
+        });
+
+      this.xSprite = genSprite(topology.sizeX);
+      this.ySprite = genSprite(topology.sizeY);
+      this.zSprite = genSprite(topology.sizeZ);
+
+      this.xSprite.position.set(0, lineBoxMaxVertex.y, lineBoxMaxVertex.z);
+      this.ySprite.position.set(lineBoxMaxVertex.x, 0, lineBoxMaxVertex.z);
+      this.zSprite.position.set(lineBoxMaxVertex.x, lineBoxMaxVertex.y, 0);
+
+      this.group.add(this.xSprite);
+      this.group.add(this.ySprite);
+      this.group.add(this.zSprite);
     }
   }
 
@@ -503,7 +536,13 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       this._setupBoundingBox();
     } else {
       this.group.remove(this.boundingBox);
+      this.group.remove(this.xSprite);
+      this.group.remove(this.ySprite);
+      this.group.remove(this.zSprite);
       this.boundingBox = null;
+      this.xSprite = null;
+      this.ySprite = null;
+      this.zSprite = null;
     }
   };
 
@@ -575,9 +614,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       <div className="rmv-sv-container rmv-sv-loose-container" style={{ width }}>
         <div className="rmv-sv-toolbar">
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor="withMaterial">着色：</label>
+            <label htmlFor={`withMaterial-${this.id}`}>着色：</label>
             <Switch
-              id="withMaterial"
+              id={`withMaterial-${this.id}`}
               checked={withMaterial}
               onChange={e => {
                 this.onMaterialChange(e.target.checked);
@@ -585,9 +624,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor="withWireframe">线框：</label>
+            <label htmlFor={`withWireframe-${this.id}`}>线框：</label>
             <Switch
-              id="withWireframe"
+              id={`withWireframe-${this.id}`}
               checked={withWireframe}
               onChange={e => {
                 this.onWireframeChange(e.target.checked);
@@ -595,9 +634,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor="withBoundingBox">框体：</label>
+            <label htmlFor={`withBoundingBox-${this.id}`}>框体：</label>
             <Switch
-              id="withBoundingBox"
+              id={`withBoundingBox-${this.id}`}
               checked={withBoundingBox}
               onChange={e => {
                 this.onBoundingBoxChange(e.target.checked);
@@ -605,9 +644,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor="withAttr">信息：</label>
+            <label htmlFor={`withAttr-${this.id}`}>信息：</label>
             <Switch
-              id="withAttr"
+              id={`withAttr-${this.id}`}
               checked={withAttr}
               onChange={e => {
                 this.setState({ withAttr: e.target.checked });
@@ -716,10 +755,10 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       <div className="rmv-sv-container" style={{ width }}>
         <div className="rmv-sv-toolbar">
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor="withMaterial">着色：</label>
+            <label htmlFor={`withMaterial-${this.id}`}>着色：</label>
             <input
               type="checkbox"
-              name="withMaterial"
+              name={`withMaterial-${this.id}`}
               checked={withMaterial}
               onChange={e => {
                 this.onMaterialChange(e.target.checked);
@@ -727,10 +766,10 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor="withWireframe">线框：</label>
+            <label htmlFor={`withWireframe-${this.id}`}>线框：</label>
             <input
               type="checkbox"
-              name="withWireframe"
+              name={`withWireframe-${this.id}`}
               checked={withWireframe}
               onChange={e => {
                 this.onWireframeChange(e.target.checked);
@@ -738,10 +777,10 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor="withBoundingBox">框体：</label>
+            <label htmlFor={`withBoundingBox-${this.id}`}>框体：</label>
             <input
               type="checkbox"
-              name="withBoundingBox"
+              name={`withBoundingBox-${this.id}`}
               checked={withBoundingBox}
               onChange={e => {
                 this.onBoundingBoxChange(e.target.checked);
@@ -749,10 +788,10 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor="withAttr">信息：</label>
+            <label htmlFor={`withAttr-${this.id}`}>信息：</label>
             <input
               type="checkbox"
-              name="withAttr"
+              name={`withAttr-${this.id}`}
               checked={withAttr}
               onChange={e => {
                 this.setState({ withAttr: e.target.checked });

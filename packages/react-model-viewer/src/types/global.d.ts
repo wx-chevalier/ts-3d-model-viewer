@@ -11,3 +11,5 @@ declare module 'uzip';
 declare module 'stl-viewer';
 
 declare module 'three-orbit-controls';
+
+declare module '@seregpie/three.text-sprite';

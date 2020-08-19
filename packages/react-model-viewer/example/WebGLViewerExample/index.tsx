@@ -17,7 +17,7 @@ export function WebGLViewerExample() {
           // console.log(m);
         }}
       />
-      <br />
+      {/* <br />
       <WebGLViewer
         key="21"
         type="stl"
@@ -73,7 +73,7 @@ export function WebGLViewerExample() {
         //   const modelArray: Uint8Array = pako.inflate(new Uint8Array(b));
         //   // S.downloadArraybuffer(modelArray, 'application/stp', 'ap203.stp');
         // }}
-      />
+      /> */}
       {/* <WebGLViewer
         key="3"
         type="stl"

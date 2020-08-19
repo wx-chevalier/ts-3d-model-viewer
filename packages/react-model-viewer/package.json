@@ -1,6 +1,6 @@
 {
   "name": "@m-fe/react-model-viewer",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Micro Front-end Libs",
   "repository": {
     "type": "git",
@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@m-fe/utils": "^0.3.2",
+    "@seregpie/three.text-sprite": "^2.0.0",
     "lodash": "^4.17.15",
     "pako": "^1.0.11",
     "react": "^16.13.0",

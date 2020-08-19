@@ -1530,6 +1530,18 @@
   dependencies:
     any-observable "^0.3.0"
 
+"@seregpie/three.text-sprite@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@seregpie/three.text-sprite/-/three.text-sprite-2.0.0.tgz#4868b7084992726d78e70a0d9186bf577b3b15e0"
+  integrity sha512-YaHmMNOmaXDGEOam1/STmVkI/rBdQqfcKlhcgHqhujjUG5skF2uc5cWYig0u3inn0m9oYsp6xqWb3rwtMOdoRg==
+  dependencies:
+    "@seregpie/three.text-texture" "^2.0.1"
+
+"@seregpie/three.text-texture@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@seregpie/three.text-texture/-/three.text-texture-2.0.1.tgz#2f0b1aaa429bfc84c8c5e3f7b0503d9faa2079ea"
+  integrity sha512-9uO/mP5PyGyl1LqrkObe9OOAwL/jp9rKjdphWf5gUH8LHDJuNy5GQCjr+nKqJG2lGID8gMNNnub1CSALl4BZHw==
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
