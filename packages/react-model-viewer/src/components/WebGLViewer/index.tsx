@@ -664,7 +664,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               <Holdable
                 finite={false}
                 onPress={() => {
-                  this.camera.translateY(-topology.sizeY / 10);
+                  this.camera && this.camera.translateY(-topology.sizeY / 10);
                 }}
               >
                 <div
@@ -677,7 +677,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               <Holdable
                 finite={false}
                 onPress={() => {
-                  this.camera.translateY(topology.sizeY / 10);
+                  this.camera && this.camera.translateY(topology.sizeY / 10);
                 }}
               >
                 <div
@@ -690,7 +690,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               <Holdable
                 finite={false}
                 onPress={() => {
-                  this.camera.translateX(-topology.sizeX / 10);
+                  this.camera && this.camera.translateX(-topology.sizeX / 10);
                 }}
               >
                 <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-left">
@@ -700,7 +700,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               <Holdable
                 finite={false}
                 onPress={() => {
-                  this.camera.translateX(topology.sizeX / 10);
+                  this.camera && this.camera.translateX(topology.sizeX / 10);
                 }}
               >
                 <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-right">
