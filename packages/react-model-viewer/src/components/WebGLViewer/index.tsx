@@ -231,12 +231,19 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     this.scene.add(this.group);
   }
 
+  get $dom() {
+    return this.$ref.current || document.getElementById('webgl-container');
+  }
   /** 初始化渲染器 */
   _setupRenderer() {
     const { backgroundColor } = this.props;
 
-    const height = this.$ref.current.clientHeight;
-    const width = this.$ref.current.clientWidth;
+    if (!this.$dom) {
+      return;
+    }
+
+    const height = this.$dom.clientHeight;
+    const width = this.$dom.clientWidth;
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     const devicePixelRatio = window.devicePixelRatio || 1;
 
@@ -249,7 +256,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.cullFace = THREE.CullFaceBack;
 
-    this.$ref.current.appendChild(renderer.domElement);
+    this.$dom.appendChild(renderer.domElement);
 
     this.renderer = renderer;
   }
@@ -275,7 +282,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   _setupControls() {
     this._setupCamera();
 
-    this.orbitControls = new OrbitControls(this.camera, this.$ref.current);
+    this.orbitControls = new OrbitControls(this.camera, this.$dom);
     this.orbitControls.enableKeys = false;
     this.orbitControls.enableZoom = true;
     this.orbitControls.enablePan = true;
@@ -283,8 +290,12 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   }
 
   _setupCamera() {
-    const height = this.$ref.current.clientHeight;
-    const width = this.$ref.current.clientWidth;
+    if (!this.$dom) {
+      return;
+    }
+
+    const height = this.$dom.clientHeight;
+    const width = this.$dom.clientWidth;
     const camera = new THREE.PerspectiveCamera(45, width / height, 1, 99999);
 
     const { model } = this;
@@ -405,7 +416,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
           fillStyle: 'rgb(255, 153, 0)',
           fontSize: 2.5,
           fontStyle: 'italic',
-          text: `${len} mm`
+          text: `${S.toFixedNumber(len, 2)} mm`
         });
 
       this.xSprite = genSprite(topology.sizeX);
@@ -552,7 +563,12 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     const { loaded } = this.state;
 
     return (
-      <div className="rmv-sv-webgl" ref={this.$ref} style={{ width, height, ...style }}>
+      <div
+        id="webgl-container"
+        className="rmv-sv-webgl"
+        ref={this.$ref}
+        style={{ width, height, ...style }}
+      >
         {!loaded && (
           <div
             style={{
