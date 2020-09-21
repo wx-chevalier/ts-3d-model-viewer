@@ -4,7 +4,6 @@ import * as S from '@m-fe/utils';
 import TextSprite from '@seregpie/three.text-sprite';
 import each from 'lodash/each';
 import max from 'lodash/max';
-import UZIP from 'pako';
 import React from 'react';
 import Loader from 'react-loader-spinner';
 import * as THREE from 'three';
@@ -16,6 +15,7 @@ import {
   ModelType,
   defaultModelViewerProps
 } from '../../types';
+import { deflate } from '../../utils/compressor';
 import { getFileObjFromModelSrc, getModelCompressType, getModelType } from '../../utils/file';
 import { calcTopology } from '../../utils/mesh';
 import { canTransformToGLTF, transformToGLTF } from '../../utils/GLTF';
@@ -119,13 +119,14 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     });
 
     await this.setState({ modelFile });
+
     // 判断是否有 onZip，有的话则进行压缩并且返回
     requestAnimationFrame(async () => {
       this.handleZip();
     });
 
     // 判断是否可以进行预览，不可以预览则仅设置
-    if (!canTransformToGLTF(this.state.type)) {
+    if (!canTransformToGLTF(this.state.type) || !props.showModelViewer) {
       return;
     }
 
@@ -489,10 +490,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
     // 仅在传入了 Zipped 文件的情况下调用
     if (modelFile && onZip && src && this.state.compressType === 'none') {
-      const buffer = await S.readFileAsArrayBufferAsync(modelFile);
-      const intArray: Uint8Array = new Uint8Array(buffer);
-
-      const zippedFile = UZIP.deflate(intArray);
+      const zippedFile = await deflate(modelFile);
 
       onZip(zippedFile);
     }

@@ -17219,6 +17219,11 @@ workerize-loader@^1.1.0:
   dependencies:
     loader-utils "^1.2.3"
 
+workerize@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.npm.taobao.org/workerize/download/workerize-0.1.8.tgz#da4b8090ed31e13bac16fb3e1c5483625e8874fc"
+  integrity sha1-2kuAkO0x4TusFvs+HFSDYl6IdPw=
+
 wrap-ansi@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-2.1.0.tgz#d8fc3d284dd05794fe84973caecdd1cf824fdd85"

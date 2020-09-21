@@ -1,12 +1,29 @@
 import pako from 'pako';
 import * as React from 'react';
+import * as S from '@m-fe/utils';
 
 import { WebGLViewer } from '../../src';
 
 export function WebGLViewerExample() {
   return (
     <div>
-      <WebGLViewer
+      {/* <WebGLViewer
+        key="2"
+        type="stl"
+        src="/hollow_of__010.stl"
+        fileName="AAAAAAAAAAAAAAAAAAAAAAAAA"
+        width={1000}
+        height={400}
+        showModelViewer={false}
+        onZip={e => {
+          console.log(e.byteLength);
+        }}
+        onTopology={m => {
+          // console.log(m);
+        }}
+      /> */}
+      <br />
+      {/* <WebGLViewer
         key="2"
         type="stl"
         src="/stl.zlib"
@@ -16,7 +33,7 @@ export function WebGLViewerExample() {
         onTopology={m => {
           // console.log(m);
         }}
-      />
+      /> */}
       {/* <br />
       <WebGLViewer
         key="21"
@@ -89,11 +106,11 @@ export function WebGLViewerExample() {
         onSnapshot={b => {
           // S.downloadUrl(URL.createObjectURL(b));
         }}
-      />
+      /> */}
       <WebGLViewer
         key="4"
         type="stl"
-        src="/1.stl"
+        src="/1.stl.zlib"
         width={600}
         height={400}
         withAttr={true}
@@ -102,9 +119,12 @@ export function WebGLViewerExample() {
           console.log(m);
         }}
         onSnapshot={b => {
-          // S.downloadUrl(URL.createObjectURL(b));
+          S.downloadUrl(URL.createObjectURL(b));
         }}
-      /> */}
+        onZip={b => {
+          // S.downloadArraybuffer(b, 'application/zlib', '1.stl.zlib');
+        }}
+      />
     </div>
   );
 }

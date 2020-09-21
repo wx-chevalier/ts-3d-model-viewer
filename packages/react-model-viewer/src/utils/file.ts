@@ -55,10 +55,13 @@ export async function getFileObjFromModelSrc(props: IModelViewerProps): Promise<
       zippedFile = S.blobToFile(blob);
     }
 
-    const arrayBuffer = await S.readFileAsArrayBufferAsync(zippedFile);
+    let arrayBuffer = await S.readFileAsArrayBufferAsync(zippedFile);
 
     // 解压缩文件
     const modelArray: Uint8Array = pako.inflate(new Uint8Array(arrayBuffer));
+
+    // 强行释放内存
+    arrayBuffer = null;
 
     return S.arrayBufferToFile(modelArray.buffer, 'application/stl', props.fileName);
   } else {

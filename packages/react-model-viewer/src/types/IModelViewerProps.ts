@@ -18,6 +18,8 @@ export interface IModelViewerProps {
   modelColor?: string | number;
   backgroundColor?: string | number;
   style?: Record<string, string | number>;
+  // 是否展示模型
+  showModelViewer?: boolean;
   // 是否展示属性浮窗
   withAttr?: boolean;
   externalAttr?: Record<string, string>;
@@ -45,6 +47,7 @@ export interface IModelViewerProps {
 export const defaultModelViewerProps: Partial<IModelViewerProps> = {
   width: 300,
   height: 200,
+  showModelViewer: true,
   cameraControls: true,
   autoplay: true,
   autoRotate: false,
