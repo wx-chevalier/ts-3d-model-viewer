@@ -22,12 +22,12 @@ export async function deflate(modelFile: File) {
     if (window.Worker) {
       const worker = workerize(workerScript);
       zippedFile = await worker.deflateInWorker(intArray);
+      UZIP.inflate(zippedFile);
     } else {
       zippedFile = UZIP.deflate(intArray);
     }
   } catch (_) {
     console.error(_);
-
     zippedFile = UZIP.deflate(intArray);
   }
 

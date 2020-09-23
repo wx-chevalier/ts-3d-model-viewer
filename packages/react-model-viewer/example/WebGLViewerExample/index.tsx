@@ -110,19 +110,28 @@ export function WebGLViewerExample() {
       <WebGLViewer
         key="4"
         type="stl"
-        src="/1.stl.zlib"
+        src="/hollow_of__010.stl.zlib"
         width={600}
         height={400}
         withAttr={true}
         externalAttr={{ 破损: '12' }}
-        onTopology={m => {
-          console.log(m);
-        }}
-        onSnapshot={b => {
-          S.downloadUrl(URL.createObjectURL(b));
-        }}
+      />
+      <WebGLViewer
+        key="5"
+        type="stl"
+        src="/stl_text.stl"
+        width={600}
+        height={400}
+        withAttr={true}
+        externalAttr={{ 破损: '12' }}
+        // onTopology={m => {
+        //   console.log(m);
+        // }}
+        // onSnapshot={b => {
+        //   S.downloadUrl(URL.createObjectURL(b));
+        // }}
         onZip={b => {
-          // S.downloadArraybuffer(b, 'application/zlib', '1.stl.zlib');
+          // S.downloadArraybuffer(b, 'application/zlib', 'hollow_of__010.stl.zlib');
         }}
       />
     </div>
