@@ -4,6 +4,10 @@ declare namespace JSX {
   }
 }
 
+declare global {
+  const __DEV__: boolean;
+}
+
 declare module 'react-loader-spinner';
 
 declare module 'uzip';

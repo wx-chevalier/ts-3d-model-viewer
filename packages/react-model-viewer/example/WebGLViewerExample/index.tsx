@@ -10,22 +10,6 @@ export function WebGLViewerExample() {
       {/* <WebGLViewer
         key="2"
         type="stl"
-        src="/hollow_of__010.stl"
-        fileName="AAAAAAAAAAAAAAAAAAAAAAAAA"
-        width={1000}
-        height={400}
-        showModelViewer={false}
-        onZip={e => {
-          console.log(e.byteLength);
-        }}
-        onTopology={m => {
-          // console.log(m);
-        }}
-      /> */}
-      <br />
-      {/* <WebGLViewer
-        key="2"
-        type="stl"
         src="/stl.zlib"
         fileName="AAAAAAAAAAAAAAAAAAAAAAAAA"
         width={1000}
@@ -34,7 +18,7 @@ export function WebGLViewerExample() {
           // console.log(m);
         }}
       /> */}
-      {/* <br />
+      <br />
       <WebGLViewer
         key="21"
         type="stl"
@@ -47,7 +31,7 @@ export function WebGLViewerExample() {
         }}
       />
       <br />
-      <WebGLViewer
+      {/* <WebGLViewer
         key="3"
         type="obj"
         src="/file.obj"
@@ -56,7 +40,8 @@ export function WebGLViewerExample() {
         onTopology={m => {
           // console.log(m);
         }}
-      />
+      /> */}
+      {/*
       <WebGLViewer
         key="33"
         type="stl"
@@ -107,7 +92,7 @@ export function WebGLViewerExample() {
           // S.downloadUrl(URL.createObjectURL(b));
         }}
       /> */}
-      <WebGLViewer
+      {/* <WebGLViewer
         key="4"
         type="stl"
         src="/hollow_of__010.stl.zlib"
@@ -133,7 +118,7 @@ export function WebGLViewerExample() {
         onZip={b => {
           // S.downloadArraybuffer(b, 'application/zlib', 'hollow_of__010.stl.zlib');
         }}
-      />
+      /> */}
     </div>
   );
 }

@@ -30,6 +30,10 @@ const OrbitControls = require('three-orbit-controls')(THREE);
 
 const fudge = 1.0;
 
+declare global {
+  const __DEV__: boolean;
+}
+
 interface IProps extends IModelViewerProps {}
 
 interface IState {
@@ -95,6 +99,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   ySprite: any;
   zSprite: any;
   plane: THREE.GridHelper;
+  axisHelper: THREE.AxesHelper;
 
   xDims: number;
   yDims: number;
@@ -148,7 +153,6 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   initGeometry(geometry: THREE.BufferGeometry | THREE.Geometry) {
     this._setupScene();
     this._setupRenderer();
-    this._setupLights();
 
     geometry.computeBoundingSphere();
     geometry.center();
@@ -163,6 +167,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     const mesh = new THREE.Mesh(geometry, material);
 
     geometry.computeBoundingBox();
+
     this.xDims = geometry.boundingBox.max.x - geometry.boundingBox.min.x;
     this.yDims = geometry.boundingBox.max.y - geometry.boundingBox.min.y;
     this.zDims = geometry.boundingBox.max.z - geometry.boundingBox.min.z;
@@ -184,6 +189,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
     this.scene.updateMatrixWorld();
 
+    this._setupLights();
     this._setupControls();
     this._setupDecorators();
 
@@ -267,16 +273,66 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     // Ambient
     this.scene.add(new THREE.AmbientLight(0xcccccc));
 
-    // Light 3
-    const light = new THREE.SpotLight(0xcccccc);
-    light.angle = 1.7;
-    light.position.set(100, 500, 100);
+    const maxGeo = this.model.geometry.boundingBox.max;
+    const minGeo = this.model.geometry.boundingBox.min;
 
     const target = new THREE.Object3D();
     target.position.set(0, 0, 0);
-    light.target = target;
 
-    this.scene.add(light);
+    const LightPosList: { x: number; y: number; z: number }[] = [
+      {
+        x: maxGeo.x * 2,
+        y: maxGeo.y * 2,
+        z: maxGeo.z * 2
+      },
+      {
+        x: minGeo.x * 2,
+        y: minGeo.y * 2,
+        z: minGeo.z * 2
+      }
+    ];
+
+    LightPosList.forEach(pos => {
+      const light = new THREE.SpotLight(0xcccccc);
+      light.castShadow = true;
+      light.angle = 180;
+      light.position.set(pos.x, pos.y, pos.z);
+
+      light.target = target;
+
+      this.scene.add(light);
+    });
+  }
+
+  _setupAxisHelper() {
+    if (this.model) {
+      if (this.axisHelper) {
+        this.group.remove(this.axisHelper);
+      }
+
+      // Get max dimention and add 50% overlap for plane
+      // with a gutter of 10
+      const geometry = this.model.geometry;
+      geometry.computeBoundingBox();
+      geometry.computeBoundingSphere();
+
+      let maxDimension: number = max([
+        this.model.geometry.boundingBox.max.x,
+        this.model.geometry.boundingBox.max.y,
+        this.model.geometry.boundingBox.max.z
+      ]);
+      maxDimension = Math.ceil(~~(maxDimension * 1.5) / 10) * 10;
+
+      const axisHelper = new THREE.AxesHelper(maxDimension);
+
+      // reset center point
+      axisHelper.position.x = 0;
+      axisHelper.position.y = 0;
+      axisHelper.position.z = 0;
+
+      this.axisHelper = axisHelper;
+      this.group.add(this.axisHelper);
+    }
   }
 
   /** 初始化控制器 */
@@ -302,6 +358,8 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     const { model } = this;
 
     this.camera = camera;
+
+    camera.add(new THREE.PointLight(0xcccccc, 2));
 
     if (model) {
       this._resetCamera();
@@ -356,6 +414,10 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     if (withBoundingBox) {
       this._setupBoundingBox();
     }
+
+    if (typeof __DEV__ !== 'undefined') {
+      this._setupAxisHelper();
+    }
   }
 
   _setupModelWireframe() {
@@ -408,7 +470,6 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       line.updateMatrix();
       const lineBox = line.geometry.boundingBox;
       const lineBoxMaxVertex = lineBox.max;
-      console.log(lineBoxMaxVertex);
 
       const { topology } = this.state;
 
