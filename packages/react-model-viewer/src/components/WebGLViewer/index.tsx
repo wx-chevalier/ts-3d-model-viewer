@@ -339,11 +339,13 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   _setupControls() {
     this._setupCamera();
 
-    this.orbitControls = new OrbitControls(this.camera, this.$dom);
-    this.orbitControls.enableKeys = false;
-    this.orbitControls.enableZoom = true;
-    this.orbitControls.enablePan = true;
-    this.orbitControls.addEventListener('change', this.renderScene.bind(this));
+    if (this.camera && this.$dom) {
+      this.orbitControls = new OrbitControls(this.camera, this.$dom);
+      this.orbitControls.enableKeys = false;
+      this.orbitControls.enableZoom = true;
+      this.orbitControls.enablePan = true;
+      this.orbitControls.addEventListener('change', this.renderScene.bind(this));
+    }
   }
 
   _setupCamera() {
