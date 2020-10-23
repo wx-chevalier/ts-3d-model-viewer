@@ -429,7 +429,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       return;
     }
 
-    this.renderer.render(this.scene, this.camera);
+    if (this.renderer) {
+      this.renderer.render(this.scene, this.camera);
+    }
   }
 
   _setupDecorators() {
