@@ -165,7 +165,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       color: this.state.modelColor,
       specular: 0x111111,
       shininess: 20,
-      side: THREE.DoubleSide,
+      // side: THREE.DoubleSide,
 
       // ***** Clipping setup (material): *****
       clippingPlanes: withClipping ? [localPlane] : [],
