@@ -372,7 +372,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       this.orbitControls.enableKeys = false;
       this.orbitControls.enableZoom = true;
       this.orbitControls.enablePan = true;
-      this.orbitControls.addEventListener('change', this.renderScene.bind(this));
+      this.orbitControls.addEventListener('change', this.renderScene);
     }
   }
 
@@ -423,7 +423,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     this.renderScene();
   }
 
-  renderScene() {
+  renderScene = () => {
     // horizontal rotation
     if (!this.group) {
       return;
@@ -432,7 +432,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     if (this.renderer) {
       this.renderer.render(this.scene, this.camera);
     }
-  }
+  };
 
   _setupDecorators() {
     const { withWireframe, withBoundingBox } = this.state;
