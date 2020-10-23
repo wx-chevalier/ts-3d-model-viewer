@@ -35,6 +35,8 @@
 
 > 模板来自于 [m-fe-libs](https://github.com/wx-chevalier/m-fe-libs)。
 
+![WebGLViewer 截图](https://s1.ax1x.com/2020/10/23/BEAXzF.md.png)
+
 # Getting Started
 
 To get a local copy up and running follow these simple steps.
