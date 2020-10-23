@@ -51,24 +51,26 @@ npm install npm@latest -g
 
 ## Installation
 
-1. Add the `<model-viewer>`
-
-```web
-<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.js"></script>
-<script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
-```
-
-2. Install NPM packages
+Install NPM packages
 
 ```sh
-npm install @m-fe/stl-viewer
+npm install @m-fe/react-model-viewer
 # or
-yarn add @m-fe/stl-viewer
+yarn add @m-fe/react-model-viewer
 ```
 
 <!-- USAGE EXAMPLES -->
 
 ## Usage
+
+### GoogleModelViewer
+
+Add the `<model-viewer>`
+
+```web
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.js"></script>
+<script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+```
 
 ```ts
 import * as React from 'react';
@@ -94,6 +96,29 @@ export default function Simple() {
     </div>
   );
 }
+```
+
+### WebGLViewer
+
+```js
+<WebGLViewer
+  key="33"
+  type="stl"
+  src="/error.stl"
+  width={600}
+  height={400}
+  onTopology={m => {
+    // console.log(m);
+  }}
+  onZip={b => {
+    // 执行解压缩
+    const modelArray: Uint8Array = pako.inflate(new Uint8Array(b));
+    console.log(modelArray);
+  }}
+  onError={err => {
+    console.log(err);
+  }}
+/>
 ```
 
 # About
