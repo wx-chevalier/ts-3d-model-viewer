@@ -24,7 +24,6 @@ import { Holdable } from '../Holdable';
 import { Switch } from '../Switch';
 
 import './index.css';
-import { unset } from 'lodash';
 
 // import { OrbitControls } from 'three-orbitcontrols-ts';
 const OrbitControls = require('three-orbit-controls')(THREE);
@@ -67,6 +66,8 @@ interface IState {
   withAxis?: boolean;
   // 是否渲染
   withMaterial?: boolean;
+  // 是否剖切
+  withClipping?: boolean;
 }
 
 export class WebGLViewer extends React.Component<IProps, IState> {
@@ -155,6 +156,25 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     }
   }
 
+  getMaterial() {
+    const { withClipping } = this.state;
+
+    const localPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 0.5);
+
+    const material = new THREE.MeshPhongMaterial({
+      color: this.state.modelColor,
+      specular: 0x111111,
+      shininess: 20,
+      side: THREE.DoubleSide,
+
+      // ***** Clipping setup (material): *****
+      clippingPlanes: withClipping ? [localPlane] : [],
+      clipShadows: true
+    });
+
+    return material;
+  }
+
   /** 初始化几何体 */
   initGeometry(geometry: THREE.BufferGeometry | THREE.Geometry) {
     this._setupScene();
@@ -165,11 +185,8 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
     geometry.applyMatrix4(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
 
-    const material = new THREE.MeshPhongMaterial({
-      color: this.state.modelColor,
-      specular: 0x111111,
-      shininess: 20
-    });
+    const material = this.getMaterial();
+
     const mesh = new THREE.Mesh(geometry, material);
 
     geometry.computeBoundingBox();
@@ -247,6 +264,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   get $dom() {
     return this.$ref.current || document.getElementById('webgl-container');
   }
+
   /** 初始化渲染器 */
   _setupRenderer() {
     const { backgroundColor } = this.props;
@@ -271,13 +289,17 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
     this.$dom.appendChild(renderer.domElement);
 
+    const Empty = Object.freeze([]) as any;
+    renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
+    renderer.localClippingEnabled = true;
+
     this.renderer = renderer;
   }
 
   /** 初始化灯光 */
   _setupLights() {
-    // Ambient
-    this.scene.add(new THREE.AmbientLight(0xcccccc));
+    // Ambient，散射灯光
+    this.scene.add(new THREE.AmbientLight(0x505050));
 
     const maxGeo = this.model.geometry.boundingBox.max;
     const minGeo = this.model.geometry.boundingBox.min;
@@ -299,7 +321,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     ];
 
     LightPosList.forEach(pos => {
-      const light = new THREE.SpotLight(0xcccccc);
+      const light = new THREE.SpotLight(0xffffff);
       light.castShadow = true;
       light.angle = 180;
       light.position.set(pos.x, pos.y, pos.z);
@@ -695,8 +717,8 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       withMaterial,
       withWireframe,
       withBoundingBox,
-      withAttr,
       showColorPicker,
+      withClipping,
       topology
     } = this.state;
 
@@ -708,11 +730,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               color={this.state.modelColor}
               onChange={({ hex }) => {
                 this.setState({ modelColor: hex }, () => {
-                  this.model.material = new THREE.MeshPhongMaterial({
-                    color: this.state.modelColor,
-                    specular: 0x111111,
-                    shininess: 20
-                  });
+                  this.model.material = this.getMaterial();
                 });
               }}
             />
@@ -750,22 +768,24 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withAttr-${this.id}`}>信息：</label>
-            <Switch
-              id={`withAttr-${this.id}`}
-              checked={withAttr}
-              onChange={e => {
-                this.setState({ withAttr: e.target.checked });
-              }}
-            />
-          </div>
-          <div className="rmv-sv-toolbar-item">
             <label htmlFor={`showColorPicker-${this.id}`}>色盘：</label>
             <Switch
               id={`showColorPicker-${this.id}`}
               checked={showColorPicker}
               onChange={e => {
                 this.setState({ showColorPicker: e.target.checked });
+              }}
+            />
+          </div>
+          <div className="rmv-sv-toolbar-item">
+            <label htmlFor={`withClipping-${this.id}`}>剖切：</label>
+            <Switch
+              id={`withClipping-${this.id}`}
+              checked={withClipping}
+              onChange={e => {
+                this.setState({ withClipping: e.target.checked }, () => {
+                  this.model.material = this.getMaterial();
+                });
               }}
             />
           </div>
@@ -841,10 +861,10 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       withMaterial,
       withWireframe,
       withBoundingBox,
-      withAttr,
       topology,
       type,
-      showColorPicker
+      showColorPicker,
+      withClipping
     } = this.state;
 
     if (!canTransformToGLTF(type)) {
@@ -932,17 +952,6 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withAttr-${this.id}`}>信息：</label>
-            <input
-              type="checkbox"
-              name={`withAttr-${this.id}`}
-              checked={withAttr}
-              onChange={e => {
-                this.setState({ withAttr: e.target.checked });
-              }}
-            />
-          </div>
-          <div className="rmv-sv-toolbar-item">
             <label htmlFor={`showColorPicker-${this.id}`}>色盘：</label>
             <input
               type="checkbox"
@@ -950,6 +959,19 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               checked={showColorPicker}
               onChange={e => {
                 this.setState({ showColorPicker: e.target.checked });
+              }}
+            />
+          </div>
+          <div className="rmv-sv-toolbar-item">
+            <label htmlFor={`withClipping-${this.id}`}>剖切：</label>
+            <input
+              type="checkbox"
+              name={`withClipping-${this.id}`}
+              checked={withClipping}
+              onChange={e => {
+                this.setState({ withClipping: e.target.checked }, () => {
+                  this.model.material = this.getMaterial();
+                });
               }}
             />
           </div>
