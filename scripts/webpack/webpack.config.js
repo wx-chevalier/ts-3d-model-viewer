@@ -1,4 +1,4 @@
-module.exports = require('@wx-fc/webpack-config')({
+module.exports = require('@m-fe/webpack-config')({
   themeVars: {
     'primary-color': '#5d4bff',
   },

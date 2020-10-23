@@ -25,11 +25,11 @@
     "clean": "yarn workspaces run clean",
     "clean:cov": "yarn workspaces run clean:cov",
     "clean:r": "rimraf ./dist/*.map && rimraf ./dist/**/*.map && rimraf ./dist/**/*.tsbuildinfo && rimraf ./dist/**/precache-*",
-    "prepublish": "npm run clean:r",
     "dev": "npm start",
     "lint": "./scripts/tools/lint_all.sh",
     "lint-staged": "lint-staged",
     "postinstall": "node ./node_modules/husky/lib/installer/bin install",
+    "prepublish": "npm run clean:r",
     "prettier-all": "prettier --write 'packages/**/src/**/*.{ts,tsx}' '!src/{assets,datas}/**'",
     "test": "yarn workspaces run test",
     "test:cov": "yarn workspaces run test:cov",
@@ -37,27 +37,28 @@
     "upgrade": "./scripts/tools/upgrade_pkgs.sh"
   },
   "devDependencies": {
+    "@m-fe/app-config": "^0.6.5",
     "@svgr/webpack": "^5.1.0",
-    "@wx-fc/app-config": "^0.3.1"
+    "prettier": "1.19.1"
   },
   "browserslist": [
-    "extends @wx-fc/browserslist-config/modern"
+    "extends @m-fe/browserslist-config/modern"
   ],
   "commitlint": {
     "extends": [
-      "@wx-fc"
+      "@m-fe"
     ]
   },
-  "prettier": "@wx-fc/prettier-config/semi",
+  "prettier": "@m-fe/prettier-config/semi",
   "remarkConfig": {
     "plugins": [
-      "@wx-fc/remark-config"
+      "@m-fe/remark-config"
     ]
   },
   "stylelint": {
     "extends": [
-      "@wx-fc/stylelint-config",
-      "@wx-fc/stylelint-config/modules"
+      "@m-fe/stylelint-config",
+      "@m-fe/stylelint-config/modules"
     ],
     "rules": {
       "font-family-no-missing-generic-family-keyword": null,

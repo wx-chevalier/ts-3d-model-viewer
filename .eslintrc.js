@@ -1,5 +1,5 @@
 module.exports = {
-  extends: '@wx-fc/eslint-config/base',
+  extends: '@m-fe/eslint-config/base',
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',

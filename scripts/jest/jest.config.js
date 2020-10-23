@@ -1,1 +1,1 @@
-module.exports = require('@wx-fc/jest-config/jest.config');
+module.exports = require('@m-fe/jest-config/jest.config');

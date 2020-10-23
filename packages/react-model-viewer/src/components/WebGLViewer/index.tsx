@@ -5,6 +5,7 @@ import TextSprite from '@seregpie/three.text-sprite';
 import each from 'lodash/each';
 import max from 'lodash/max';
 import React from 'react';
+import { SketchPicker } from 'react-color';
 import Loader from 'react-loader-spinner';
 import * as THREE from 'three';
 
@@ -23,6 +24,7 @@ import { Holdable } from '../Holdable';
 import { Switch } from '../Switch';
 
 import './index.css';
+import { unset } from 'lodash';
 
 // import { OrbitControls } from 'three-orbitcontrols-ts';
 const OrbitControls = require('three-orbit-controls')(THREE);
@@ -41,6 +43,9 @@ interface IState {
   compressType: ModelCompressType;
   topology?: ModelAttr;
   modelFile?: File;
+
+  showColorPicker?: boolean;
+  modelColor: string;
 
   cameraX?: number;
   cameraY?: number;
@@ -81,7 +86,8 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     withMaterial: true,
     withAttr: this.props.withAttr,
     withPlane: true,
-    withAxis: true
+    withAxis: true,
+    modelColor: this.props.modelColor
   };
 
   model?: THREE.Mesh;
@@ -160,7 +166,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     geometry.applyMatrix4(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
 
     const material = new THREE.MeshPhongMaterial({
-      color: this.props.modelColor,
+      color: this.state.modelColor,
       specular: 0x111111,
       shininess: 20
     });
@@ -685,10 +691,33 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   renderLoose() {
     const { width, withJoystick } = this.props;
 
-    const { withMaterial, withWireframe, withBoundingBox, withAttr, topology } = this.state;
+    const {
+      withMaterial,
+      withWireframe,
+      withBoundingBox,
+      withAttr,
+      showColorPicker,
+      topology
+    } = this.state;
 
     return (
       <div className="rmv-sv-container rmv-sv-loose-container" style={{ width }}>
+        {showColorPicker && (
+          <div className="rmv-sv-color-picker">
+            <SketchPicker
+              color={this.state.modelColor}
+              onChange={({ hex }) => {
+                this.setState({ modelColor: hex }, () => {
+                  this.model.material = new THREE.MeshPhongMaterial({
+                    color: this.state.modelColor,
+                    specular: 0x111111,
+                    shininess: 20
+                  });
+                });
+              }}
+            />
+          </div>
+        )}
         <div className="rmv-sv-toolbar">
           <div className="rmv-sv-toolbar-item">
             <label htmlFor={`withMaterial-${this.id}`}>着色：</label>
@@ -727,6 +756,16 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               checked={withAttr}
               onChange={e => {
                 this.setState({ withAttr: e.target.checked });
+              }}
+            />
+          </div>
+          <div className="rmv-sv-toolbar-item">
+            <label htmlFor={`showColorPicker-${this.id}`}>色盘：</label>
+            <Switch
+              id={`showColorPicker-${this.id}`}
+              checked={showColorPicker}
+              onChange={e => {
+                this.setState({ showColorPicker: e.target.checked });
               }}
             />
           </div>
@@ -787,6 +826,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             </div>
           )}
         </div>
+
         {this.renderAttr()}
 
         {this.renderWebGL()}
@@ -797,7 +837,15 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   render() {
     const { width, height, style, layoutType, withJoystick } = this.props;
 
-    const { withMaterial, withWireframe, withBoundingBox, withAttr, topology, type } = this.state;
+    const {
+      withMaterial,
+      withWireframe,
+      withBoundingBox,
+      withAttr,
+      topology,
+      type,
+      showColorPicker
+    } = this.state;
 
     if (!canTransformToGLTF(type)) {
       return (
@@ -830,6 +878,25 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
     return (
       <div className="rmv-sv-container" style={{ width }}>
+        {showColorPicker && (
+          <div
+            className="rmv-sv-color-picker"
+            style={{ bottom: -8, background: 'none', top: 'unset' }}
+          >
+            <SketchPicker
+              color={this.state.modelColor}
+              onChange={({ hex }) => {
+                this.setState({ modelColor: hex }, () => {
+                  this.model.material = new THREE.MeshPhongMaterial({
+                    color: this.state.modelColor,
+                    specular: 0x111111,
+                    shininess: 20
+                  });
+                });
+              }}
+            />
+          </div>
+        )}
         <div className="rmv-sv-toolbar">
           <div className="rmv-sv-toolbar-item">
             <label htmlFor={`withMaterial-${this.id}`}>着色：</label>
@@ -872,6 +939,17 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               checked={withAttr}
               onChange={e => {
                 this.setState({ withAttr: e.target.checked });
+              }}
+            />
+          </div>
+          <div className="rmv-sv-toolbar-item">
+            <label htmlFor={`showColorPicker-${this.id}`}>色盘：</label>
+            <input
+              type="checkbox"
+              name={`showColorPicker-${this.id}`}
+              checked={showColorPicker}
+              onChange={e => {
+                this.setState({ showColorPicker: e.target.checked });
               }}
             />
           </div>

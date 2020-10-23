@@ -1,7 +1,7 @@
 module.exports = {
   presets: [
     [
-      '@wx-fc',
+      '@m-fe',
       {
         import: true,
         react: true,

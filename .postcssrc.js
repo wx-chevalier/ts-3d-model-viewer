@@ -1,1 +1,1 @@
-module.exports = require('@wx-fc/postcss-config');
+module.exports = require('@m-fe/postcss-config');

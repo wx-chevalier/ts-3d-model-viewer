@@ -1,6 +1,6 @@
 {
   "name": "@m-fe/react-model-viewer",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Micro Front-end Libs",
   "repository": {
     "type": "git",
@@ -43,7 +43,8 @@
     "@seregpie/three.text-sprite": "^2.0.0",
     "lodash": "^4.17.15",
     "pako": "^1.0.11",
-    "react": "^16.13.0",
+    "react": "^17.0.1",
+    "react-color": "^2.18.1",
     "react-dom": "^16.13.0",
     "react-loader-spinner": "^3.1.5",
     "stl-viewer": "^0.12.0",
@@ -57,14 +58,15 @@
     "workerize": "^0.1.8"
   },
   "devDependencies": {
+    "@m-fe/app-config": "^0.6.5",
     "@storybook/addon-actions": "^5.3.14",
     "@storybook/addon-info": "^5.3.14",
     "@storybook/addon-links": "^5.3.14",
     "@storybook/addons": "^5.3.14",
     "@storybook/react": "^5.3.14",
     "@types/pako": "^1.0.1",
+    "@types/react-color": "^3.0.4",
     "@types/tween.js": "^18.5.1",
-    "@wx-fc/app-config": "^0.3.6",
     "cross-env": "^7.0.2",
     "rc-upload": "^3.0.0",
     "webpack": "^4.42.0",

@@ -7,7 +7,7 @@ import { WebGLViewer } from '../../src';
 export function WebGLViewerExample() {
   return (
     <div>
-      <WebGLViewer
+      {/* <WebGLViewer
         key="2"
         type="stl"
         src="/hollow_of__010.stl.zlib"
@@ -17,19 +17,20 @@ export function WebGLViewerExample() {
         onTopology={m => {
           // console.log(m);
         }}
-      />
+      /> */}
       <br />
-      {/* <WebGLViewer
+      <WebGLViewer
         key="21"
         type="stl"
         src="/stl_text.stl"
         fileName="BBB"
         width={1000}
         height={400}
+        layoutType="compact"
         onTopology={m => {
           // console.log(m);
         }}
-      /> */}
+      />
       <br />
       {/* <WebGLViewer
         key="3"

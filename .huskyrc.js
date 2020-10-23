@@ -1,1 +1,1 @@
-module.exports = require('@wx-fc/husky-config');
+module.exports = require('@m-fe/husky-config');

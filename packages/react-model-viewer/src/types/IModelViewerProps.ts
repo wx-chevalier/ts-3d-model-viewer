@@ -15,7 +15,7 @@ export interface IModelViewerProps {
   fileName?: string;
   width?: number | string;
   height?: number | string;
-  modelColor?: string | number;
+  modelColor?: string;
   backgroundColor?: string | number;
   style?: Record<string, string | number>;
   // 是否展示模型
@@ -53,7 +53,7 @@ export const defaultModelViewerProps: Partial<IModelViewerProps> = {
   autoRotate: false,
   shadowIntensity: 0,
   timeout: 30 * 1000,
-  modelColor: 0xb3b3b3,
+  modelColor: `0xb3b3b3`,
   backgroundColor: 'rgb(55,65,92)',
   withAttr: true,
   externalAttr: {},
