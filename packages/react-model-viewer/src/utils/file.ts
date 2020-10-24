@@ -1,4 +1,4 @@
-import * as S from '@m-fe/utils';
+import { arrayBufferToFile, blobToFile, readFileAsArrayBufferAsync, newUri } from '@m-fe/utils';
 import pako from 'pako';
 
 import {
@@ -52,10 +52,10 @@ export async function getFileObjFromModelSrc(props: IModelViewerProps): Promise<
         })
       ).blob();
 
-      zippedFile = S.blobToFile(blob);
+      zippedFile = blobToFile(blob);
     }
 
-    let arrayBuffer = await S.readFileAsArrayBufferAsync(zippedFile);
+    let arrayBuffer = await readFileAsArrayBufferAsync(zippedFile);
 
     // 解压缩文件
     const modelArray: Uint8Array = pako.inflate(new Uint8Array(arrayBuffer));
@@ -63,7 +63,7 @@ export async function getFileObjFromModelSrc(props: IModelViewerProps): Promise<
     // 强行释放内存
     arrayBuffer = null;
 
-    return S.arrayBufferToFile(modelArray.buffer, 'application/stl', props.fileName);
+    return arrayBufferToFile(modelArray.buffer, 'application/stl', props.fileName);
   } else {
     // 否则作为正常处理
     if (props.src instanceof File) {
@@ -77,7 +77,7 @@ export async function getFileObjFromModelSrc(props: IModelViewerProps): Promise<
           })
         ).blob();
 
-        return S.blobToFile(blob, S.newUri(props.src).filename());
+        return blobToFile(blob, newUri(props.src).filename());
       } catch (e) {
         return null;
       }

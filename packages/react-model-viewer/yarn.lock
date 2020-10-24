@@ -2669,10 +2669,10 @@
     tslint-plugin-prettier "^2.3.0"
     tslint-react "^5.0.0"
 
-"@m-fe/utils@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@m-fe/utils/-/utils-0.3.2.tgz#6db7767ba770911634b2a9a11ecce87a33a090f8"
-  integrity sha512-xmBoNxN8amxbXMfLGyCW4nZ4I1MEj+TqS9DIu1pHAHiINYFjWfmo01M4yqtuA/CU1zERRs0HxE7tfF56M+sugA==
+"@m-fe/utils@^0.3.14":
+  version "0.3.14"
+  resolved "https://registry.npm.taobao.org/@m-fe/utils/download/@m-fe/utils-0.3.14.tgz?cache=0&sync_timestamp=1603507054974&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40m-fe%2Futils%2Fdownload%2F%40m-fe%2Futils-0.3.14.tgz#244506f2b607deb375814a9eb1f377f540f3df6e"
+  integrity sha1-JEUG8rYH3rN1gUqesfN39UDz324=
   dependencies:
     dayjs "^1.8.26"
     fast-deep-equal "^2.0.1"
@@ -2680,7 +2680,6 @@
     lodash.chunk "^4.2.0"
     lodash.upperfirst "^4.3.1"
     urijs "^1.19.2"
-    uuid "^3.3.3"
     uuid-random "^1.3.2"
 
 "@m-fe/webpack-config@^0.1.13":
@@ -15324,6 +15323,15 @@ react-textarea-autosize@^7.1.0:
     "@babel/runtime" "^7.1.2"
     prop-types "^15.6.0"
 
+react@^16.13.0:
+  version "16.14.0"
+  resolved "https://registry.npm.taobao.org/react/download/react-16.14.0.tgz?cache=0&sync_timestamp=1603367818828&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact%2Fdownload%2Freact-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
+  integrity sha1-lNd23dCqo32j7aj8W2sYpMmjEU0=
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+
 react@^16.8.3:
   version "16.13.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.13.0.tgz#d046eabcdf64e457bbeed1e792e235e1b9934cf7"
@@ -15332,14 +15340,6 @@ react@^16.8.3:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-
-react@^17.0.1:
-  version "17.0.1"
-  resolved "https://registry.npm.taobao.org/react/download/react-17.0.1.tgz?cache=0&sync_timestamp=1603367818828&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact%2Fdownload%2Freact-17.0.1.tgz#6e0600416bd57574e3f86d92edba3d9008726127"
-  integrity sha1-bgYAQWvVdXTj+G2S7bo9kAhyYSc=
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
 
 reactcss@^1.2.0:
   version "1.2.3"

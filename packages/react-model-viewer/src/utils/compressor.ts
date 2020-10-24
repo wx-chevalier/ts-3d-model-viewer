@@ -1,4 +1,4 @@
-import * as S from '@m-fe/utils';
+import { readFileAsArrayBufferAsync } from '@m-fe/utils';
 import UZIP from 'pako';
 import workerize from 'workerize';
 
@@ -12,7 +12,7 @@ const workerScript = `
 `;
 
 export async function deflate(modelFile: File) {
-  let buffer = await S.readFileAsArrayBufferAsync(modelFile);
+  let buffer = await readFileAsArrayBufferAsync(modelFile);
   let intArray: Uint8Array = new Uint8Array(buffer);
 
   // 执行压缩操作

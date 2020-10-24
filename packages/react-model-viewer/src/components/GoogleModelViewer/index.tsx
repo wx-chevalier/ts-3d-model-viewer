@@ -1,4 +1,4 @@
-import * as S from '@m-fe/utils';
+import { genId, readFileAsArrayBufferAsync } from '@m-fe/utils';
 import UZIP from 'pako';
 import * as React from 'react';
 import Loader from 'react-loader-spinner';
@@ -42,7 +42,7 @@ export class GoogleModelViewer extends React.Component<
 > {
   static defaultProps = { ...defaultModelViewerProps };
 
-  id = S.genId();
+  id = genId();
   $ref: any;
 
   state: GoogleModelViewerState = {
@@ -136,7 +136,7 @@ export class GoogleModelViewer extends React.Component<
     const { modelFile } = this.state;
 
     if (modelFile && onZip && src && this.state.compressType === 'none') {
-      const buffer = await S.readFileAsArrayBufferAsync(modelFile);
+      const buffer = await readFileAsArrayBufferAsync(modelFile);
       const intArray: Uint8Array = new Uint8Array(buffer);
 
       const zippedFile = UZIP.deflate(intArray);

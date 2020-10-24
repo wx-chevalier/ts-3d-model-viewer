@@ -1,6 +1,5 @@
 import pako from 'pako';
 import * as React from 'react';
-import * as S from '@m-fe/utils';
 
 import { WebGLViewer } from '../../src';
 

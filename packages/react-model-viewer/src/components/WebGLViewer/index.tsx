@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-require-imports */
-import * as S from '@m-fe/utils';
+import { ellipsis, genId, toFixedNumber } from '@m-fe/utils';
 import TextSprite from '@seregpie/three.text-sprite';
 import each from 'lodash/each';
 import max from 'lodash/max';
@@ -71,7 +71,7 @@ interface IState {
 }
 
 export class WebGLViewer extends React.Component<IProps, IState> {
-  id = S.genId();
+  id = genId();
   static defaultProps = { ...defaultModelViewerProps };
 
   $ref = React.createRef<HTMLDivElement>();
@@ -510,7 +510,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
           fillStyle: 'rgb(255, 153, 0)',
           fontSize: 2.5,
           fontStyle: 'italic',
-          text: `${S.toFixedNumber(len, 2)} mm`
+          text: `${toFixedNumber(len, 2)} mm`
         });
 
       this.xSprite = genSprite(topology.sizeX);
@@ -686,18 +686,18 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       withAttr &&
       topology && (
         <div className="rmv-gmv-attr-modal">
-          {fileName && <div className="item">名称：{fileName}</div>}
+          {fileName && <div className="item">名称：{ellipsis(fileName)}</div>}
           <div className="rmv-gmv-attr-modal-row">
             <div className="item">
-              尺寸：{S.toFixedNumber(topology.sizeX)} * {S.toFixedNumber(topology.sizeY)} *{' '}
-              {S.toFixedNumber(topology.sizeZ)} {' mm'}
+              尺寸：{toFixedNumber(topology.sizeX)} * {toFixedNumber(topology.sizeY)} *{' '}
+              {toFixedNumber(topology.sizeZ)} {' mm'}
             </div>
             <div className="item">
-              体积：{S.toFixedNumber(topology.volume)}
+              体积：{toFixedNumber(topology.volume)}
               {' mm³'}
             </div>
             <div className="item">
-              面积：{S.toFixedNumber(topology.area, 2)}
+              面积：{toFixedNumber(topology.area, 2)}
               {' mm²'}
             </div>
             <div className="item">面片：{topology.triangleCnt} 个</div>
