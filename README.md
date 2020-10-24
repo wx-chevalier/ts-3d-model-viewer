@@ -11,7 +11,7 @@
     <img src="https://s2.ax1x.com/2020/03/10/8iEuqO.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">@m-fe/model-viewer</h3>
+  <h3 align="center">@m-fe/react-model-viewer</h3>
 
   <p align="center">
     STL 3D 预览
@@ -40,16 +40,6 @@
 # Getting Started
 
 To get a local copy up and running follow these simple steps.
-
-## Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-
-- npm
-
-```sh
-npm install npm@latest -g
-```
 
 ## Installation
 
