@@ -4,7 +4,7 @@
   "description": "Micro Front-end Libs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/FE-Kits/3d-model-viewer"
+    "url": "https://github.com/wx-chevalier/3d-model-viewer"
   },
   "author": "wx-chevalier@github",
   "license": "MIT",

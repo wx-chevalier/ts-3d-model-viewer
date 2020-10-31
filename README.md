@@ -7,7 +7,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/FE-Kits/3d-model-viewer">
+  <a href="https://github.com/wx-chevalier/3d-model-viewer">
     <img src="https://s2.ax1x.com/2020/03/10/8iEuqO.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -16,14 +16,14 @@
   <p align="center">
     STL 3D 预览
     <br />
-    <a href="https://github.com/FE-Kits/3d-model-viewer"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/wx-chevalier/3d-model-viewer"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/FE-Kits/3d-model-viewer">View Demo</a>
+    <a href="https://github.com/wx-chevalier/3d-model-viewer">View Demo</a>
     ·
-    <a href="https://github.com/FE-Kits/3d-model-viewer/issues">Report Bug</a>
+    <a href="https://github.com/wx-chevalier/3d-model-viewer/issues">Report Bug</a>
     ·
-    <a href="https://github.com/FE-Kits/3d-model-viewer/issues">Request Feature</a>
+    <a href="https://github.com/wx-chevalier/3d-model-viewer/issues">Request Feature</a>
   </p>
 </p>
 
@@ -119,7 +119,7 @@ export default function Simple() {
 
 ## Roadmap
 
-See the [open issues](https://github.com/FE-Kits/3d-model-viewer/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/wx-chevalier/3d-model-viewer/issues) for a list of proposed features (and known issues).
 
 <!-- CONTRIBUTING -->
 
@@ -160,13 +160,13 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/FE-Kits/3d-model-viewer.svg?style=flat-square
-[contributors-url]: https://github.com/FE-Kits/3d-model-viewer/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/FE-Kits/3d-model-viewer.svg?style=flat-square
-[forks-url]: https://github.com/FE-Kits/3d-model-viewer/network/members
-[stars-shield]: https://img.shields.io/github/stars/FE-Kits/3d-model-viewer.svg?style=flat-square
-[stars-url]: https://github.com/FE-Kits/3d-model-viewer/stargazers
-[issues-shield]: https://img.shields.io/github/issues/FE-Kits/3d-model-viewer.svg?style=flat-square
-[issues-url]: https://github.com/FE-Kits/3d-model-viewer/issues
-[license-shield]: https://img.shields.io/github/license/FE-Kits/3d-model-viewer.svg?style=flat-square
-[license-url]: https://github.com/FE-Kits/3d-model-viewer/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/wx-chevalier/3d-model-viewer.svg?style=flat-square
+[contributors-url]: https://github.com/wx-chevalier/3d-model-viewer/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/wx-chevalier/3d-model-viewer.svg?style=flat-square
+[forks-url]: https://github.com/wx-chevalier/3d-model-viewer/network/members
+[stars-shield]: https://img.shields.io/github/stars/wx-chevalier/3d-model-viewer.svg?style=flat-square
+[stars-url]: https://github.com/wx-chevalier/3d-model-viewer/stargazers
+[issues-shield]: https://img.shields.io/github/issues/wx-chevalier/3d-model-viewer.svg?style=flat-square
+[issues-url]: https://github.com/wx-chevalier/3d-model-viewer/issues
+[license-shield]: https://img.shields.io/github/license/wx-chevalier/3d-model-viewer.svg?style=flat-square
+[license-url]: https://github.com/wx-chevalier/3d-model-viewer/blob/master/LICENSE.txt
