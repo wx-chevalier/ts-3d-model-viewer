@@ -151,6 +151,8 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 - [webgl-3d-viewer](http://piscis.github.io/webgl-3d-viewer/example/)
 
+- 参考设计：[Sketchfab](https://sketchfab.com/3d-models/lost-heritage-f8d4561b75c64769b4c88a3478b5a184)
+
 ### Studio
 
 - [jsketcher](https://github.com/xibyte/jsketcher): JS.Sketcher is a parametric 2D and 3D CAD modeler written in pure javascript.
