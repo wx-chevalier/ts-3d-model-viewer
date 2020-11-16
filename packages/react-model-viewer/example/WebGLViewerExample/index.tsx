@@ -1,4 +1,4 @@
-import pako from 'pako';
+import * as S from '@m-fe/utils';
 import * as React from 'react';
 
 import { WebGLViewer } from '../../src';
@@ -25,8 +25,12 @@ export function WebGLViewerExample() {
         fileName="BBB"
         width={1000}
         height={400}
+        layoutType="compact"
         onTopology={m => {
           // console.log(m);
+        }}
+        onSnapshot={dataUrl => {
+          S.downloadUrl(dataUrl as string);
         }}
       />
       <br />

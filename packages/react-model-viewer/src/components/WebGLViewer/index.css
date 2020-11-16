@@ -10,6 +10,22 @@
   background: black;
   color: white;
   position: relative;
+  align-items: center;
+}
+
+.rmv-sv-toolbar .rmv-sv-toolbar-left {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 16px;
+}
+
+.rmv-sv-toolbar .rmv-sv-toolbar-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 1 1 1px;
+  padding-right: 21px;
 }
 
 .rmv-sv-toolbar-item {

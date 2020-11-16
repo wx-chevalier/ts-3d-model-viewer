@@ -38,7 +38,7 @@ export interface IModelViewerProps {
   layoutType: 'compact' | 'loose';
 
   onTopology?: (modelAttr: ModelAttr) => void;
-  onSnapshot?: (blob: Blob) => void;
+  onSnapshot?: (blobOrDataUrl: Blob | string) => void;
   onZip?: (zippedArrayBuffer: ArrayBuffer) => void;
   onLoad?: () => void;
   onError?: (err: Error) => void;

@@ -4,6 +4,8 @@ import { ellipsis, genId, toFixedNumber } from '@m-fe/utils';
 import TextSprite from '@seregpie/three.text-sprite';
 import each from 'lodash/each';
 import max from 'lodash/max';
+import Tooltip from 'rc-tooltip';
+import 'rc-tooltip/assets/bootstrap.css';
 import React from 'react';
 import { SketchPicker } from 'react-color';
 import Loader from 'react-loader-spinner';
@@ -19,6 +21,7 @@ import {
 import { deflate } from '../../utils/compressor';
 import { getFileObjFromModelSrc, getModelCompressType, getModelType } from '../../utils/file';
 import { calcTopology } from '../../utils/mesh';
+import { ScreenshotObject } from '../../utils/screenshot';
 import { canTransformToGLTF, transformToGLTF } from '../../utils/GLTF';
 import { Holdable } from '../Holdable';
 import { Switch } from '../Switch';
@@ -275,7 +278,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
     const height = this.$dom.clientHeight;
     const width = this.$dom.clientWidth;
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      preserveDrawingBuffer: true
+    });
     const devicePixelRatio = window.devicePixelRatio || 1;
 
     renderer.setClearColor(new THREE.Color(backgroundColor), 1);
@@ -857,7 +864,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   }
 
   render() {
-    const { width, height, style, layoutType, withJoystick } = this.props;
+    const { width, height, style, layoutType, withJoystick, onSnapshot } = this.props;
 
     const {
       withMaterial,
@@ -894,10 +901,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     }
 
     if (layoutType === 'loose') {
-      // 宽松方式
+      // 宽松方式，即左右布局
       return this.renderLoose();
     }
 
+    // 非宽松方式，即上下布局
     return (
       <div className="rmv-sv-container" style={{ width }}>
         {showColorPicker && (
@@ -920,62 +928,105 @@ export class WebGLViewer extends React.Component<IProps, IState> {
           </div>
         )}
         <div className="rmv-sv-toolbar">
-          <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withMaterial-${this.id}`}>着色：</label>
-            <input
-              type="checkbox"
-              name={`withMaterial-${this.id}`}
-              checked={withMaterial}
-              onChange={e => {
-                this.onMaterialChange(e.target.checked);
-              }}
-            />
+          <div className="rmv-sv-toolbar-left">
+            <div className="rmv-sv-toolbar-item">
+              <label htmlFor={`withMaterial-${this.id}`}>着色：</label>
+              <input
+                type="checkbox"
+                name={`withMaterial-${this.id}`}
+                checked={withMaterial}
+                onChange={e => {
+                  this.onMaterialChange(e.target.checked);
+                }}
+              />
+            </div>
+            <div className="rmv-sv-toolbar-item">
+              <label htmlFor={`withWireframe-${this.id}`}>线框：</label>
+              <input
+                type="checkbox"
+                name={`withWireframe-${this.id}`}
+                checked={withWireframe}
+                onChange={e => {
+                  this.onWireframeChange(e.target.checked);
+                }}
+              />
+            </div>
+            <div className="rmv-sv-toolbar-item">
+              <label htmlFor={`withBoundingBox-${this.id}`}>框体：</label>
+              <input
+                type="checkbox"
+                name={`withBoundingBox-${this.id}`}
+                checked={withBoundingBox}
+                onChange={e => {
+                  this.onBoundingBoxChange(e.target.checked);
+                }}
+              />
+            </div>
+            <div className="rmv-sv-toolbar-item">
+              <label htmlFor={`showColorPicker-${this.id}`}>色盘：</label>
+              <input
+                type="checkbox"
+                name={`showColorPicker-${this.id}`}
+                checked={showColorPicker}
+                onChange={e => {
+                  this.setState({ showColorPicker: e.target.checked });
+                }}
+              />
+            </div>
+            <div className="rmv-sv-toolbar-item">
+              <label htmlFor={`withClipping-${this.id}`}>剖切：</label>
+              <input
+                type="checkbox"
+                name={`withClipping-${this.id}`}
+                checked={withClipping}
+                onChange={e => {
+                  this.setState({ withClipping: e.target.checked }, () => {
+                    this.model.material = this.getMaterial();
+                  });
+                }}
+              />
+            </div>
           </div>
-          <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withWireframe-${this.id}`}>线框：</label>
-            <input
-              type="checkbox"
-              name={`withWireframe-${this.id}`}
-              checked={withWireframe}
-              onChange={e => {
-                this.onWireframeChange(e.target.checked);
-              }}
-            />
-          </div>
-          <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withBoundingBox-${this.id}`}>框体：</label>
-            <input
-              type="checkbox"
-              name={`withBoundingBox-${this.id}`}
-              checked={withBoundingBox}
-              onChange={e => {
-                this.onBoundingBoxChange(e.target.checked);
-              }}
-            />
-          </div>
-          <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`showColorPicker-${this.id}`}>色盘：</label>
-            <input
-              type="checkbox"
-              name={`showColorPicker-${this.id}`}
-              checked={showColorPicker}
-              onChange={e => {
-                this.setState({ showColorPicker: e.target.checked });
-              }}
-            />
-          </div>
-          <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withClipping-${this.id}`}>剖切：</label>
-            <input
-              type="checkbox"
-              name={`withClipping-${this.id}`}
-              checked={withClipping}
-              onChange={e => {
-                this.setState({ withClipping: e.target.checked }, () => {
-                  this.model.material = this.getMaterial();
-                });
-              }}
-            />
+          <div className="rmv-sv-toolbar-right">
+            {/** 是否显示截图 */}
+            {onSnapshot && (
+              <Tooltip placement="left" overlay="点击生成截图">
+                <svg
+                  viewBox="0 0 1024 1024"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  p-id="671"
+                  width="20px"
+                  height="20px"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                    try {
+                      new ScreenshotObject(
+                        this.model,
+                        this.camera,
+                        this.renderer,
+                        (dataUrl: string) => {
+                          onSnapshot(dataUrl);
+                        }
+                      );
+                    } catch (_) {
+                      console.error(_);
+                    }
+                  }}
+                >
+                  <path
+                    d="M970.88 803.2V375.04a98.56 98.56 0 0 0-97.92-97.92h-152.32L696.32 192a64 64 0 0 0-64-43.52H393.6a64 64 0 0 0-64 43.52l-26.24 84.48H151.04A97.92 97.92 0 0 0 53.12 375.04v428.8a97.92 97.92 0 0 0 97.92 97.92h721.92a98.56 98.56 0 0 0 97.92-98.56z m-64 0a33.92 33.92 0 0 1-33.92 33.92H151.04a33.92 33.92 0 0 1-33.92-33.92V375.04a33.92 33.92 0 0 1 33.92-33.92h176.64A32 32 0 0 0 359.04 320L384 211.2a14.08 14.08 0 0 1 7.04 0h243.84L665.6 320a32 32 0 0 0 30.72 23.68h176.64a33.92 33.92 0 0 1 33.92 33.92z"
+                    fill="#ffffff"
+                    p-id="672"
+                  />
+                  <path
+                    d="M284.16 423.04H209.28a16 16 0 0 0 0 32h74.88a16 16 0 0 0 0-32zM512 384a188.16 188.16 0 1 0 188.16 192A188.8 188.8 0 0 0 512 384z m0 345.6A156.16 156.16 0 1 1 668.16 576 156.8 156.8 0 0 1 512 729.6z"
+                    fill="#ffffff"
+                    p-id="673"
+                  />
+                </svg>
+              </Tooltip>
+            )}
           </div>
         </div>
         {this.renderAttr()}
