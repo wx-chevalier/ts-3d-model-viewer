@@ -644,10 +644,13 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     if (selected) {
       this._setupBoundingBox();
     } else {
-      this.group.remove(this.boundingBox);
-      this.group.remove(this.xSprite);
-      this.group.remove(this.ySprite);
-      this.group.remove(this.zSprite);
+      if (this.group) {
+        this.group.remove(this.boundingBox);
+        this.group.remove(this.xSprite);
+        this.group.remove(this.ySprite);
+        this.group.remove(this.zSprite);
+      }
+
       this.boundingBox = null;
       this.xSprite = null;
       this.ySprite = null;
