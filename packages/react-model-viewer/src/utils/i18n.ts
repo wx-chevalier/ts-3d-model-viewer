@@ -43,7 +43,8 @@ const enMessages = {
   尺寸: 'Size',
   体积: 'Volume',
   面积: 'Area',
-  面片: 'Facets'
+  面片: 'Facets',
+  个: ''
 };
 
 // 这里的 id 就是中文键名

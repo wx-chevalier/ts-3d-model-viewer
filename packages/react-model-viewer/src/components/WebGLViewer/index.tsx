@@ -719,7 +719,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               {' mm²'}
             </div>
             <div className="item">
-              {i18nFormat('面片')}：{topology.triangleCnt} 个
+              {i18nFormat('面片')}：{topology.triangleCnt} {i18nFormat('个')}
             </div>
             {Object.keys(externalAttr).map(k => (
               <div className="item" key={k}>
