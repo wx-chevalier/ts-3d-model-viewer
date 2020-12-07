@@ -105,6 +105,7 @@
   position: relative;
   height: 90px;
   margin-top: 8px;
+  width: 100%;
 }
 
 .rmv-sv-loose-container .rmv-sv-joystick .rmv-sv-joystick-center {

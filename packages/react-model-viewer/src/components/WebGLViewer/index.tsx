@@ -20,6 +20,7 @@ import {
 } from '../../types';
 import { deflate } from '../../utils/compressor';
 import { getFileObjFromModelSrc, getModelCompressType, getModelType } from '../../utils/file';
+import { getLocale, i18nFormat, setLocale } from '../../utils/i18n';
 import { calcTopology } from '../../utils/mesh';
 import { ScreenshotObject } from '../../utils/screenshot';
 import { canTransformToGLTF, transformToGLTF } from '../../utils/GLTF';
@@ -71,6 +72,8 @@ interface IState {
   withMaterial?: boolean;
   // 是否剖切
   withClipping?: boolean;
+  // 是否英文
+  withLanguageSelector?: boolean;
 }
 
 export class WebGLViewer extends React.Component<IProps, IState> {
@@ -91,7 +94,8 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     withAttr: this.props.withAttr,
     withPlane: true,
     withAxis: true,
-    modelColor: this.props.modelColor
+    modelColor: this.props.modelColor,
+    withLanguageSelector: getLocale() === 'en'
   };
 
   model?: THREE.Mesh;
@@ -696,21 +700,27 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       withAttr &&
       topology && (
         <div className="rmv-gmv-attr-modal">
-          {fileName && <div className="item">名称：{ellipsis(fileName)}</div>}
+          {fileName && (
+            <div className="item">
+              {i18nFormat('名称')}：{ellipsis(fileName)}
+            </div>
+          )}
           <div className="rmv-gmv-attr-modal-row">
             <div className="item">
-              尺寸：{toFixedNumber(topology.sizeX)} * {toFixedNumber(topology.sizeY)} *{' '}
-              {toFixedNumber(topology.sizeZ)} {' mm'}
+              {i18nFormat('尺寸')}：{toFixedNumber(topology.sizeX)} *{' '}
+              {toFixedNumber(topology.sizeY)} * {toFixedNumber(topology.sizeZ)} {' mm'}
             </div>
             <div className="item">
-              体积：{toFixedNumber(topology.volume)}
+              {i18nFormat('体积')}：{toFixedNumber(topology.volume)}
               {' mm³'}
             </div>
             <div className="item">
-              面积：{toFixedNumber(topology.area, 2)}
+              {i18nFormat('面积')}：{toFixedNumber(topology.area, 2)}
               {' mm²'}
             </div>
-            <div className="item">面片：{topology.triangleCnt} 个</div>
+            <div className="item">
+              {i18nFormat('面片')}：{topology.triangleCnt} 个
+            </div>
             {Object.keys(externalAttr).map(k => (
               <div className="item" key={k}>
                 {k}：{externalAttr[k]}
@@ -731,6 +741,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       withBoundingBox,
       showColorPicker,
       withClipping,
+      withLanguageSelector,
       topology
     } = this.state;
 
@@ -748,9 +759,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
         )}
-        <div className="rmv-sv-toolbar">
+        <div className="rmv-sv-toolbar" style={{ width: withLanguageSelector ? 150 : 100 }}>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withMaterial-${this.id}`}>着色：</label>
+            <label htmlFor={`withMaterial-${this.id}`}>{i18nFormat('着色')}：</label>
             <Switch
               id={`withMaterial-${this.id}`}
               checked={withMaterial}
@@ -760,7 +771,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withWireframe-${this.id}`}>线框：</label>
+            <label htmlFor={`withWireframe-${this.id}`}>{i18nFormat('线框')}：</label>
             <Switch
               id={`withWireframe-${this.id}`}
               checked={withWireframe}
@@ -770,7 +781,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withBoundingBox-${this.id}`}>框体：</label>
+            <label htmlFor={`withBoundingBox-${this.id}`}>{i18nFormat('框体')}：</label>
             <Switch
               id={`withBoundingBox-${this.id}`}
               checked={withBoundingBox}
@@ -780,7 +791,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`showColorPicker-${this.id}`}>色盘：</label>
+            <label htmlFor={`showColorPicker-${this.id}`}>{i18nFormat('色盘')}：</label>
             <Switch
               id={`showColorPicker-${this.id}`}
               checked={showColorPicker}
@@ -790,7 +801,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withClipping-${this.id}`}>剖切：</label>
+            <label htmlFor={`withClipping-${this.id}`}>{i18nFormat('剖切')}：</label>
             <Switch
               id={`withClipping-${this.id}`}
               checked={withClipping}
@@ -798,6 +809,22 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                 this.setState({ withClipping: e.target.checked }, () => {
                   this.model.material = this.getMaterial();
                 });
+              }}
+            />
+          </div>
+          <div className="rmv-sv-toolbar-item">
+            <label htmlFor={`withLanguageSelector-${this.id}`}>中/EN：</label>
+            <Switch
+              id={`withLanguageSelector-${this.id}`}
+              checked={withLanguageSelector}
+              onChange={e => {
+                if (e.target.checked) {
+                  setLocale('en');
+                } else {
+                  setLocale('zh');
+                }
+
+                this.setState({ withLanguageSelector: e.target.checked });
               }}
             />
           </div>
