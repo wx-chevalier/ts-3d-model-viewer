@@ -11,25 +11,57 @@
   color: white;
   position: relative;
   align-items: center;
+  overflow-x: auto;
 }
 
 .rmv-sv-toolbar .rmv-sv-toolbar-left {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
-  padding-left: 16px;
+  flex: 1 1 1px;
 }
 
 .rmv-sv-toolbar .rmv-sv-toolbar-right {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  flex: 1 1 1px;
-  padding-right: 21px;
 }
 
 .rmv-sv-toolbar-item {
-  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rmv-sv-toolbar-item label:last-child {
+  margin-left: 4px;
+}
+
+.rmv-sv-compact-container .rmv-gmv-attr-modal {
+  position: absolute;
+  bottom: 0;
+  height: 50px;
+  width: 100%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  color: rgba(51, 51, 51, 1);
+  padding: 0 8px;
+  box-sizing: border-box;
+  background-color: black;
+}
+
+.rmv-sv-compact-container .rmv-gmv-attr-modal .rmv-gmv-attr-modal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.rmv-sv-compact-container .rmv-gmv-attr-modal .rmv-gmv-attr-modal-row .item {
+  flex: 1 1 1px;
 }
 
 .rmv-sv-loose-container {
@@ -48,21 +80,21 @@
   align-items: flex-start;
   color: rgba(51, 51, 51, 1);
   padding: 0 8px;
-  padding-left: 20px;
   box-sizing: border-box;
 }
 
 .rmv-sv-loose-container .rmv-gmv-attr-modal-row {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .rmv-sv-loose-container .rmv-gmv-attr-modal .item {
   color: rgba(51, 51, 51, 1);
   font-size: 14px;
   line-height: 22px;
-  margin-right: 16px;
+  flex: 1 1 1px;
 }
 
 .rmv-sv-loose-container .rmv-sv-toolbar {

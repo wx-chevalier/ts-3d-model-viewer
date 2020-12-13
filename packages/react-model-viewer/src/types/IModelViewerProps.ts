@@ -23,6 +23,8 @@ export interface IModelViewerProps {
   // 是否展示属性浮窗
   withAttr?: boolean;
   externalAttr?: Record<string, string>;
+  // 是否展示右侧摄像头按钮
+  showCameraIcon?: boolean;
 
   cameraControls?: boolean;
   autoplay?: boolean;
@@ -61,5 +63,6 @@ export const defaultModelViewerProps: Partial<IModelViewerProps> = {
   layoutType: window.innerWidth > 600 ? 'loose' : 'compact',
   cameraX: 0,
   cameraY: 0,
-  cameraZ: 0
+  cameraZ: 0,
+  showCameraIcon: false
 };

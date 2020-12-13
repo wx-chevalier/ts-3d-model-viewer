@@ -25,7 +25,7 @@ export function WebGLViewerExample() {
         fileName="BBB"
         width={600}
         height={400}
-        layoutType="loose"
+        layoutType="compact"
         onTopology={m => {
           // console.log(m);
         }}

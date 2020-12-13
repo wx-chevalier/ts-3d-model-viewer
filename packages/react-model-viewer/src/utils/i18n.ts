@@ -44,6 +44,7 @@ const enMessages = {
   体积: 'Volume',
   面积: 'Area',
   面片: 'Facets',
+  破损: 'Broken',
   个: ''
 };
 
