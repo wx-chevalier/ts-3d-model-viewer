@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/build/three.min.js';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader';

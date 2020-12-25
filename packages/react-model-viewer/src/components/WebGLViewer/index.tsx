@@ -9,7 +9,7 @@ import 'rc-tooltip/assets/bootstrap.css';
 import React from 'react';
 import { SketchPicker } from 'react-color';
 import Loader from 'react-loader-spinner';
-import * as THREE from 'three';
+import * as THREE from 'three/build/three.min.js';
 
 import {
   IModelViewerProps,

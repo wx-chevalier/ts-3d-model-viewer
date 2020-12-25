@@ -19,3 +19,7 @@ declare module 'three-orbit-controls';
 declare module '@seregpie/three.text-sprite';
 
 declare module 'workerize';
+
+declare module 'three/build/three.min.js' {
+  export * from 'three';
+}

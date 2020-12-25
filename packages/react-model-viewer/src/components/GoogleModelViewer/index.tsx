@@ -2,7 +2,7 @@ import { genId, readFileAsArrayBufferAsync } from '@m-fe/utils';
 import UZIP from 'pako';
 import * as React from 'react';
 import Loader from 'react-loader-spinner';
-import * as THREE from 'three';
+import * as THREE from 'three/build/three.min.js';
 
 import {
   IModelViewerProps,
