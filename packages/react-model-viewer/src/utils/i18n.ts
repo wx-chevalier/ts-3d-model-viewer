@@ -1,3 +1,5 @@
+import { get } from '@m-fe/utils';
+
 let locale: string;
 
 export function getDefaultLocale() {
@@ -16,10 +18,12 @@ export function setLocale(_i: string) {
   let i = _i;
 
   if (!i) {
-    i = localStorage.getItem('3d_model_viewer_lang') || getDefaultLocale();
+    i = get(null, () => localStorage.getItem('3d_model_viewer_lang')) || getDefaultLocale();
   }
 
-  localStorage.setItem('3d_model_viewer_lang', i);
+  if (localStorage) {
+    localStorage.setItem('3d_model_viewer_lang', i);
+  }
 
   locale = i;
 }
@@ -27,7 +31,7 @@ export function setLocale(_i: string) {
 export function getLocale() {
   if (!locale) {
     // en/en, zh/zh
-    return localStorage.getItem('3d_model_viewer_lang') || getDefaultLocale();
+    return get(null, () => localStorage.getItem('3d_model_viewer_lang')) || getDefaultLocale();
   }
   return locale;
 }
