@@ -309,38 +309,40 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
   /** 初始化灯光 */
   _setupLights() {
-    // Ambient，散射灯光
-    this.scene.add(new THREE.AmbientLight(0x505050));
+    if (this.model) {
+      // Ambient，散射灯光
+      this.scene.add(new THREE.AmbientLight(0x505050));
 
-    const maxGeo = this.model.geometry.boundingBox.max;
-    const minGeo = this.model.geometry.boundingBox.min;
+      const maxGeo = this.model.geometry.boundingBox.max;
+      const minGeo = this.model.geometry.boundingBox.min;
 
-    const target = new THREE.Object3D();
-    target.position.set(0, 0, 0);
+      const target = new THREE.Object3D();
+      target.position.set(0, 0, 0);
 
-    const LightPosList: { x: number; y: number; z: number }[] = [
-      {
-        x: maxGeo.x * 2,
-        y: maxGeo.y * 2,
-        z: maxGeo.z * 2
-      },
-      {
-        x: minGeo.x * 2,
-        y: minGeo.y * 2,
-        z: minGeo.z * 2
-      }
-    ];
+      const LightPosList: { x: number; y: number; z: number }[] = [
+        {
+          x: maxGeo.x * 2,
+          y: maxGeo.y * 2,
+          z: maxGeo.z * 2
+        },
+        {
+          x: minGeo.x * 2,
+          y: minGeo.y * 2,
+          z: minGeo.z * 2
+        }
+      ];
 
-    LightPosList.forEach(pos => {
-      const light = new THREE.SpotLight(0xffffff);
-      light.castShadow = true;
-      light.angle = 180;
-      light.position.set(pos.x, pos.y, pos.z);
+      LightPosList.forEach(pos => {
+        const light = new THREE.SpotLight(0xffffff);
+        light.castShadow = true;
+        light.angle = 180;
+        light.position.set(pos.x, pos.y, pos.z);
 
-      light.target = target;
+        light.target = target;
 
-      this.scene.add(light);
-    });
+        this.scene.add(light);
+      });
+    }
   }
 
   _setupAxisHelper() {
@@ -352,25 +354,28 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       // Get max dimention and add 50% overlap for plane
       // with a gutter of 10
       const geometry = this.model.geometry;
-      geometry.computeBoundingBox();
-      geometry.computeBoundingSphere();
 
-      let maxDimension: number = max([
-        this.model.geometry.boundingBox.max.x,
-        this.model.geometry.boundingBox.max.y,
-        this.model.geometry.boundingBox.max.z
-      ]);
-      maxDimension = Math.ceil(~~(maxDimension * 1.5) / 10) * 10;
+      if (geometry) {
+        geometry.computeBoundingBox();
+        geometry.computeBoundingSphere();
 
-      const axisHelper = new THREE.AxesHelper(maxDimension);
+        let maxDimension: number = max([
+          geometry.boundingBox.max.x,
+          geometry.boundingBox.max.y,
+          geometry.boundingBox.max.z
+        ]);
+        maxDimension = Math.ceil(~~(maxDimension * 1.5) / 10) * 10;
 
-      // reset center point
-      axisHelper.position.x = 0;
-      axisHelper.position.y = 0;
-      axisHelper.position.z = 0;
+        const axisHelper = new THREE.AxesHelper(maxDimension);
 
-      this.axisHelper = axisHelper;
-      this.group.add(this.axisHelper);
+        // reset center point
+        axisHelper.position.x = 0;
+        axisHelper.position.y = 0;
+        axisHelper.position.z = 0;
+
+        this.axisHelper = axisHelper;
+        this.group.add(this.axisHelper);
+      }
     }
   }
 
@@ -408,18 +413,23 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   }
 
   private _resetCamera() {
-    const geometry = this.model.geometry;
-    geometry.computeBoundingSphere();
+    if (this.model) {
+      const geometry = this.model.geometry;
 
-    const g = this.model.geometry.boundingSphere.radius;
-    const dist = g * 3;
+      if (geometry) {
+        geometry.computeBoundingSphere();
 
-    // fudge factor so you can see the boundaries
-    this.camera.position.set(
-      this.props.cameraX,
-      this.props.cameraY,
-      this.props.cameraZ || dist * fudge
-    );
+        const g = this.model.geometry.boundingSphere.radius;
+        const dist = g * 3;
+
+        // fudge factor so you can see the boundaries
+        this.camera.position.set(
+          this.props.cameraX,
+          this.props.cameraY,
+          this.props.cameraZ || dist * fudge
+        );
+      }
+    }
   }
 
   animate(_time: number) {
@@ -548,8 +558,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       // Getmax dimention and add 10% overlap for plane
       // with a gutter of 10
       const geometry = this.model.geometry;
-      geometry.computeBoundingBox();
-      geometry.computeBoundingSphere();
+
+      if (geometry) {
+        geometry.computeBoundingBox();
+        geometry.computeBoundingSphere();
+      }
 
       let maxDimension = max([this.xDims, this.yDims, this.zDims]);
       maxDimension = Math.ceil(~~(maxDimension * 1.1) / 10) * 50;
