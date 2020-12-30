@@ -23,7 +23,7 @@ export function WebGLViewerExample() {
         type="stl"
         src="/stl_text.stl"
         fileName="BBB"
-        width={600}
+        width={'100vw'}
         height={400}
         layoutType="compact"
         onTopology={m => {

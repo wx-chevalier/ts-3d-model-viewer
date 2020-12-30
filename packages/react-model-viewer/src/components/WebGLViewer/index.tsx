@@ -745,6 +745,67 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     );
   }
 
+  renderJoySticker() {
+    const { topology } = this.state;
+
+    return (
+      <div className="rmv-sv-joystick">
+        <div
+          className="rmv-sv-joystick-center"
+          onClick={() => {
+            this._resetCamera();
+          }}
+        />
+        <Holdable
+          finite={false}
+          onPress={() => {
+            this.camera && this.camera.translateY(-topology.sizeY / 10);
+          }}
+        >
+          <div
+            className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-up"
+            style={{ top: 0 }}
+          >
+            <i />
+          </div>
+        </Holdable>
+        <Holdable
+          finite={false}
+          onPress={() => {
+            this.camera && this.camera.translateY(topology.sizeY / 10);
+          }}
+        >
+          <div
+            className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-down"
+            style={{ bottom: 0 }}
+          >
+            <i />
+          </div>
+        </Holdable>
+        <Holdable
+          finite={false}
+          onPress={() => {
+            this.camera && this.camera.translateX(-topology.sizeX / 10);
+          }}
+        >
+          <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-left">
+            <i />
+          </div>
+        </Holdable>
+        <Holdable
+          finite={false}
+          onPress={() => {
+            this.camera && this.camera.translateX(topology.sizeX / 10);
+          }}
+        >
+          <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-right">
+            <i />
+          </div>
+        </Holdable>
+      </div>
+    );
+  }
+
   renderLoose() {
     const { width, withJoystick } = this.props;
 
@@ -754,8 +815,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       withBoundingBox,
       showColorPicker,
       withClipping,
-      withLanguageSelector,
-      topology
+      withLanguageSelector
     } = this.state;
 
     return (
@@ -841,62 +901,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               }}
             />
           </div>
-          {withJoystick && (
-            <div className="rmv-sv-joystick">
-              <div
-                className="rmv-sv-joystick-center"
-                onClick={() => {
-                  this._resetCamera();
-                }}
-              />
-              <Holdable
-                finite={false}
-                onPress={() => {
-                  this.camera && this.camera.translateY(-topology.sizeY / 10);
-                }}
-              >
-                <div
-                  className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-up"
-                  style={{ top: 0 }}
-                >
-                  <i />
-                </div>
-              </Holdable>
-              <Holdable
-                finite={false}
-                onPress={() => {
-                  this.camera && this.camera.translateY(topology.sizeY / 10);
-                }}
-              >
-                <div
-                  className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-down"
-                  style={{ bottom: 0 }}
-                >
-                  <i />
-                </div>
-              </Holdable>
-              <Holdable
-                finite={false}
-                onPress={() => {
-                  this.camera && this.camera.translateX(-topology.sizeX / 10);
-                }}
-              >
-                <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-left">
-                  <i />
-                </div>
-              </Holdable>
-              <Holdable
-                finite={false}
-                onPress={() => {
-                  this.camera && this.camera.translateX(topology.sizeX / 10);
-                }}
-              >
-                <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-right">
-                  <i />
-                </div>
-              </Holdable>
-            </div>
-          )}
+          {withJoystick && this.renderJoySticker()}
         </div>
 
         {this.renderAttr()}
@@ -1092,57 +1097,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             )}
           </div>
         </div>
-        {withJoystick && (
-          <>
-            <Holdable
-              finite={false}
-              onPress={() => {
-                this.camera.translateY(-topology.sizeY / 10);
-              }}
-            >
-              <div
-                className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-up"
-                style={{ top: 40 }}
-              >
-                <i />
-              </div>
-            </Holdable>
-            <Holdable
-              finite={false}
-              onPress={() => {
-                this.camera.translateY(topology.sizeY / 10);
-              }}
-            >
-              <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-down">
-                <i />
-              </div>
-            </Holdable>
-            <Holdable
-              finite={false}
-              onPress={() => {
-                if (this.camera) {
-                  this.camera.translateX(-topology.sizeX / 10);
-                }
-              }}
-            >
-              <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-left">
-                <i />
-              </div>
-            </Holdable>
-            <Holdable
-              finite={false}
-              onPress={() => {
-                if (this.camera) {
-                  this.camera.translateX(topology.sizeX / 10);
-                }
-              }}
-            >
-              <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-right">
-                <i />
-              </div>
-            </Holdable>
-          </>
-        )}
+        {withJoystick && this.renderJoySticker()}
         {this.renderAttr()}
         {this.renderWebGL()}
       </div>

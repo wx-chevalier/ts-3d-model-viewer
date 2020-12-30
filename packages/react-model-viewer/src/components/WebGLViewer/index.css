@@ -134,14 +134,21 @@
   font-size: 14px;
 }
 
-.rmv-sv-loose-container .rmv-sv-joystick {
+.rmv-sv-joystick {
   position: relative;
   height: 90px;
   margin-top: 8px;
   width: 100%;
 }
 
-.rmv-sv-loose-container .rmv-sv-joystick .rmv-sv-joystick-center {
+.rmv-sv-compact-container .rmv-sv-joystick {
+  position: absolute;
+  width: 100px;
+  bottom: 15%;
+  right: 0;
+}
+
+.rmv-sv-joystick .rmv-sv-joystick-center {
   width: 22px;
   height: 22px;
   border-radius: 22px;
