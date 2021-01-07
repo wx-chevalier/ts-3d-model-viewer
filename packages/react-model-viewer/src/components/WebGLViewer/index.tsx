@@ -22,8 +22,8 @@ import { deflate } from '../../utils/compressor';
 import { getFileObjFromModelSrc, getModelCompressType, getModelType } from '../../utils/file';
 import { getLocale, i18nFormat, setLocale } from '../../utils/i18n';
 import { calcTopology } from '../../utils/mesh';
+import { canTransformToGLTF, loadMesh } from '../../utils/mesh_loader';
 import { ScreenshotObject } from '../../utils/screenshot';
-import { canTransformToGLTF, transformToGLTF } from '../../utils/GLTF';
 import { Holdable } from '../Holdable';
 import { Switch } from '../Switch';
 
@@ -150,11 +150,12 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     }
 
     try {
-      // 进行模型实际加载
-      const { mesh } = await transformToGLTF(
+      // 进行模型实际加载，注意，不需要转化为
+      const { mesh } = await loadMesh(
         modelFile || props.src,
         this.state.type,
-        this.props.onError
+        this.props.onError,
+        false
       );
 
       this.initGeometry(mesh.geometry);

@@ -15,7 +15,7 @@ import { ModelAttr } from '../../types/ModelAttr';
 import { toFixedNumber } from '../../utils';
 import { getFileObjFromModelSrc, getModelCompressType, getModelType } from '../../utils/file';
 import { calcTopology } from '../../utils/mesh';
-import { canTransformToGLTF, transformToGLTF } from '../../utils/GLTF';
+import { canTransformToGLTF, loadMesh } from '../../utils/mesh_loader';
 import { Holdable } from '../Holdable';
 
 import './index.css';
@@ -80,7 +80,7 @@ export class GoogleModelViewer extends React.Component<
     }
 
     try {
-      const { gltf: gltfSrc, mesh } = await transformToGLTF(
+      const { gltf: gltfSrc, mesh } = await loadMesh(
         modelFile || props.src,
         this.state.type,
         this.props.onError

@@ -9,12 +9,19 @@ import { ModelSrc, ModelType } from '../types/IModelViewerProps';
 export const canTransformToGLTF = (type: ModelType) =>
   type === 'glb' || type === 'gltf' || type === 'ply' || type === 'stl' || type === 'obj';
 
+function createURL(json: any) {
+  const str = JSON.stringify(json);
+  const blob = new Blob([str], { type: 'text/plain' });
+  return URL.createObjectURL(blob);
+}
+
 /** 将其他类型的文件，转化为 GLTF 类型 */
-export function transformToGLTF(
+export function loadMesh(
   src: ModelSrc,
   type: ModelType,
-  onError?: (err: Error) => void
-): Promise<{ gltf: string; mesh?: THREE.Mesh; srcUrl: string }> {
+  onError?: (err: Error) => void,
+  withGltf = true
+): Promise<{ gltf?: string; mesh?: THREE.Mesh; srcUrl: string }> {
   const material = new THREE.MeshStandardMaterial();
 
   return new Promise(resolve => {
@@ -81,14 +88,19 @@ export function transformToGLTF(
         srcUrl,
         geometry => {
           const mesh = new THREE.Mesh(geometry, material);
-          const exporter = new GLTFExporter();
-          exporter.parse(
-            mesh,
-            gltf => {
-              resolve({ gltf: createURL(gltf), mesh, srcUrl });
-            },
-            {}
-          );
+
+          if (withGltf) {
+            const exporter = new GLTFExporter();
+            exporter.parse(
+              mesh,
+              gltf => {
+                resolve({ gltf: createURL(gltf), mesh, srcUrl });
+              },
+              {}
+            );
+          } else {
+            resolve({ mesh, srcUrl });
+          }
         },
         () => {},
         err => {
@@ -99,10 +111,4 @@ export function transformToGLTF(
       );
     }
   });
-}
-
-function createURL(json: any) {
-  const str = JSON.stringify(json);
-  const blob = new Blob([str], { type: 'text/plain' });
-  return URL.createObjectURL(blob);
 }

@@ -21,7 +21,7 @@ export function WebGLViewerExample() {
       <WebGLViewer
         key="21"
         type="stl"
-        src="/stl_text.stl"
+        src="/超大STL.stl"
         fileName="BBB"
         width={'100vw'}
         height={400}
