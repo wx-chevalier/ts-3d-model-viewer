@@ -1,4 +1,4 @@
-import * as THREE from 'three/build/three.min.js';
+import * as THREE from 'three';
 
 import { ModelAttr } from '../types/ModelAttr';
 

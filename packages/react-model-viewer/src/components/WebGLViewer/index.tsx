@@ -9,7 +9,7 @@ import 'rc-tooltip/assets/bootstrap.css';
 import React from 'react';
 import { SketchPicker } from 'react-color';
 import Loader from 'react-loader-spinner';
-import * as THREE from 'three/build/three.min.js';
+import * as THREE from 'three';
 
 import {
   IModelViewerProps,
@@ -234,27 +234,35 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
   /** 清除实体 */
   destroy() {
-    cancelAnimationFrame(this.animationId);
+    try {
+      cancelAnimationFrame(this.animationId);
 
-    if (this.scene !== null) {
-      each(this.group.children, object => {
-        this.group.remove(object);
-      });
+      if (this.scene !== null) {
+        each(this.group.children, object => {
+          if (this.group) {
+            this.group.remove(object);
+          }
+        });
 
-      each(this.scene.children, object => {
-        this.scene.remove(object);
-      });
+        each(this.scene.children, object => {
+          if (this.scene) {
+            this.scene.remove(object);
+          }
+        });
+      }
+
+      this.scene = null;
+      this.group = null;
+      this.model = null;
+      this.modelWireframe = null;
+      this.boundingBox = null;
+
+      this.renderer.dispose();
+      this.renderer.forceContextLoss();
+      this.$ref.current.remove();
+    } catch (_) {
+      console.error(_);
     }
-
-    this.scene = null;
-    this.group = null;
-    this.model = null;
-    this.modelWireframe = null;
-    this.boundingBox = null;
-
-    this.renderer.dispose();
-    this.renderer.forceContextLoss();
-    this.$ref.current.remove();
   }
 
   /** 初始化场景 */

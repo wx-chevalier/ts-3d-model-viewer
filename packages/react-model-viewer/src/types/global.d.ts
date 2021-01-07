@@ -20,6 +20,6 @@ declare module '@seregpie/three.text-sprite';
 
 declare module 'workerize';
 
-declare module 'three/build/three.min.js' {
-  export * from 'three';
-}
+// declare module 'three' {
+//   export * from 'three';
+// }
