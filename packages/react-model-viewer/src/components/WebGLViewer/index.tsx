@@ -356,7 +356,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
   _setupAxisHelper() {
     if (this.model) {
-      if (this.axisHelper) {
+      if (this.axisHelper && this.group) {
         this.group.remove(this.axisHelper);
       }
 
@@ -488,7 +488,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       return;
     }
 
-    if (this.modelWireframe) {
+    if (this.modelWireframe && this.group) {
       this.group.remove(this.modelWireframe);
     }
 
@@ -560,7 +560,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   /** 设置平面 */
   _setupPlane() {
     if (this.model) {
-      if (this.plane) {
+      if (this.plane && this.group) {
         this.group.remove(this.plane);
       }
 
@@ -632,10 +632,12 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       withMaterial: selected
     });
 
-    if (selected) {
-      this.group.add(this.model);
-    } else {
-      this.group.remove(this.model);
+    if (this.group) {
+      if (selected) {
+        this.group.add(this.model);
+      } else {
+        this.group.remove(this.model);
+      }
     }
   };
 
@@ -644,7 +646,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     const { withWireframe } = this.state;
 
     if (withWireframe !== selected) {
-      if (this.modelWireframe) {
+      if (this.modelWireframe && this.group) {
         this.group.remove(this.modelWireframe);
         this.modelWireframe = null;
       }
