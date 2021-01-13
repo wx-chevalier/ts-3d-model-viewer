@@ -29,9 +29,7 @@ import { Switch } from '../Switch';
 
 import './index.css';
 
-// import { OrbitControls } from 'three-orbitcontrols-ts';
 const OrbitControls = require('three-orbit-controls')(THREE);
-// import { ViewerControl, ViewerControlConfig } from './ViewerControl';
 
 const fudge = 1.0;
 
@@ -131,25 +129,25 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
   /** 这里根据传入的文件类型，进行不同的文件转化 */
   async loadModel(props: IProps) {
-    const modelFile = await getFileObjFromModelSrc({
-      ...props,
-      type: 'stl',
-      compressType: this.state.compressType
-    });
-
-    await this.setState({ modelFile });
-
-    // 判断是否有 onZip，有的话则进行压缩并且返回
-    requestAnimationFrame(async () => {
-      this.handleZip();
-    });
-
-    // 判断是否可以进行预览，不可以预览则仅设置
-    if (!canTransformToGLTF(this.state.type) || !props.showModelViewer) {
-      return;
-    }
-
     try {
+      const modelFile = await getFileObjFromModelSrc({
+        ...props,
+        type: 'stl',
+        compressType: this.state.compressType
+      });
+
+      await this.setState({ modelFile });
+
+      // 判断是否有 onZip，有的话则进行压缩并且返回
+      requestAnimationFrame(async () => {
+        this.handleZip();
+      });
+
+      // 判断是否可以进行预览，不可以预览则仅设置
+      if (!canTransformToGLTF(this.state.type) || !props.showModelViewer) {
+        return;
+      }
+
       // 进行模型实际加载，注意，不需要转化为
       const { mesh } = await loadMesh(
         modelFile || props.src,
@@ -160,7 +158,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
       this.initGeometry(mesh.geometry);
     } catch (e) {
-      console.error(e);
+      console.error('>>>WebGLViewer>>>loadModel', e);
+
+      if (props.onError) {
+        props.onError(e);
+      }
     }
   }
 
