@@ -1,5 +1,4 @@
 import { arrayBufferToFile, blobToFile, newUri, readFileAsArrayBufferAsync } from '@m-fe/utils';
-import pako from 'pako';
 
 import {
   IModelViewerProps,
@@ -7,6 +6,7 @@ import {
   ModelSrc,
   ModelType
 } from '../types/IModelViewerProps';
+
 import { inflate } from './compressor';
 
 /** 根据模型名称推导出可能的类型 */

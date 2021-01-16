@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
@@ -28,7 +30,15 @@ export function loadMesh(
     const srcUrl = src instanceof File ? URL.createObjectURL(src) : src;
 
     if (type === 'glb' || type === 'gltf') {
-      resolve({ gltf: srcUrl, srcUrl });
+      const loader = new GLTFLoader();
+
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath('draco/');
+      loader.setDRACOLoader(dracoLoader);
+
+      loader.load(srcUrl, data => {
+        resolve({ gltf: srcUrl, srcUrl, mesh: data.scene.children[0] as THREE.Mesh });
+      });
     } else if (type === 'obj') {
       const loader = new OBJLoader();
       loader.load(

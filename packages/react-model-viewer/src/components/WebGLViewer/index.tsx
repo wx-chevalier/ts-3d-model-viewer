@@ -136,7 +136,6 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     try {
       const modelFile = await getFileObjFromModelSrc({
         ...props,
-        type: 'stl',
         compressType: this.state.compressType
       });
 

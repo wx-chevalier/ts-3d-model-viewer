@@ -18,10 +18,26 @@ export function WebGLViewerExample() {
         }}
       /> */}
       <br />
-      <WebGLViewer
+      {/* <WebGLViewer
         key="21"
-        type="stl"
-        src="1.stl.zlib"
+        src="big.stl"
+        fileName="BBB"
+        width={'100vw'}
+        height={400}
+        layoutType="compact"
+        onTopology={m => {
+          // console.log(m);
+        }}
+        onSnapshot={dataUrl => {
+          S.downloadUrl(dataUrl as string);
+        }}
+        onError={() => {
+          console.error('Invalid');
+        }}
+      /> */}
+      <WebGLViewer
+        key="22"
+        src="big.glb"
         fileName="BBB"
         width={'100vw'}
         height={400}
