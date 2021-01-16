@@ -34,23 +34,33 @@ export function loadMesh(
       loader.load(
         srcUrl,
         obj => {
-          const exporter = new GLTFExporter();
+          if (withGltf) {
+            const exporter = new GLTFExporter();
 
-          exporter.parse(
-            obj,
-            gltf => {
-              // 将 obj 转化为 mesh
-              obj.traverse(child => {
-                if (child instanceof THREE.Mesh) {
-                  (child.material as THREE.Material).transparent = true;
-                  // here in child the geometry and material are available
-                  const mesh = new THREE.Mesh(child.geometry, child.material);
-                  resolve({ gltf: createURL(gltf), mesh, srcUrl });
-                }
-              });
-            },
-            {}
-          );
+            exporter.parse(
+              obj,
+              gltf => {
+                // 将 obj 转化为 mesh
+                obj.traverse(child => {
+                  if (child instanceof THREE.Mesh) {
+                    (child.material as THREE.Material).transparent = true;
+                    const mesh = new THREE.Mesh(child.geometry, child.material);
+                    resolve({ gltf: createURL(gltf), mesh, srcUrl });
+                  }
+                });
+              },
+              {}
+            );
+          } else {
+            // 不包含 gltf 则直接返回
+            obj.traverse(child => {
+              if (child instanceof THREE.Mesh) {
+                (child.material as THREE.Material).transparent = true;
+                const mesh = new THREE.Mesh(child.geometry, child.material);
+                resolve({ mesh, srcUrl });
+              }
+            });
+          }
         },
         () => {},
         err => {

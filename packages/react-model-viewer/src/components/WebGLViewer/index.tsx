@@ -19,7 +19,11 @@ import {
   defaultModelViewerProps
 } from '../../types';
 import { deflate } from '../../utils/compressor';
-import { getFileObjFromModelSrc, getModelCompressType, getModelType } from '../../utils/file';
+import {
+  getFileObjFromModelSrc,
+  getModelCompressType,
+  getModelType
+} from '../../utils/file_loader';
 import { getLocale, i18nFormat, setLocale } from '../../utils/i18n';
 import { calcTopology } from '../../utils/mesh';
 import { canTransformToGLTF, loadMesh } from '../../utils/mesh_loader';

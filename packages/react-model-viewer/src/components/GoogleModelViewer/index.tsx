@@ -13,7 +13,11 @@ import {
 } from '../../types/IModelViewerProps';
 import { ModelAttr } from '../../types/ModelAttr';
 import { toFixedNumber } from '../../utils';
-import { getFileObjFromModelSrc, getModelCompressType, getModelType } from '../../utils/file';
+import {
+  getFileObjFromModelSrc,
+  getModelCompressType,
+  getModelType
+} from '../../utils/file_loader';
 import { calcTopology } from '../../utils/mesh';
 import { canTransformToGLTF, loadMesh } from '../../utils/mesh_loader';
 import { Holdable } from '../Holdable';

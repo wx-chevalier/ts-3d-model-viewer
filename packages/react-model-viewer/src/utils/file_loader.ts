@@ -1,4 +1,4 @@
-import { arrayBufferToFile, blobToFile, readFileAsArrayBufferAsync, newUri } from '@m-fe/utils';
+import { arrayBufferToFile, blobToFile, newUri, readFileAsArrayBufferAsync } from '@m-fe/utils';
 import pako from 'pako';
 
 import {
@@ -7,6 +7,7 @@ import {
   ModelSrc,
   ModelType
 } from '../types/IModelViewerProps';
+import { inflate } from './compressor';
 
 /** 根据模型名称推导出可能的类型 */
 export function getModelType(fileName: string, model: ModelSrc): ModelType {
@@ -55,13 +56,8 @@ export async function getFileObjFromModelSrc(props: IModelViewerProps): Promise<
       zippedFile = blobToFile(blob);
     }
 
-    let arrayBuffer = await readFileAsArrayBufferAsync(zippedFile);
-
     // 解压缩文件
-    const modelArray: Uint8Array = pako.inflate(new Uint8Array(arrayBuffer));
-
-    // 强行释放内存
-    arrayBuffer = null;
+    const modelArray: Uint8Array = await inflate(zippedFile);
 
     return arrayBufferToFile(modelArray.buffer, 'application/stl', props.fileName);
   } else {

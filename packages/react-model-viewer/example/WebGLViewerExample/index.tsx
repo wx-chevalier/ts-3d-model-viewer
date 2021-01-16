@@ -21,7 +21,7 @@ export function WebGLViewerExample() {
       <WebGLViewer
         key="21"
         type="stl"
-        src="https://ufc-prod-model.oss-cn-shanghai.aliyuncs.com/SHARE/model/202101/be6bfb88-88cc-4c2a-9958-83968a4a3173/chassis.stl?Expires=1610549691&OSSAccessKeyId=LTAI4FcMBNPFRcRUHiP6brD7&Signature=vPCwW5i5O07LUKuEfq%2F4QmO%2FXSY%3D"
+        src="1.stl.zlib"
         fileName="BBB"
         width={'100vw'}
         height={400}
