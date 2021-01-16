@@ -1,0 +1,173 @@
+.TH ADMESH "1" 21/10/2013 "User Commands"
+.SH NAME
+ADMesh - a program for processing triangulated solid meshes
+.SH SYNOPSIS
+.B admesh
+[\fIOPTION\fR]... \fIfile\fR
+.SH DESCRIPTION
+ADMesh is a program for processing triangulated solid meshes. Currently, ADMesh only reads the STL file format that is used for rapid prototyping applications, although it can write STL, VRML, OFF, and DXF files.
+
+By default, ADMesh performs all of the mesh checking and repairing options
+on the input file.  This means that is checks exact, nearby,
+remove-unconnected, fill-holes, normal-directions, and normal-values.  The
+file type (ASCII or binary) is automatically detected.  The input file is
+not modified unless it is specified by the \fB--write\fP option.  If the following
+command line was input:
+
+.B admesh sphere.stl
+
+The file sphere.stl would be opened and read, it would be checked and fixed
+if necessary, and the results of processing would be printed out.  The
+results would not be saved.
+
+The default value for tolerance is the length of the shortest edge of the
+mesh.  The default number of iterations is 2, and the default increment is
+0.01% of the diameter of a sphere that encloses the entire mesh.
+
+If any of the options \fB--exact\fP, \fB--nearby\fP, \fB--remove-unconnected\fP, \fB--fill-holes\fP,
+\fB--normal-directions\fP, \fB--reverse-all\fP, \fB--normal-values\fP, or \fB--no-check\fP are
+given, then no other checks besides that one will be done unless they are
+specified or unless they are required by ADMesh before the specified check
+can be done.  For example the following command line:
+
+.B admesh --remove-unconnected sphere.stl
+
+would first do an exact check because it is required, and then the
+unconnected facets would be removed.  The results would be printed and no
+other checks would be done.
+.SH OPTIONS
+.TP
+\fB\-\-x\-rotate\fR=\fIangle\fR
+Rotate CCW about x\-axis by angle degrees
+.TP
+\fB\-\-y\-rotate\fR=\fIangle\fR
+Rotate CCW about y\-axis by angle degrees
+.TP
+\fB\-\-z\-rotate\fR=\fIangle\fR
+Rotate CCW about z\-axis by angle degrees
+.TP
+\fB\-\-xy\-mirror\fR
+Mirror about the xy plane
+.TP
+\fB\-\-yz\-mirror\fR
+Mirror about the yz plane
+.TP
+\fB\-\-xz\-mirror\fR
+Mirror about the xz plane
+.TP
+\fB\-\-scale\fR=\fIfactor\fR
+Scale the file by factor (multiply by factor)
+.TP
+\fB\-\-translate\fR=\fIx\fR,y,z
+Translate the file to x, y, and z
+.TP
+\fB\-\-merge\fR=\fIname\fR
+Merge file called name with input file
+.TP
+\fB\-e\fR, \fB\-\-exact\fR
+Only check for perfectly matched edges
+.TP
+\fB\-n\fR, \fB\-\-nearby\fR
+Find and connect nearby facets. Correct bad facets
+.TP
+\fB\-t\fR, \fB\-\-tolerance\fR=\fItol\fR
+Initial tolerance to use for nearby check = tol
+.TP
+\fB\-i\fR, \fB\-\-iterations\fR=\fIi\fR
+Number of iterations for nearby check = i
+.TP
+\fB\-m\fR, \fB\-\-increment\fR=\fIinc\fR
+Amount to increment tolerance after iteration=inc
+.HP
+\fB\-u\fR, \fB\-\-remove\-unconnected\fR Remove facets that have 0 neighbors
+.TP
+\fB\-f\fR, \fB\-\-fill\-holes\fR
+Add facets to fill holes
+.TP
+\fB\-d\fR, \fB\-\-normal\-directions\fR
+Check and fix direction of normals(ie cw, ccw)
+.TP
+\fB\-\-reverse\-all\fR
+Reverse the directions of all facets and normals
+.TP
+\fB\-v\fR, \fB\-\-normal\-values\fR
+Check and fix normal values
+.TP
+\fB\-c\fR, \fB\-\-no\-check\fR
+Don't do any check on input file
+.TP
+\fB\-b\fR, \fB\-\-write\-binary\-stl\fR=\fIname\fR
+Output a binary STL file called name
+.TP
+\fB\-a\fR, \fB\-\-write\-ascii\-stl\fR=\fIname\fR
+Output an ascii STL file called name
+.TP
+\fB\-\-write\-off\fR=\fIname\fR
+Output a Geomview OFF format file called name
+.TP
+\fB\-\-write\-dxf\fR=\fIname\fR
+Output a DXF format file called name
+.TP
+\fB\-\-write\-vrml\fR=\fIname\fR
+Output a VRML format file called name
+.TP
+\fB\-\-help\fR
+Display this help and exit
+.TP
+\fB\-\-version\fR
+Output version information and exit
+.PP
+The functions are executed in the same order as the options shown here.
+So check here to find what happens if, for example, \fB\-\-translate\fR and \fB\-\-merge\fR
+options are specified together.  The order of the options specified on the
+command line is not important.
+.SH EXAMPLES
+To perform all checks except for nearby, the following command line would be
+used:
+
+.B admesh --exact --remove-unconnected --fill-holes --normal-directions --normal-values sphere.stl
+
+Actually, since the \fBexact\fP check is required by ADMesh before
+\fBremove-unconnected\fP, and \fBremove-unconnected\fP is required before \fB--fill-holes\fP,
+the above command line could be shortened as follows with the same results:
+
+.B admesh --fill-holes --normal-directions --normal-values sphere.stl
+
+And again the same results could be achieved using the short options:
+
+.B admesh -fudev sphere.stl
+
+or
+
+.B admesh -fdv sphere.stl
+   
+The following command lines do the same thing:
+
+.B admesh sphere.stl
+
+.B admesh -fundev sphere.stl
+
+.B admesh -f -u -n -d -e -v sphere.stl
+
+since the \fB-fundev\fP options are implied by default.  To eliminate one of the
+checks, just remove the letter of the check to eliminate from the "word" fundev.
+.SH SEE ALSO
+For more information about the options and output read
+.B admesh-doc.txt
+- it is usually located in /usr/share/doc/admesh-x.xx dir.
+.SH COPYRIGHT
+Copyright (C) 1995, 1996  Anthony D. Martin <amartin@engr.csulb.edu>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.

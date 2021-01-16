@@ -1,0 +1,83 @@
+body {
+	background-color: black;
+	font-family: 'Roboto';
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+.viewer {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background-image: radial-gradient(center bottom, ellipse cover, rgb(116,170,31), rgb(79,154,56));
+  background-image: -webkit-radial-gradient(center bottom, ellipse cover, rgb(116,170,31), rgb(79,154,56));
+  background-image: -moz-radial-gradient(center bottom, ellipse cover, rgb(116,170,31), rgb(79,154,56));
+}
+
+.viewer__wrapper {
+  height: 100%;
+  width: 100%;
+  z-index: 2;
+  background: url('../images/stripe_bg.svg');
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: center;
+  padding: 10px;
+}
+
+.viewer__info {
+  text-align: left;
+  color: #fff;
+  margin-bottom: 8px;
+  display: block;
+  width: 100%;
+}
+
+.viewer__container {
+  border: 1px solid #ccc;
+  position: relative;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: stretch;
+  box-sizing: border-box;
+}
+
+.viewer__progress-bar {
+	display: flex;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+}
+
+.viewer__progress-bar--visible {
+	display: flex;
+}
+
+.viewer__progress-bar--hidden {
+	display: none;
+}
+
+.viewer__progress-bar__container {
+	max-width: 50%;
+	min-height: 32px;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-radius: 3px;
+	border: 1px solid #cccccc;
+	font-size: 16px;
+	line-height: 32px;
+	background-color: rgba(0,0,0,0.5);
+	color: #cccccc;
+}

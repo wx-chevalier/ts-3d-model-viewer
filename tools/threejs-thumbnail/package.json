@@ -1,0 +1,45 @@
+{
+  "name": "node-stl-to-thumbnail",
+  "version": "1.1.0",
+  "description": "Create thumbnail from 3D STL file. Creates beautifully rendered png and jpeg output server-side with no GPU from ASCII and Binary STL's.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:fakhrullah/node-stl-to-thumbnail.git"
+  },
+  "keywords": [
+    "stl",
+    "three",
+    "threejs",
+    "thumbnail",
+    "canvas",
+    "render",
+    "node",
+    "nodejs",
+    "3d",
+    "3d",
+    "model",
+    "stereolithography",
+    "server-side",
+    "gpu",
+    "cpu"
+  ],
+  "author": "FakhrullahPadzil",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fakhrullah/node-stl-to-thumbnail/issues"
+  },
+  "homepage": "https://github.com/fakhrullah/node-stl-to-thumbnail",
+  "dependencies": {
+    "canvas": "^2.5.0",
+    "lodash": "^4.17.13",
+    "request": "^2.88.0",
+    "three": "^0.90.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.0.1"
+  }
+}

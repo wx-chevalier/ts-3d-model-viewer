@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Drag & drop &lt;model-viewer&gt;</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/style.css" />
+
+  <script src="https://ufc-assets.oss-cn-shanghai.aliyuncs.com/res/model-viewer-legacy.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <script src="three.js"></script>
+
+  <script src="OBJLoader.js"></script>
+  <script src="PLYLoader.js"></script>
+  <script src="STLLoader.js"></script>
+
+  <script src="GLTFExporter.js"></script>
+
+</head>
+
+<body>
+  <button onclick="loadStl()">加载远端 STL</button>
+
+  <model-viewer id="viewer"
+    src="https://cdn.glitch.com/36cb8393-65c6-408d-a538-055ada20431b/Astronaut.glb?1542147958948"
+    background-color="#8888ff" camera-controls="false" autoplay auto-rotate shadow-intensity="1"
+    onload="console.log('loaded')"></model-viewer>
+
+  <div id="instructions">
+    <h1>
+      <a href="https://googlewebcomponents.github.io/model-viewer/">&lt;model-viewer&gt;</a>
+    </h1>
+    Drop GLTF, GLB, OBJ, PLY or STL.
+  </div>
+</body>
+<script src="script.js" defer></script>
+
+
+</html>

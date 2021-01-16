@@ -1,0 +1,14 @@
+To install ADMesh, you will need a system with a c compiler.
+Do the following:
+
+1.  Get the file admesh-x.xx.tar.gz
+2.  Extract the archive.  i.e. type something like the following:
+         tar -zxvf admesh-x.xx.tar.gz
+    The source files will be extracted into a directory called admesh-x.xx
+3.  cd admesh-x.xx
+4.  type the following:
+         ./configure
+	 make
+	 su -c 'make install'
+
+That should do it. Standard options for configure script and make are provided.

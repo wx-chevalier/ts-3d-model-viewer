@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libadmesh
+Description: Library for woring with admesh
+Version: 0.98.4
+Libs: -L${libdir} -ladmesh
+Libs.private:
+Cflags: -I${includedir}
