@@ -1,7 +1,0 @@
-.idea
-*.iml
-node_modules
-npm-debug.log
-build
-src/misc
-.publish
