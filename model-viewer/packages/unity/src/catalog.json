@@ -1,0 +1,1466 @@
+{
+    "formats": [
+        {
+            "url": "https://www.autodesk.com/products/fbx/overview",
+            "description": "FBX (Filmbox) is a proprietary file format (.fbx) developed by Kaydara and owned by Autodesk since 2006. It is used to provide interoperability between digital content creation applications. FBX is also part of Autodesk Gameware, a series of video game middleware. ",
+            "name": "FBX",
+            "extension": "fbx",
+            "id": "FBX",
+            "models": [
+                {
+                    "file": "formats/FBX/models/batman70.fbx",
+                    "name": "batman70.fbx",
+                    "size": "501,3 Kb",
+                    "thumbnail": "formats/FBX/models/batman70.png"
+                },
+                {
+                    "file": "formats/FBX/models/box.fbx",
+                    "name": "box.fbx",
+                    "size": "16,8 Kb",
+                    "thumbnail": "formats/FBX/models/box.png"
+                },
+                {
+                    "file": "formats/FBX/models/boxWithCompressedCTypeArray.FBX",
+                    "name": "boxWithCompressedCTypeArray.FBX",
+                    "size": "13,5 Kb",
+                    "thumbnail": "formats/FBX/models/boxWithCompressedCTypeArray.png"
+                },
+                {
+                    "file": "formats/FBX/models/boxWithUncompressedCTypeArray.FBX",
+                    "name": "boxWithUncompressedCTypeArray.FBX",
+                    "size": "25,4 Kb",
+                    "thumbnail": "formats/FBX/models/boxWithUncompressedCTypeArray.png"
+                },
+                {
+                    "file": "formats/FBX/models/box_ascii.FBX",
+                    "name": "box_ascii.FBX",
+                    "size": "588,7 Kb",
+                    "thumbnail": "formats/FBX/models/box_ascii.png"
+                },
+                {
+                    "file": "formats/FBX/models/box_ascii_embedded_texture_fragmented.fbx",
+                    "name": "box_ascii_embedded_texture_fragmented.fbx",
+                    "size": "1,3 Mb",
+                    "thumbnail": "formats/FBX/models/box_ascii_embedded_texture_fragmented.png"
+                },
+                {
+                    "file": "formats/FBX/models/box_orphant_embedded_texture.fbx",
+                    "name": "box_orphant_embedded_texture.fbx",
+                    "size": "36,5 Kb",
+                    "thumbnail": "formats/FBX/models/box_orphant_embedded_texture.png"
+                },
+                {
+                    "file": "formats/FBX/models/close_to_identity_transforms.fbx",
+                    "name": "close_to_identity_transforms.fbx",
+                    "size": "87,1 Kb",
+                    "thumbnail": "formats/FBX/models/close_to_identity_transforms.png"
+                },
+                {
+                    "file": "formats/FBX/models/cubes_nonames.fbx",
+                    "name": "cubes_nonames.fbx",
+                    "size": "86,8 Kb",
+                    "thumbnail": "formats/FBX/models/cubes_nonames.png"
+                },
+                {
+                    "file": "formats/FBX/models/cubes_with_mirroring_and_pivot.fbx",
+                    "name": "cubes_with_mirroring_and_pivot.fbx",
+                    "size": "87,3 Kb",
+                    "thumbnail": "formats/FBX/models/cubes_with_mirroring_and_pivot.png"
+                },
+                {
+                    "file": "formats/FBX/models/cubes_with_names.fbx",
+                    "name": "cubes_with_names.fbx",
+                    "size": "86,9 Kb",
+                    "thumbnail": "formats/FBX/models/cubes_with_names.png"
+                },
+                {
+                    "file": "formats/FBX/models/global_settings.fbx",
+                    "name": "global_settings.fbx",
+                    "size": "56,2 Kb",
+                    "thumbnail": "formats/FBX/models/global_settings.png"
+                },
+                {
+                    "file": "formats/FBX/models/huesitos.fbx",
+                    "name": "huesitos.fbx",
+                    "size": "108,9 Kb",
+                    "thumbnail": "formats/FBX/models/huesitos.png"
+                },
+                {
+                    "file": "formats/FBX/models/phong_cube.fbx",
+                    "name": "phong_cube.fbx",
+                    "size": "16,7 Kb",
+                    "thumbnail": "formats/FBX/models/phong_cube.png"
+                },
+                {
+                    "file": "formats/FBX/models/spider.fbx",
+                    "name": "spider.fbx",
+                    "size": "120,4 Kb",
+                    "thumbnail": "formats/FBX/models/spider.png"
+                }
+            ]
+        },
+        {
+            "url": "https://www.khronos.org/collada/",
+            "description": "COLLADA™ defines an XML-based schema to make it easy to transport 3D assets between applications - enabling diverse 3D authoring and content processing tools to be combined into a production pipeline. The intermediate language provides comprehensive encoding of visual scenes including: geometry, shaders and effects, physics, animation, kinematics, and even multiple version representations of the same asset.COLLADA FX enables leading 3D authoring tools to work effectively together to create shader and effects applications and assets to be authored and packaged using OpenGL® Shading Language, Cg, CgFX, and DirectX® FX. ",
+            "name": "COLLADA",
+            "extension": "dae",
+            "id": "Collada",
+            "models": [
+                {
+                    "file": "formats/Collada/models/anims_with_full_rotations_between_keys.DAE",
+                    "name": "anims_with_full_rotations_between_keys.DAE",
+                    "size": "500,5 Kb",
+                    "thumbnail": "formats/Collada/models/anims_with_full_rotations_between_keys.png"
+                },
+                {
+                    "file": "formats/Collada/models/cameras.dae",
+                    "name": "cameras.dae",
+                    "size": "3,1 Kb",
+                    "thumbnail": "formats/Collada/models/cameras.png"
+                },
+                {
+                    "file": "formats/Collada/models/Cinema4D.dae",
+                    "name": "Cinema4D.dae",
+                    "size": "74,9 Kb",
+                    "thumbnail": "formats/Collada/models/Cinema4D.png"
+                },
+                {
+                    "file": "formats/Collada/models/ConcavePolygon.dae",
+                    "name": "ConcavePolygon.dae",
+                    "size": "4,8 Kb",
+                    "thumbnail": "formats/Collada/models/ConcavePolygon.png"
+                },
+                {
+                    "file": "formats/Collada/models/cube_emptyTags.dae",
+                    "name": "cube_emptyTags.dae",
+                    "size": "4,6 Kb",
+                    "thumbnail": "formats/Collada/models/cube_emptyTags.png"
+                },
+                {
+                    "file": "formats/Collada/models/cube_with_2UVs.DAE",
+                    "name": "cube_with_2UVs.DAE",
+                    "size": "8,4 Kb",
+                    "thumbnail": "formats/Collada/models/cube_with_2UVs.png"
+                },
+                {
+                    "file": "formats/Collada/models/earthCylindrical.DAE",
+                    "name": "earthCylindrical.DAE",
+                    "size": "324,4 Kb",
+                    "thumbnail": "formats/Collada/models/earthCylindrical.png"
+                },
+                {
+                    "file": "formats/Collada/models/library_animation_clips.dae",
+                    "name": "library_animation_clips.dae",
+                    "size": "83,6 Kb",
+                    "thumbnail": "formats/Collada/models/library_animation_clips.png"
+                },
+                {
+                    "file": "formats/Collada/models/lights.dae",
+                    "name": "lights.dae",
+                    "size": "14,4 Kb",
+                    "thumbnail": "formats/Collada/models/lights.png"
+                },
+                {
+                    "file": "formats/Collada/models/regr01.dae",
+                    "name": "regr01.dae",
+                    "size": "36,7 Kb",
+                    "thumbnail": "formats/Collada/models/regr01.png"
+                },
+                {
+                    "file": "formats/Collada/models/sphere_triangulate.dae",
+                    "name": "sphere_triangulate.dae",
+                    "size": "46 Kb",
+                    "thumbnail": "formats/Collada/models/sphere_triangulate.png"
+                },
+                {
+                    "file": "formats/Collada/models/teapots_transparent.DAE",
+                    "name": "teapots_transparent.DAE",
+                    "size": "492,9 Kb",
+                    "thumbnail": "formats/Collada/models/teapots_transparent.png"
+                },
+                {
+                    "file": "formats/Collada/models/teapot_instancenodes.DAE",
+                    "name": "teapot_instancenodes.DAE",
+                    "size": "73,6 Kb",
+                    "thumbnail": "formats/Collada/models/teapot_instancenodes.png"
+                }
+            ]
+        },
+        {
+            "url": "https://www.onshape.com/",
+            "description": "Onshape is a computer-aided design (CAD) software system, delivered over the Internet via a Software as a Service (SAAS) model. It makes extensive use of cloud computing, with compute-intensive processing and rendering performed on Internet-based servers, and users are able to interact with the system via a web browser or the iOS and Android apps.",
+            "name": "OnShape",
+            "extension": "onshape",
+            "id": "OnShape",
+            "models": [
+                {
+                    "file": "https://cad.onshape.com/documents/0cc05df50afa7069d40d5b29/w/4e9a02bde82a52420bb553ee/e/6d739c0ee09a45d88f809d15",
+                    "name": "BallCuber",
+                    "size": "",
+                    "thumbnail": "formats/OnShape/models/BallCuber.png"
+                },
+                {
+                    "file": "https://cad.onshape.com/documents/0cc05df50afa7069d40d5b29/w/4e9a02bde82a52420bb553ee/e/af1653a7fa67658e00c67315",
+                    "name": "coupling",
+                    "size": "",
+                    "thumbnail": "formats/OnShape/models/coupling.png"
+                },
+                {
+                    "file": "https://cad.onshape.com/documents/0cc05df50afa7069d40d5b29/w/4e9a02bde82a52420bb553ee/e/4a5a667392e4fecce483cd1c",
+                    "name": "motor",
+                    "size": "",
+                    "thumbnail": "formats/OnShape/models/motor.png"
+                },
+                {
+                    "file": "https://cad.onshape.com/documents/0cc05df50afa7069d40d5b29/w/4e9a02bde82a52420bb553ee/e/a80d9fc422a10aaf03d43764",
+                    "name": "sphere",
+                    "size": "",
+                    "thumbnail": "formats/OnShape/models/sphere.png"
+                }
+            ]
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/Wavefront_.obj_file",
+            "description": "OBJ (or .OBJ) is a geometry definition file format first developed by Wavefront Technologies for its Advanced Visualizer animation package. The file format is open and has been adopted by other 3D graphics application vendors.\r\nThe OBJ file format is a simple data-format that represents 3D geometry alone — namely, the position of each vertex, the UV position of each texture coordinate vertex, vertex normals, and the faces that make each polygon defined as a list of vertices, and texture vertices. Vertices are stored in a counter-clockwise order by default, making explicit declaration of face normals unnecessary. OBJ coordinates have no units, but OBJ files can contain scale information in a human readable comment line.\r\nMaterials that describe the visual aspects of the polygons are stored in external .mtl files. More than one external MTL material file may be referenced from within the OBJ file. The .mtl file may contain one or more named material definitions. ",
+            "name": "Wavefront OBJ",
+            "extension": "obj",
+            "id": "OBJ",
+            "models": [
+                {
+                    "file": "formats/OBJ/models/batman.obj",
+                    "name": "batman.obj",
+                    "size": "1,6 Mb",
+                    "thumbnail": "formats/OBJ/models/batman.png"
+                },
+                {
+                    "file": "formats/OBJ/models/box_UTF16BE.obj",
+                    "name": "box_UTF16BE.obj",
+                    "size": "882 b",
+                    "thumbnail": "formats/OBJ/models/box_UTF16BE.png"
+                },
+                {
+                    "file": "formats/OBJ/models/regr01.obj",
+                    "name": "regr01.obj",
+                    "size": "168,1 Kb",
+                    "thumbnail": "formats/OBJ/models/regr01.png"
+                },
+                {
+                    "file": "formats/OBJ/models/spider.obj",
+                    "name": "spider.obj",
+                    "size": "106,6 Kb",
+                    "thumbnail": "formats/OBJ/models/spider.png"
+                },
+                {
+                    "file": "formats/OBJ/models/WusonOBJ.obj",
+                    "name": "WusonOBJ.obj",
+                    "size": "260 Kb",
+                    "thumbnail": "formats/OBJ/models/WusonOBJ.png"
+                }
+            ]
+        },
+        {
+            "url": "https://www.blender.org/",
+            "description": "Blender is the free and open source 3D creation suite. It supports the entirety of the 3D pipeline—modeling, rigging, animation, simulation, rendering, compositing and motion tracking, video editing and 2D animation pipeline. Only old Blender versions are supported and work for supporting new version is on progress.",
+            "name": "Blender",
+            "extension": "blend",
+            "id": "BLEND",
+            "models": [
+                {
+                    "file": "formats/BLEND/models/4Cubes4Mats_248.blend",
+                    "name": "4Cubes4Mats_248.blend",
+                    "size": "133,5 Kb",
+                    "thumbnail": "formats/BLEND/models/4Cubes4Mats_248.png"
+                },
+                {
+                    "file": "formats/BLEND/models/AreaLight_269.blend",
+                    "name": "AreaLight_269.blend",
+                    "size": "486,9 Kb",
+                    "thumbnail": "formats/BLEND/models/AreaLight_269.png"
+                },
+                {
+                    "file": "formats/BLEND/models/BlenderDefault_248.blend",
+                    "name": "BlenderDefault_248.blend",
+                    "size": "122,2 Kb",
+                    "thumbnail": "formats/BLEND/models/BlenderDefault_248.png"
+                },
+                {
+                    "file": "formats/BLEND/models/BlenderDefault_250.blend",
+                    "name": "BlenderDefault_250.blend",
+                    "size": "387,7 Kb",
+                    "thumbnail": "formats/BLEND/models/BlenderDefault_250.png"
+                },
+                {
+                    "file": "formats/BLEND/models/BlenderDefault_250_Compressed.blend",
+                    "name": "BlenderDefault_250_Compressed.blend",
+                    "size": "62,3 Kb",
+                    "thumbnail": "formats/BLEND/models/BlenderDefault_250_Compressed.png"
+                },
+                {
+                    "file": "formats/BLEND/models/BlenderDefault_262.blend",
+                    "name": "BlenderDefault_262.blend",
+                    "size": "461 Kb",
+                    "thumbnail": "formats/BLEND/models/BlenderDefault_262.png"
+                },
+                {
+                    "file": "formats/BLEND/models/BlenderDefault_269.blend",
+                    "name": "BlenderDefault_269.blend",
+                    "size": "480,5 Kb",
+                    "thumbnail": "formats/BLEND/models/BlenderDefault_269.png"
+                },
+                {
+                    "file": "formats/BLEND/models/BlenderDefault_271.blend",
+                    "name": "BlenderDefault_271.blend",
+                    "size": "472,8 Kb",
+                    "thumbnail": "formats/BLEND/models/BlenderDefault_271.png"
+                },
+                {
+                    "file": "formats/BLEND/models/BlenderMaterial_269.blend",
+                    "name": "BlenderMaterial_269.blend",
+                    "size": "491,8 Kb",
+                    "thumbnail": "formats/BLEND/models/BlenderMaterial_269.png"
+                },
+                {
+                    "file": "formats/BLEND/models/box.blend",
+                    "name": "box.blend",
+                    "size": "443,4 Kb",
+                    "thumbnail": "formats/BLEND/models/box.png"
+                },
+                {
+                    "file": "formats/BLEND/models/CubeHierarchy_248.blend",
+                    "name": "CubeHierarchy_248.blend",
+                    "size": "152,6 Kb",
+                    "thumbnail": "formats/BLEND/models/CubeHierarchy_248.png"
+                },
+                {
+                    "file": "formats/BLEND/models/HUMAN.blend",
+                    "name": "HUMAN.blend",
+                    "size": "138,8 Kb",
+                    "thumbnail": "formats/BLEND/models/HUMAN.png"
+                },
+                {
+                    "file": "formats/BLEND/models/MirroredCube_252.blend",
+                    "name": "MirroredCube_252.blend",
+                    "size": "87 Kb",
+                    "thumbnail": "formats/BLEND/models/MirroredCube_252.png"
+                },
+                {
+                    "file": "formats/BLEND/models/NoisyTexturedCube_VoronoiGlob_248.blend",
+                    "name": "NoisyTexturedCube_VoronoiGlob_248.blend",
+                    "size": "227,5 Kb",
+                    "thumbnail": "formats/BLEND/models/NoisyTexturedCube_VoronoiGlob_248.png"
+                },
+                {
+                    "file": "formats/BLEND/models/SmoothVsSolidCube_248.blend",
+                    "name": "SmoothVsSolidCube_248.blend",
+                    "size": "126,8 Kb",
+                    "thumbnail": "formats/BLEND/models/SmoothVsSolidCube_248.png"
+                },
+                {
+                    "file": "formats/BLEND/models/Suzanne.blend",
+                    "name": "Suzanne.blend",
+                    "size": "543,2 Kb",
+                    "thumbnail": "formats/BLEND/models/Suzanne.png"
+                },
+                {
+                    "file": "formats/BLEND/models/SuzanneSubdiv_252.blend",
+                    "name": "SuzanneSubdiv_252.blend",
+                    "size": "84,2 Kb",
+                    "thumbnail": "formats/BLEND/models/SuzanneSubdiv_252.png"
+                },
+                {
+                    "file": "formats/BLEND/models/test_279.blend",
+                    "name": "test_279.blend",
+                    "size": "459,1 Kb",
+                    "thumbnail": "formats/BLEND/models/test_279.png"
+                },
+                {
+                    "file": "formats/BLEND/models/TexturedCube_ImageGlob_248.blend",
+                    "name": "TexturedCube_ImageGlob_248.blend",
+                    "size": "130,4 Kb",
+                    "thumbnail": "formats/BLEND/models/TexturedCube_ImageGlob_248.png"
+                },
+                {
+                    "file": "formats/BLEND/models/TexturedPlane_ImageUvPacked_248.blend",
+                    "name": "TexturedPlane_ImageUvPacked_248.blend",
+                    "size": "138,9 Kb",
+                    "thumbnail": "formats/BLEND/models/TexturedPlane_ImageUvPacked_248.png"
+                },
+                {
+                    "file": "formats/BLEND/models/TorusLightsCams_250_compressed.blend",
+                    "name": "TorusLightsCams_250_compressed.blend",
+                    "size": "115,1 Kb",
+                    "thumbnail": "formats/BLEND/models/TorusLightsCams_250_compressed.png"
+                },
+                {
+                    "file": "formats/BLEND/models/yxa_1.blend",
+                    "name": "yxa_1.blend",
+                    "size": "429,8 Kb",
+                    "thumbnail": "formats/BLEND/models/yxa_1.png"
+                }
+            ]
+        },
+        {
+            "url": "https://www.khronos.org/gltf/",
+            "description": "glTF (derivative short form of Graphics Library Transmission Format or GL Transmission Format) is a file format for 3D scenes and models using the JSON standard. It is an API-neutral runtime asset delivery format developed by the Khronos Group 3D Formats Working Group. It was announced at HTML5DevConf 2016. This format is intended to be an efficient, interoperable format with minimum file size and runtime processing by apps. As such, its creators have described it as the \"JPEG of 3D.\" glTF also defines a common publishing format for 3D content tools and services. GLB file format is a binary form of glTF that includes textures instead of referencing them as external images.",
+            "name": "glTF",
+            "extension": "gltf",
+            "id": "glTF",
+            "models": [
+                {
+                    "file": "formats/glTF/models/BoxTextured.gltf",
+                    "name": "BoxTextured.gltf",
+                    "size": "8,1 Kb",
+                    "thumbnail": "formats/glTF/models/BoxTextured.png"
+                },
+                {
+                    "file": "formats/glTF/models/simple_skin.gltf",
+                    "name": "simple_skin.gltf",
+                    "size": "4,2 Kb",
+                    "thumbnail": "formats/glTF/models/simple_skin.png"
+                }
+            ]
+        },
+        {
+            "url": "https://www.khronos.org/gltf/",
+            "description": "glTF (derivative short form of Graphics Library Transmission Format or GL Transmission Format) is a file format for 3D scenes and models using the JSON standard. It is an API-neutral runtime asset delivery format developed by the Khronos Group 3D Formats Working Group. It was announced at HTML5DevConf 2016. This format is intended to be an efficient, interoperable format with minimum file size and runtime processing by apps. As such, its creators have described it as the \"JPEG of 3D.\" glTF also defines a common publishing format for 3D content tools and services. GLB file format is a binary form of glTF that includes textures instead of referencing them as external images.",
+            "name": "GLB",
+            "extension": "glb",
+            "id": "glb",
+            "models": [
+                {
+                    "file": "formats/glb/models/2CylinderEngine.glb",
+                    "name": "2CylinderEngine.glb",
+                    "size": "1,8 Mb",
+                    "thumbnail": "formats/glb/models/2CylinderEngine.png"
+                },
+                {
+                    "file": "formats/glb/models/ballcuber.glb",
+                    "name": "ballcuber.glb",
+                    "size": "7,8 Mb",
+                    "thumbnail": "formats/glb/models/ballcuber.png"
+                },
+                {
+                    "file": "formats/glb/models/BoxTextured.glb",
+                    "name": "BoxTextured.glb",
+                    "size": "4,6 Kb",
+                    "thumbnail": "formats/glb/models/BoxTextured.png"
+                }
+            ]
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/Autodesk_3ds_Max",
+            "description": "Autodesk 3ds Max, formerly 3D Studio and 3D Studio Max, is a professional 3D computer graphics program for making 3D animations, models, games and images. It is developed and produced by Autodesk Media and Entertainment. It has modeling capabilities and a flexible plugin architecture and must be used on the Microsoft Windows platform. It is frequently used by video game developers, many TV commercial studios, and architectural visualization studios. It is also used for movie effects and movie pre-visualization. For its modeling and animation tools, the latest version of 3ds Max also features shaders (such as ambient occlusion and subsurface scattering), dynamic simulation, particle systems, radiosity, normal map creation and rendering, global illumination, a customizable user interface, new icons, and its own scripting language.",
+            "name": "Autodesk 3ds Max",
+            "extension": "3ds",
+            "id": "3DS",
+            "models": [
+                {
+                    "file": "formats/3DS/models/cubes_with_alpha.3DS",
+                    "name": "cubes_with_alpha.3DS",
+                    "size": "5,8 Kb",
+                    "thumbnail": "formats/3DS/models/cubes_with_alpha.png"
+                },
+                {
+                    "file": "formats/3DS/models/fels.3ds",
+                    "name": "fels.3ds",
+                    "size": "13 Kb",
+                    "thumbnail": "formats/3DS/models/fels.png"
+                },
+                {
+                    "file": "formats/3DS/models/spider.3ds",
+                    "name": "spider.3ds",
+                    "size": "28,3 Kb",
+                    "thumbnail": "formats/3DS/models/spider.png"
+                },
+                {
+                    "file": "formats/3DS/models/UVTransform_Cube.3DS",
+                    "name": "UVTransform_Cube.3DS",
+                    "size": "1,3 Kb",
+                    "thumbnail": "formats/3DS/models/UVTransform_Cube.png"
+                }
+            ]
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/STL_(file_format)",
+            "description": "STL (an abbreviation of \"stereolithography\") is a file format native to the stereolithography CAD software created by 3D Systems. STL has several backronyms such as \"Standard Triangle Language\" and \"Standard Tessellation Language\". This file format is supported by many other software packages; it is widely used for rapid prototyping, 3D printing and computer-aided manufacturing. STL files describe only the surface geometry of a three-dimensional object without any representation of color, texture or other common CAD model attributes. The STL format specifies both ASCII and binary representations. Binary files are more common, since they are more compact.",
+            "name": "STL",
+            "extension": "stl",
+            "id": "STL",
+            "models": [
+                {
+                    "file": "formats/STL/models/3DSMaxExport.STL",
+                    "name": "3DSMaxExport.STL",
+                    "size": "97,7 Kb",
+                    "thumbnail": "formats/STL/models/3DSMaxExport.png"
+                },
+                {
+                    "file": "formats/STL/models/sphereWithHole.stl",
+                    "name": "sphereWithHole.stl",
+                    "size": "52,6 Kb",
+                    "thumbnail": "formats/STL/models/sphereWithHole.png"
+                },
+                {
+                    "file": "formats/STL/models/Spider_ascii.stl",
+                    "name": "Spider_ascii.stl",
+                    "size": "284,2 Kb",
+                    "thumbnail": "formats/STL/models/Spider_ascii.png"
+                },
+                {
+                    "file": "formats/STL/models/Spider_binary.stl",
+                    "name": "Spider_binary.stl",
+                    "size": "66,9 Kb",
+                    "thumbnail": "formats/STL/models/Spider_binary.png"
+                },
+                {
+                    "file": "formats/STL/models/Wuson.stl",
+                    "name": "Wuson.stl",
+                    "size": "182,3 Kb",
+                    "thumbnail": "formats/STL/models/Wuson.png"
+                }
+            ]
+        },
+        {
+            "url": "https://knowledge.autodesk.com/support/autocad/learn-explore/caas/sfdcarticles/sfdcarticles/AutoCAD-DXF-file-format-documentation.html",
+            "description": "AutoCAD DXF (Drawing Interchange Format, or Drawing Exchange Format) is a CAD data file format developed by Autodesk for enabling data interoperability between AutoCAD and other programs. It can describe 2D or 3D objects.",
+            "name": "DXF 3D",
+            "extension": "dxf",
+            "id": "DXF",
+            "models": [
+                {
+                    "file": "formats/DXF/models/issue_2229.dxf",
+                    "name": "issue_2229.dxf",
+                    "size": "426,6 Kb",
+                    "thumbnail": "formats/DXF/models/issue_2229.png"
+                },
+                {
+                    "file": "formats/DXF/models/lineTest.dxf",
+                    "name": "lineTest.dxf",
+                    "size": "947 b",
+                    "thumbnail": "formats/DXF/models/lineTest.png"
+                },
+                {
+                    "file": "formats/DXF/models/PinkEggFromLW.dxf",
+                    "name": "PinkEggFromLW.dxf",
+                    "size": "55,7 Kb",
+                    "thumbnail": "formats/DXF/models/PinkEggFromLW.png"
+                },
+                {
+                    "file": "formats/DXF/models/wuson.dxf",
+                    "name": "wuson.dxf",
+                    "size": "582,1 Kb",
+                    "thumbnail": "formats/DXF/models/wuson.png"
+                }
+            ]
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/3D_Manufacturing_Format",
+            "description": "3D Manufacturing Format or 3MF is an open source file format standard developed and published by the 3MF Consortium. 3MF is an XML-based data format designed for using additive manufacturing, including information about materials, colors, and other information that cannot be represented in the STL format.",
+            "name": "3D Manufacturing Format",
+            "extension": "3mf",
+            "id": "3MF",
+            "models": [
+                {
+                    "file": "formats/3MF/models/box.3mf",
+                    "name": "box.3mf",
+                    "size": "1,4 Kb",
+                    "thumbnail": "formats/3MF/models/box.png"
+                }
+            ]
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/Additive_manufacturing_file_format",
+            "description": "Additive manufacturing file format (AMF) is an open standard for describing objects for additive manufacturing processes such as 3D printing. The official ISO/ASTM 52915:2016 standard is an XML-based format designed to allow any computer-aided design software to describe the shape and composition of any 3D object to be fabricated on any 3D printer. Unlike its predecessor STL format, AMF has native support for color, materials, lattices, and constellations. ",
+            "name": "Additive manufacturing format ",
+            "extension": "amf",
+            "id": "AMF",
+            "models": [
+                {
+                    "file": "formats/AMF/models/test9.amf",
+                    "name": "test9.amf",
+                    "size": "3,1 Kb",
+                    "thumbnail": "formats/AMF/models/test9.png"
+                }
+            ]
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/PLY_(file_format)",
+            "description": "PLY is a computer file format known as the Polygon File Format or the Stanford Triangle Format. It was principally designed to store three-dimensional data from 3D scanners. The data storage format supports a relatively simple description of a single object as a list of nominally flat polygons. A variety of properties can be stored, including: color and transparency, surface normals, texture coordinates and data confidence values. The format permits one to have different properties for the front and back of a polygon. There are two versions of the file format, one in ASCII, the other in binary. ",
+            "name": "PLY",
+            "extension": "ply",
+            "id": "PLY",
+            "models": [
+                {
+                    "file": "formats/PLY/models/cube.ply",
+                    "name": "cube.ply",
+                    "size": "352 b",
+                    "thumbnail": "formats/PLY/models/cube.png"
+                },
+                {
+                    "file": "formats/PLY/models/cube_binary.ply",
+                    "name": "cube_binary.ply",
+                    "size": "447 b",
+                    "thumbnail": "formats/PLY/models/cube_binary.png"
+                },
+                {
+                    "file": "formats/PLY/models/Wuson.ply",
+                    "name": "Wuson.ply",
+                    "size": "908,9 Kb",
+                    "thumbnail": "formats/PLY/models/Wuson.png"
+                }
+            ]
+        },
+        {
+            "url": "",
+            "description": "The raw format is a minimalist ASCII format which contains 9 columns of data corresponding to the coordinates of the 3 points of a triangle (x y z x y z x y z).",
+            "name": "Raw",
+            "extension": "raw",
+            "id": "RAW",
+            "models": [
+                {
+                    "file": "formats/RAW/models/Wuson.raw",
+                    "name": "Wuson.raw",
+                    "size": "315,5 Kb",
+                    "thumbnail": "formats/RAW/models/Wuson.png"
+                }
+            ]
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/ISO_10303",
+            "description": "That would be amazing to one day support STEP, but it's the most complicated format...",
+            "name": "STEP",
+            "extension": "step,stp",
+            "id": "STEP",
+            "models": []
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/JT_(visualization_format)",
+            "description": "JT (Jupiter Tessellation) is an ISO-standardized 3D data format and is in industry used for product visualization, collaboration, CAD data exchange, and in some also for long-term data retention. It can contain any combination of approximate (faceted) data, boundary representation surfaces (NURBS), Product and Manufacturing Information (PMI), and Metadata (textual attributes) either exported from the native CAD system or inserted by a product data management (PDM) system. Work is on progress to support JT files.",
+            "name": "Jupiter Tessellation",
+            "extension": "jt",
+            "id": "JT",
+            "models": []
+        },
+        {
+            "url": "http://www.inivis.com/",
+            "description": "Available for Windows, Mac and Linux, AC3D is a powerful, easy to use and inexpensive, professional 3D software design package.\r\n",
+            "name": "AC3D",
+            "extension": "ac",
+            "id": "AC",
+            "models": [
+                {
+                    "file": "formats/AC/models/sample_subdiv.ac",
+                    "name": "sample_subdiv.ac",
+                    "size": "3 Kb",
+                    "thumbnail": "formats/AC/models/sample_subdiv.png"
+                },
+                {
+                    "file": "formats/AC/models/SphereWithLight.ac",
+                    "name": "SphereWithLight.ac",
+                    "size": "18,8 Kb",
+                    "thumbnail": "formats/AC/models/SphereWithLight.png"
+                },
+                {
+                    "file": "formats/AC/models/SphereWithLightUvScaling4X.ac",
+                    "name": "SphereWithLightUvScaling4X.ac",
+                    "size": "18,9 Kb",
+                    "thumbnail": "formats/AC/models/SphereWithLightUvScaling4X.png"
+                },
+                {
+                    "file": "formats/AC/models/SphereWithLight_UTF8BOM.ac",
+                    "name": "SphereWithLight_UTF8BOM.ac",
+                    "size": "18,8 Kb",
+                    "thumbnail": "formats/AC/models/SphereWithLight_UTF8BOM.png"
+                },
+                {
+                    "file": "formats/AC/models/Wuson.ac",
+                    "name": "Wuson.ac",
+                    "size": "574,3 Kb",
+                    "thumbnail": "formats/AC/models/Wuson.png"
+                }
+            ]
+        },
+        {
+            "url": "https://www.lifewire.com/ase-file-2619688",
+            "description": "ASE file is a text file containing 2D or 3D scene information, exported by various Autodesk programs (like 3ds Max, AutoCAD, AutoCAD Architecture, Autodesk Combustion, Inventor, Maya, Revit) saved in a text format, which is more compatible with other programs. ASE files are similar to Autodesk .ASC files, but contain additional scene information, as well as points and shapes.",
+            "name": "Autodesk Scene Export",
+            "extension": "ase",
+            "id": "ASE",
+            "models": [
+                {
+                    "file": "formats/ASE/models/anim.ASE",
+                    "name": "anim.ASE",
+                    "size": "13,5 Kb",
+                    "thumbnail": "formats/ASE/models/anim.png"
+                },
+                {
+                    "file": "formats/ASE/models/anim2.ASE",
+                    "name": "anim2.ASE",
+                    "size": "41,8 Kb",
+                    "thumbnail": "formats/ASE/models/anim2.png"
+                },
+                {
+                    "file": "formats/ASE/models/CameraRollAnim.ase",
+                    "name": "CameraRollAnim.ase",
+                    "size": "13,9 Kb",
+                    "thumbnail": "formats/ASE/models/CameraRollAnim.png"
+                },
+                {
+                    "file": "formats/ASE/models/CameraRollAnimWithChildObject.ase",
+                    "name": "CameraRollAnimWithChildObject.ase",
+                    "size": "29,8 Kb",
+                    "thumbnail": "formats/ASE/models/CameraRollAnimWithChildObject.png"
+                },
+                {
+                    "file": "formats/ASE/models/MotionCaptureROM.ase",
+                    "name": "MotionCaptureROM.ase",
+                    "size": "1,1 Mb",
+                    "thumbnail": "formats/ASE/models/MotionCaptureROM.png"
+                },
+                {
+                    "file": "formats/ASE/models/RotatingCube.ASE",
+                    "name": "RotatingCube.ASE",
+                    "size": "16,2 Kb",
+                    "thumbnail": "formats/ASE/models/RotatingCube.png"
+                },
+                {
+                    "file": "formats/ASE/models/TargetCameraAnim.ase",
+                    "name": "TargetCameraAnim.ase",
+                    "size": "17 Kb",
+                    "thumbnail": "formats/ASE/models/TargetCameraAnim.png"
+                },
+                {
+                    "file": "formats/ASE/models/ThreeCubesGreen.ASE",
+                    "name": "ThreeCubesGreen.ASE",
+                    "size": "8,7 Kb",
+                    "thumbnail": "formats/ASE/models/ThreeCubesGreen.png"
+                }
+            ]
+        },
+        {
+            "url": "https://github.com/blitz-research/blitz3d",
+            "description": "3D model or \"entity\" file used by Blitz3D, an application and simple programming language used to created 3D games. It stores model information in \"chunks\" and may contain textures, brushes, vertices, triangles, meshes, bones, or animation data. B3D files are used for storing video game models for characters, terrain, buildings, and other objects.",
+            "name": "BlitzBasic 3D",
+            "extension": "b3d",
+            "id": "B3D",
+            "models": [
+                {
+                    "file": "formats/B3D/models/WusonBlitz.b3d",
+                    "name": "WusonBlitz.b3d",
+                    "size": "85,2 Kb",
+                    "thumbnail": "formats/B3D/models/WusonBlitz.png"
+                }
+            ]
+        },
+        {
+            "url": "https://research.cs.wisc.edu/graphics/Courses/cs-838-1999/Jeff/BVH.html",
+            "description": "The Biovision Hierarchy (BVH) character animation file format was developed by Biovision, a defunct motion capture services company, to give motion capture data to customers. This format largely displaced an earlier format Biovision providing skeleton hierarchy information as well as motion data. ",
+            "name": "Biovision BVH",
+            "extension": "bvh",
+            "id": "BVH",
+            "models": [
+                {
+                    "file": "formats/BVH/models/01_01.bvh",
+                    "name": "01_01.bvh",
+                    "size": "2 Mb",
+                    "thumbnail": "formats/BVH/models/01_01.png"
+                },
+                {
+                    "file": "formats/BVH/models/01_03.bvh",
+                    "name": "01_03.bvh",
+                    "size": "3,3 Mb",
+                    "thumbnail": "formats/BVH/models/01_03.png"
+                },
+                {
+                    "file": "formats/BVH/models/Boxing_Toes.bvh",
+                    "name": "Boxing_Toes.bvh",
+                    "size": "2,5 Mb",
+                    "thumbnail": "formats/BVH/models/Boxing_Toes.png"
+                }
+            ]
+        },
+        {
+            "url": "https://www.maxon.net/",
+            "description": "Cinema 4D is a 3D software suite developed by the German company Maxon. As of R21, only one version of Cinema 4D is available. It replaces all previous variants, including BodyPaint 3D, and includes all features of the past 'Studio' variant. With R21, all binaries were unified. There is no technical difference between commercial, educational, or demo versions. The difference is now only in licensing. 2014 saw the release of Cinema 4D Lite, which came packaged with Adobe After Effects Creative Cloud 2014. \"Lite\" acts as an introductory version, with many features withheld. This is part of a partnership between the two companies, where a Maxon-produced plug-in, called Cineware, allows any variant to create a seamless workflow with After Effects. The \"Lite\" variant is dependent on After Effects CC, needing the latter application running to launch, and is only sold as a package component included with AE CS through Adobe. ",
+            "name": "Model 3D File",
+            "extension": "c4d",
+            "id": "C4D",
+            "models": []
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/TrueSpace",
+            "description": "TrueSpace was a commercial 3D computer graphics and animation software developed by Caligari Corporation, bought-out by Microsoft. As of May 2009, it was officially discontinued, but with some 'unofficial support' up to February 2010.",
+            "name": "trueSpace",
+            "extension": "cob",
+            "id": "COB",
+            "models": [
+                {
+                    "file": "formats/COB/models/dwarf.cob",
+                    "name": "dwarf.cob",
+                    "size": "940,3 Kb",
+                    "thumbnail": "formats/COB/models/dwarf.png"
+                },
+                {
+                    "file": "formats/COB/models/molecule.cob",
+                    "name": "molecule.cob",
+                    "size": "35,5 Kb",
+                    "thumbnail": "formats/COB/models/molecule.png"
+                },
+                {
+                    "file": "formats/COB/models/spider_4_3.cob",
+                    "name": "spider_4_3.cob",
+                    "size": "175,8 Kb",
+                    "thumbnail": "formats/COB/models/spider_4_3.png"
+                },
+                {
+                    "file": "formats/COB/models/spider_6_6.cob",
+                    "name": "spider_6_6.cob",
+                    "size": "53,2 Kb",
+                    "thumbnail": "formats/COB/models/spider_6_6.png"
+                },
+                {
+                    "file": "formats/COB/models/spider_6_6_ascii.cob",
+                    "name": "spider_6_6_ascii.cob",
+                    "size": "476,9 Kb",
+                    "thumbnail": "formats/COB/models/spider_6_6_ascii.png"
+                }
+            ]
+        },
+        {
+            "url": "https://knowledge.autodesk.com/support/3ds-max/learn-explore/caas/CloudHelp/cloudhelp/2019/ENU/3DSMax-Character-Animation/files/GUID-F78E5DE2-DE97-4C63-B533-24B938A2903C-htm.html",
+            "description": "Character Studio is a set of tools within Autodesk’s 3DS Max. It was originally sold separately as a separate add-on product (complete with its own separate packaging, installation media, manual, etc.), then included on the 3ds max installation.",
+            "name": "Autodesk Character Studio Motion ",
+            "extension": "csm",
+            "id": "CSM",
+            "models": [
+                {
+                    "file": "formats/CSM/models/ThomasFechten.csm",
+                    "name": "ThomasFechten.csm",
+                    "size": "3,5 Mb",
+                    "thumbnail": "formats/CSM/models/ThomasFechten.png"
+                }
+            ]
+        },
+        {
+            "url": "http://www.3dgamestudio.com/",
+            "description": "The HMP file type is primarily associated with 3D GameStudio by Conitec Datasystems, Inc. Gamestudio is an authoring suite for 2D and 3D multimedia projects; especially computer games.",
+            "name": "3D GameStudio Terrain ",
+            "extension": "hmp",
+            "id": "HMP",
+            "models": [
+                {
+                    "file": "formats/HMP/models/terrain.hmp",
+                    "name": "terrain.hmp",
+                    "size": "4,4 Kb",
+                    "thumbnail": "formats/HMP/models/terrain.png"
+                }
+            ]
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/Industry_Foundation_Classes",
+            "description": "The Industry Foundation Classes (IFC) data model is intended to describe architectural, building and construction industry data. ",
+            "name": "Industry Foundation Classes",
+            "extension": "ifc",
+            "id": "IFC",
+            "models": [
+                {
+                    "file": "formats/IFC/models/AC14-FZK-Haus.ifc",
+                    "name": "AC14-FZK-Haus.ifc",
+                    "size": "4 Mb",
+                    "thumbnail": "formats/IFC/models/AC14-FZK-Haus.png"
+                }
+            ]
+        },
+        {
+            "url": "http://irrlicht.sourceforge.net/",
+            "description": "The Irrlicht Engine is an open source realtime 3D engine written in C++. It is cross-platform, using D3D, OpenGL and its own software renderers. OpenGL-ES2 and WebGL renderers are also in development. It is a stable library which has been worked on for nearly 2 decades. We've got a huge community and Irrlicht is used by hobbyists and professional companies alike. You can find enhancements for it all over the web, like alternative terrain renderers, portal renderers, exporters, world layers, tutorials, editors, language bindings and so on. And best of all: It's completely free. ",
+            "name": "Irrlicht",
+            "extension": "irr",
+            "id": "IRR",
+            "models": []
+        },
+        {
+            "url": "https://www.lightwave3d.com/",
+            "description": "LightWave 3D is a 3D computer graphics program developed by NewTek. It has been used in films, television, motion graphics, digital matte painting, visual effects, video game development, product design, architectural visualizations, virtual production, music videos, pre-visualizations and advertising. ",
+            "name": "LightWave",
+            "extension": "lwo",
+            "id": "LWO",
+            "models": [
+                {
+                    "file": "formats/LWO/models/concave_polygon.lwo",
+                    "name": "concave_polygon.lwo",
+                    "size": "2,5 Kb",
+                    "thumbnail": "formats/LWO/models/concave_polygon.png"
+                },
+                {
+                    "file": "formats/LWO/models/concave_self_intersecting.lwo",
+                    "name": "concave_self_intersecting.lwo",
+                    "size": "562 b",
+                    "thumbnail": "formats/LWO/models/concave_self_intersecting.png"
+                },
+                {
+                    "file": "formats/LWO/models/earth_cylindrical_x.lwo",
+                    "name": "earth_cylindrical_x.lwo",
+                    "size": "8,8 Kb",
+                    "thumbnail": "formats/LWO/models/earth_cylindrical_x.png"
+                },
+                {
+                    "file": "formats/LWO/models/hierarchy.lwo",
+                    "name": "hierarchy.lwo",
+                    "size": "13,1 Kb",
+                    "thumbnail": "formats/LWO/models/hierarchy.png"
+                },
+                {
+                    "file": "formats/LWO/models/hierarchy_smoothed.lwo",
+                    "name": "hierarchy_smoothed.lwo",
+                    "size": "13,1 Kb",
+                    "thumbnail": "formats/LWO/models/hierarchy_smoothed.png"
+                },
+                {
+                    "file": "formats/LWO/models/ModoExport_vertNormals.lwo",
+                    "name": "ModoExport_vertNormals.lwo",
+                    "size": "24 Kb",
+                    "thumbnail": "formats/LWO/models/ModoExport_vertNormals.png"
+                },
+                {
+                    "file": "formats/LWO/models/nonplanar_polygon.lwo",
+                    "name": "nonplanar_polygon.lwo",
+                    "size": "618 b",
+                    "thumbnail": "formats/LWO/models/nonplanar_polygon.png"
+                },
+                {
+                    "file": "formats/LWO/models/sphere_with_gradient.lwo",
+                    "name": "sphere_with_gradient.lwo",
+                    "size": "9,4 Kb",
+                    "thumbnail": "formats/LWO/models/sphere_with_gradient.png"
+                },
+                {
+                    "file": "formats/LWO/models/sphere_with_mat_gloss_10pc.lwo",
+                    "name": "sphere_with_mat_gloss_10pc.lwo",
+                    "size": "7,4 Kb",
+                    "thumbnail": "formats/LWO/models/sphere_with_mat_gloss_10pc.png"
+                },
+                {
+                    "file": "formats/LWO/models/Subdivision.lwo",
+                    "name": "Subdivision.lwo",
+                    "size": "1,3 Kb",
+                    "thumbnail": "formats/LWO/models/Subdivision.png"
+                },
+                {
+                    "file": "formats/LWO/models/transparency.lwo",
+                    "name": "transparency.lwo",
+                    "size": "8,9 Kb",
+                    "thumbnail": "formats/LWO/models/transparency.png"
+                },
+                {
+                    "file": "formats/LWO/models/UglyVertexColors.lwo",
+                    "name": "UglyVertexColors.lwo",
+                    "size": "65,3 Kb",
+                    "thumbnail": "formats/LWO/models/UglyVertexColors.png"
+                }
+            ]
+        },
+        {
+            "url": "https://www.lightwave3d.com/",
+            "description": "LightWave 3D is a 3D computer graphics program developed by NewTek. It has been used in films, television, motion graphics, digital matte painting, visual effects, video game development, product design, architectural visualizations, virtual production, music videos, pre-visualizations and advertising. ",
+            "name": "LightWave Scene",
+            "extension": "lws",
+            "id": "LWS",
+            "models": [
+                {
+                    "file": "formats/LWS/models/move_x.lws",
+                    "name": "move_x.lws",
+                    "size": "7,5 Kb",
+                    "thumbnail": "formats/LWS/models/move_x.png"
+                },
+                {
+                    "file": "formats/LWS/models/move_xz_bezier.lws",
+                    "name": "move_xz_bezier.lws",
+                    "size": "7,8 Kb",
+                    "thumbnail": "formats/LWS/models/move_xz_bezier.png"
+                },
+                {
+                    "file": "formats/LWS/models/move_xz_hermite.lws",
+                    "name": "move_xz_hermite.lws",
+                    "size": "7,6 Kb",
+                    "thumbnail": "formats/LWS/models/move_xz_hermite.png"
+                },
+                {
+                    "file": "formats/LWS/models/move_xz_linear.lws",
+                    "name": "move_xz_linear.lws",
+                    "size": "7,6 Kb",
+                    "thumbnail": "formats/LWS/models/move_xz_linear.png"
+                },
+                {
+                    "file": "formats/LWS/models/move_xz_spline.lws",
+                    "name": "move_xz_spline.lws",
+                    "size": "7,6 Kb",
+                    "thumbnail": "formats/LWS/models/move_xz_spline.png"
+                },
+                {
+                    "file": "formats/LWS/models/move_xz_stepped.lws",
+                    "name": "move_xz_stepped.lws",
+                    "size": "7,6 Kb",
+                    "thumbnail": "formats/LWS/models/move_xz_stepped.png"
+                },
+                {
+                    "file": "formats/LWS/models/move_x_oldformat_56.lws",
+                    "name": "move_x_oldformat_56.lws",
+                    "size": "3,3 Kb",
+                    "thumbnail": "formats/LWS/models/move_x_oldformat_56.png"
+                },
+                {
+                    "file": "formats/LWS/models/move_x_oldformat_6.lws",
+                    "name": "move_x_oldformat_6.lws",
+                    "size": "7,1 Kb",
+                    "thumbnail": "formats/LWS/models/move_x_oldformat_6.png"
+                },
+                {
+                    "file": "formats/LWS/models/move_x_post_constant.lws",
+                    "name": "move_x_post_constant.lws",
+                    "size": "7,5 Kb",
+                    "thumbnail": "formats/LWS/models/move_x_post_constant.png"
+                },
+                {
+                    "file": "formats/LWS/models/move_x_post_linear.lws",
+                    "name": "move_x_post_linear.lws",
+                    "size": "7,5 Kb",
+                    "thumbnail": "formats/LWS/models/move_x_post_linear.png"
+                },
+                {
+                    "file": "formats/LWS/models/move_x_post_offset_repeat.lws",
+                    "name": "move_x_post_offset_repeat.lws",
+                    "size": "7,5 Kb",
+                    "thumbnail": "formats/LWS/models/move_x_post_offset_repeat.png"
+                },
+                {
+                    "file": "formats/LWS/models/move_x_post_repeat.lws",
+                    "name": "move_x_post_repeat.lws",
+                    "size": "7,5 Kb",
+                    "thumbnail": "formats/LWS/models/move_x_post_repeat.png"
+                },
+                {
+                    "file": "formats/LWS/models/move_x_post_reset.lws",
+                    "name": "move_x_post_reset.lws",
+                    "size": "7,5 Kb",
+                    "thumbnail": "formats/LWS/models/move_x_post_reset.png"
+                },
+                {
+                    "file": "formats/LWS/models/move_y_pre_ofrep_post_osc.lws",
+                    "name": "move_y_pre_ofrep_post_osc.lws",
+                    "size": "7,6 Kb",
+                    "thumbnail": "formats/LWS/models/move_y_pre_ofrep_post_osc.png"
+                }
+            ]
+        },
+        {
+            "url": "https://www.foundry.com/products/modo",
+            "description": "Modo is a polygon and subdivision surface modeling, sculpting, 3D painting, animation and rendering package developed by Luxology, LLC, which is now merged with and known as Foundry. The program incorporates features such as n-gons and edge weighting, and runs on Microsoft Windows, Linux and macOS platforms. ",
+            "name": "Modo",
+            "extension": "lxo",
+            "id": "LXO",
+            "models": [
+                {
+                    "file": "formats/LXO/models/CrazyEngine.lxo",
+                    "name": "CrazyEngine.lxo",
+                    "size": "59,3 Kb",
+                    "thumbnail": "formats/LXO/models/CrazyEngine.png"
+                },
+                {
+                    "file": "formats/LXO/models/sphereWithVertMap.lxo",
+                    "name": "sphereWithVertMap.lxo",
+                    "size": "34,6 Kb",
+                    "thumbnail": "formats/LXO/models/sphereWithVertMap.png"
+                }
+            ]
+        },
+        {
+            "url": "https://gitlab.com/bztsrc/model3d/",
+            "description": "This Model 3D format was designed to address all of the\r\nshortcomings of the existing current formats, so that it can became a truely universal 3D model container and ease all developer's\r\nand model designer's minds, consistently parsed by all software while being easy on network traffic at the same time:",
+            "name": "Model 3D File",
+            "extension": "m3d",
+            "id": "M3D",
+            "models": []
+        },
+        {
+            "url": "http://tfc.duke.free.fr/coding/md2-specs-en.html",
+            "description": "The MD2 model file format was introduced by id Software when releasing Quake 2 in November 1997. It's a file format quite simple to use and understand. MD2 models' characteristics are these:\r\n- Model's geometric data (triangles);\r\n- Frame-by-frame animations;\r\n- Structured data for drawing the model using GL_TRIANGLE_FAN and GL_TRIANGLE_STRIP primitives (called “OpenGL commands”).\r\n",
+            "name": "Quake II",
+            "extension": "md2",
+            "id": "MD2",
+            "models": [
+                {
+                    "file": "formats/MD2/models/faerie.md2",
+                    "name": "faerie.md2",
+                    "size": "313,5 Kb",
+                    "thumbnail": "formats/MD2/models/faerie.png"
+                },
+                {
+                    "file": "formats/MD2/models/sydney.md2",
+                    "name": "sydney.md2",
+                    "size": "295 Kb",
+                    "thumbnail": "formats/MD2/models/sydney.png"
+                }
+            ]
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/Quake_III_Arena",
+            "description": "Quake III Arena is a 1999 multiplayer-focused first-person shooter developed by id Software. It is the third game in the Quake series; it differs from previous games by excluding a story-based single-player mode and highly focusing on multiplayer gameplay. The single-player mode is played against computer-controlled bots. It features music composed by Sonic Mayhem and Front Line Assembly founder Bill Leeb.",
+            "name": "Quake III Arena",
+            "extension": "md3",
+            "id": "MD3",
+            "models": []
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/Quake_III_Arena",
+            "description": "Quake 4 is a military science fiction first-person shooter video game, the fourth title in the Quake series. The game was developed by Raven Software and published by Activision. Raven Software collaborated with id Software, the creators and developers of preceding Quake games. id Software supervised the development of the game as well as providing the id Tech 4 engine upon which it was built. Quake 4 went gold in early October 2005 and was released on October 18, 2005 for Microsoft Windows and later for Linux and OS X, as well as being a launch title for the Xbox 360. A special DVD Collectors Edition was released, including promotional material and the game Quake II with its expansions, The Reckoning and Ground Zero. The Xbox 360 version of Quake 4 is based on the Special Collectors Edition, and includes Quake II. On August 4, 2011, the game was made available through Steam. ",
+            "name": "Quake 4",
+            "extension": "md4",
+            "id": "MD4",
+            "models": []
+        },
+        {
+            "url": "http://tfc.duke.free.fr/coding/md5-specs-en.html",
+            "description": "The MD5 model format comes from id Software's Doom 3 first person shooter, released in august 2004. The mesh data and animation data are separated in distinct files. These are ASCII files and are human readable. Here are some generalities about the MD5 format:\r\n- Model's geometric data are stored in *.md5mesh files;\r\n- Animations are stored in *.md5anim files;\r\n- Supports Skeletal Animation;\r\n- Supports Vertex Skinning;\r\n- Uses quaternions for orientation.\r\n",
+            "name": "Doom 3",
+            "extension": "md5mesh",
+            "id": "MD5",
+            "models": [
+                {
+                    "file": "formats/MD5/models/SimpleCube.md5mesh",
+                    "name": "SimpleCube.md5mesh",
+                    "size": "2,2 Kb",
+                    "thumbnail": "formats/MD5/models/SimpleCube.png"
+                }
+            ]
+        },
+        {
+            "url": "http://www.3dgamestudio.com/",
+            "description": "The HMP file type is primarily associated with 3D GameStudio by Conitec Datasystems, Inc. Gamestudio is an authoring suite for 2D and 3D multimedia projects; especially computer games.",
+            "name": "3D GameStudio ",
+            "extension": "mdl",
+            "id": "MDL",
+            "models": [
+                {
+                    "file": "formats/MDL/models/minigun_MDL3.MDL",
+                    "name": "minigun_MDL3.MDL",
+                    "size": "2,7 Mb",
+                    "thumbnail": "formats/MDL/models/minigun_MDL3.png"
+                },
+                {
+                    "file": "formats/MDL/models/PhosphoricAcid_MDl7.mdl",
+                    "name": "PhosphoricAcid_MDl7.mdl",
+                    "size": "28,3 Kb",
+                    "thumbnail": "formats/MDL/models/PhosphoricAcid_MDl7.png"
+                },
+                {
+                    "file": "formats/MDL/models/Sphere_DiffPinkBlueSpec_Alpha90.mdl",
+                    "name": "Sphere_DiffPinkBlueSpec_Alpha90.mdl",
+                    "size": "3,6 Kb",
+                    "thumbnail": "formats/MDL/models/Sphere_DiffPinkBlueSpec_Alpha90.png"
+                }
+            ]
+        },
+        {
+            "url": "http://www.milkshape3d.com/",
+            "description": "MilkShape 3D (MS3D) is a shareware low-polygon 3D modeling program created by Mete Ciragan. It is used mainly for compiling models for Half-Life, Blockland, The Sims 2, The Sims 3, Rock Raiders, and other sandbox video games. It is also used to create models for a large number of indie games, Milkshape 3D's repertoire of export capabilities has been extended considerably, due to the efforts of both its creator and the community around it, and it is now able to be used for most games today, so long as an exporter for the required format is available. ",
+            "name": "Milkshape 3D",
+            "extension": "msd3",
+            "id": "MS3D",
+            "models": []
+        },
+        {
+            "url": "http://paulbourke.net/dataformats/nff/nff1.html",
+            "description": "The NFF (Neutral File Format) is designed as a minimal scene description language.  The language was designed in order to test various rendering algorithms and efficiency schemes.  It is meant to describe the geometry and basic surface characteristics of objects, the placement of lights, and the viewing frustum for the eye.  Some additional information is provided for esthetic reasons (such as the color of the objects, which is not strictly necessary for testing the efficiency of rendering algorithms).",
+            "name": "Neutral File Format ",
+            "extension": "nff",
+            "id": "NFF",
+            "models": [
+                {
+                    "file": "formats/NFF/models/cylinder.nff",
+                    "name": "cylinder.nff",
+                    "size": "197 b",
+                    "thumbnail": "formats/NFF/models/cylinder.png"
+                },
+                {
+                    "file": "formats/NFF/models/dodecahedron.nff",
+                    "name": "dodecahedron.nff",
+                    "size": "11 b",
+                    "thumbnail": "formats/NFF/models/dodecahedron.png"
+                },
+                {
+                    "file": "formats/NFF/models/hexahedron.nff",
+                    "name": "hexahedron.nff",
+                    "size": "26 b",
+                    "thumbnail": "formats/NFF/models/hexahedron.png"
+                },
+                {
+                    "file": "formats/NFF/models/octahedron.nff",
+                    "name": "octahedron.nff",
+                    "size": "15 b",
+                    "thumbnail": "formats/NFF/models/octahedron.png"
+                },
+                {
+                    "file": "formats/NFF/models/positionTest.nff",
+                    "name": "positionTest.nff",
+                    "size": "387 b",
+                    "thumbnail": "formats/NFF/models/positionTest.png"
+                },
+                {
+                    "file": "formats/NFF/models/spheres.nff",
+                    "name": "spheres.nff",
+                    "size": "349 b",
+                    "thumbnail": "formats/NFF/models/spheres.png"
+                },
+                {
+                    "file": "formats/NFF/models/tetrahedron.nff",
+                    "name": "tetrahedron.nff",
+                    "size": "11 b",
+                    "thumbnail": "formats/NFF/models/tetrahedron.png"
+                }
+            ]
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/OFF_(file_format)",
+            "description": "OFF (Object File Format) is a geometry definition file format containing the description of the composing polygons of the 3D object.",
+            "name": "OFF",
+            "extension": "off",
+            "id": "OFF",
+            "models": [
+                {
+                    "file": "formats/OFF/models/Cube.off",
+                    "name": "Cube.off",
+                    "size": "314 b",
+                    "thumbnail": "formats/OFF/models/Cube.png"
+                },
+                {
+                    "file": "formats/OFF/models/Wuson.off",
+                    "name": "Wuson.off",
+                    "size": "152,8 Kb",
+                    "thumbnail": "formats/OFF/models/Wuson.png"
+                }
+            ]
+        },
+        {
+            "url": "https://opengex.org/",
+            "description": "The Open Game Engine Exchange (OpenGEX) format is a text-based file format designed to facilitate the transfer of complex scene data between applications such as modeling tools and game engines. The OpenGEX format is built upon the data structure concepts defined by the Open Data Description Language (OpenDDL), a generic language for the storage of arbitrary data in human-readable format.",
+            "name": "OpenGEX",
+            "extension": "ogex",
+            "id": "OpenGEX",
+            "models": [
+                {
+                    "file": "formats/OpenGEX/models/Example.ogex",
+                    "name": "Example.ogex",
+                    "size": "4,2 Kb",
+                    "thumbnail": "formats/OpenGEX/models/Example.png"
+                }
+            ]
+        },
+        {
+            "url": "http://www.quick3d.com",
+            "description": "Quick3D is a viewing and converting tools developed in the 2000s.",
+            "name": "Quick 3D",
+            "extension": "q3o,q3s",
+            "id": "Q3D",
+            "models": [
+                {
+                    "file": "formats/Q3D/models/E-AT-AT.q3o",
+                    "name": "E-AT-AT.q3o",
+                    "size": "344,1 Kb",
+                    "thumbnail": "formats/Q3D/models/E-AT-AT.png"
+                },
+                {
+                    "file": "formats/Q3D/models/earth.q3o",
+                    "name": "earth.q3o",
+                    "size": "104,2 Kb",
+                    "thumbnail": "formats/Q3D/models/earth.png"
+                },
+                {
+                    "file": "formats/Q3D/models/WusonOrange.q3o",
+                    "name": "WusonOrange.q3o",
+                    "size": "140,8 Kb",
+                    "thumbnail": "formats/Q3D/models/WusonOrange.png"
+                },
+                {
+                    "file": "formats/Q3D/models/WusonOrange.q3s",
+                    "name": "WusonOrange.q3s",
+                    "size": "141,1 Kb",
+                    "thumbnail": "formats/Q3D/models/WusonOrange.png"
+                }
+            ]
+        },
+        {
+            "url": "https://www.nevercenter.com/silo/",
+            "description": "Silo is a polygon/subdivision surfaces 3D modeling application created by Nevercenter. It has a focus on quick editing, a customizable interface (all mouse buttons and keyboard shortcuts can be assigned to any function), and a flexible workflow.",
+            "name": "Nevercenter Silo",
+            "extension": "sib",
+            "id": "SIB",
+            "models": [
+                {
+                    "file": "formats/SIB/models/heffalump.sib",
+                    "name": "heffalump.sib",
+                    "size": "54,4 Kb",
+                    "thumbnail": "formats/SIB/models/heffalump.png"
+                }
+            ]
+        },
+        {
+            "url": "https://developer.valvesoftware.com/wiki/Studiomdl_Data",
+            "description": "The Studiomdl Data file format (SMD) stores 3D models in ASCII for analysis and compilation by studiomdl. SMD files are usually generated by an SMD export plug-in for a given model editor package like MilkShape. Aside from Source and GoldSrc, SMD is known to be used by Sauerbraten and third party tools for The Sims and Mount & Blade. ",
+            "name": "Valve Model",
+            "extension": "smd",
+            "id": "SMD",
+            "models": [
+                {
+                    "file": "formats/SMD/models/holy_grailref.smd",
+                    "name": "holy_grailref.smd",
+                    "size": "259,9 Kb",
+                    "thumbnail": "formats/SMD/models/holy_grailref.png"
+                },
+                {
+                    "file": "formats/SMD/models/triangle.smd",
+                    "name": "triangle.smd",
+                    "size": "235 b",
+                    "thumbnail": "formats/SMD/models/triangle.png"
+                }
+            ]
+        },
+        {
+            "url": "https://planetside.co.uk/",
+            "description": "Terragen is a scenery generator program for Microsoft Windows and Mac OS X developed and published by Planetside Software. It can be used to create renderings and animations of landscapes",
+            "name": "Terragen Terrain",
+            "extension": "ter",
+            "id": "TER",
+            "models": [
+                {
+                    "file": "formats/TER/models/RealisticTerrain.ter",
+                    "name": "RealisticTerrain.ter",
+                    "size": "129,1 Kb",
+                    "thumbnail": "formats/TER/models/RealisticTerrain.png"
+                },
+                {
+                    "file": "formats/TER/models/RealisticTerrain_Large.ter",
+                    "name": "RealisticTerrain_Large.ter",
+                    "size": "514,1 Kb",
+                    "thumbnail": "formats/TER/models/RealisticTerrain_Large.png"
+                }
+            ]
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/DirectX",
+            "description": "Microsoft DirectX is a collection of application programming interfaces (APIs) for handling tasks related to multimedia, especially game programming and video, on Microsoft platforms. Originally, the names of these APIs all began with Direct, such as Direct3D, DirectDraw, DirectMusic, DirectPlay, DirectSound, and so forth.",
+            "name": "DirectX",
+            "extension": "x",
+            "id": "X",
+            "models": [
+                {
+                    "file": "formats/X/models/BCN_Epileptic.X",
+                    "name": "BCN_Epileptic.X",
+                    "size": "713 Kb",
+                    "thumbnail": "formats/X/models/BCN_Epileptic.png"
+                },
+                {
+                    "file": "formats/X/models/fromtruespace_bin32.x",
+                    "name": "fromtruespace_bin32.x",
+                    "size": "363,6 Kb",
+                    "thumbnail": "formats/X/models/fromtruespace_bin32.png"
+                },
+                {
+                    "file": "formats/X/models/kwxport_test_cubewithvcolors.x",
+                    "name": "kwxport_test_cubewithvcolors.x",
+                    "size": "9,4 Kb",
+                    "thumbnail": "formats/X/models/kwxport_test_cubewithvcolors.png"
+                },
+                {
+                    "file": "formats/X/models/Testwuson.X",
+                    "name": "Testwuson.X",
+                    "size": "854,8 Kb",
+                    "thumbnail": "formats/X/models/Testwuson.png"
+                },
+                {
+                    "file": "formats/X/models/test_cube_binary.x",
+                    "name": "test_cube_binary.x",
+                    "size": "2,8 Kb",
+                    "thumbnail": "formats/X/models/test_cube_binary.png"
+                },
+                {
+                    "file": "formats/X/models/test_cube_compressed.x",
+                    "name": "test_cube_compressed.x",
+                    "size": "775 b",
+                    "thumbnail": "formats/X/models/test_cube_compressed.png"
+                },
+                {
+                    "file": "formats/X/models/test_cube_text.x",
+                    "name": "test_cube_text.x",
+                    "size": "5,1 Kb",
+                    "thumbnail": "formats/X/models/test_cube_text.png"
+                }
+            ]
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/X3D",
+            "description": "X3D is a royalty-free ISO/IEC standard for declaratively representing 3D computer graphics. File format support includes XML, ClassicVRML, Compressed Binary Encoding (CBE) and a draft JSON encoding. X3D became the successor to the Virtual Reality Modeling Language (VRML) in 2001. X3D features extensions to VRML (e.g. CAD, geospatial, humanoid animation, NURBS etc.), the ability to encode the scene using an XML syntax as well as the Open Inventor-like syntax of VRML97, or binary formatting, and enhanced application programming interfaces (APIs).\r\nThe X3D extension supports multi-stage and multi-texture rendering; it also supports shading with lightmap and normalmap. Starting in 2010, X3D has supported deferred rendering architecture. Now X3D can import SSAO, CSM and Realtime Environment Reflection/Lighting. The user can also use optimizations including BSP/QuadTree/OctTree or culling in the X3D scene.\r\nX3D can work with other open source standards including XML, DOM and XPath. ",
+            "name": "X3D",
+            "extension": "x3d",
+            "id": "X3D",
+            "models": [
+                {
+                    "file": "formats/X3D/models/ComputerKeyboard.x3d",
+                    "name": "ComputerKeyboard.x3d",
+                    "size": "9,7 Kb",
+                    "thumbnail": "formats/X3D/models/ComputerKeyboard.png"
+                }
+            ]
+        },
+        {
+            "url": "https://en.wikipedia.org/wiki/Xgl",
+            "description": "Xgl is an obsolete display server implementation supporting the X Window System protocol designed to take advantage of modern graphics cards via their OpenGL drivers, layered on top of OpenGL. It supports hardware acceleration of all X, OpenGL and XVideo applications and graphical effects by a compositing window manager such as Compiz or Beryl. The project was started by David Reveman of Novell and first released on January 2, 2006. It was removed from the X.org server in favor of AIGLX on June 12, 2008. ",
+            "name": "Xgl",
+            "extension": "xgl,zgl",
+            "id": "XGL",
+            "models": [
+                {
+                    "file": "formats/XGL/models/BCN_Epileptic.zgl",
+                    "name": "BCN_Epileptic.zgl",
+                    "size": "175,7 Kb",
+                    "thumbnail": "formats/XGL/models/BCN_Epileptic.png"
+                },
+                {
+                    "file": "formats/XGL/models/cubes_with_alpha.zgl",
+                    "name": "cubes_with_alpha.zgl",
+                    "size": "2 Kb",
+                    "thumbnail": "formats/XGL/models/cubes_with_alpha.png"
+                },
+                {
+                    "file": "formats/XGL/models/sample_official.xgl",
+                    "name": "sample_official.xgl",
+                    "size": "3,2 Kb",
+                    "thumbnail": "formats/XGL/models/sample_official.png"
+                },
+                {
+                    "file": "formats/XGL/models/sphere_with_mat_gloss_10pc.zgl",
+                    "name": "sphere_with_mat_gloss_10pc.zgl",
+                    "size": "8,9 Kb",
+                    "thumbnail": "formats/XGL/models/sphere_with_mat_gloss_10pc.png"
+                },
+                {
+                    "file": "formats/XGL/models/Spider_ascii.zgl",
+                    "name": "Spider_ascii.zgl",
+                    "size": "58,5 Kb",
+                    "thumbnail": "formats/XGL/models/Spider_ascii.png"
+                },
+                {
+                    "file": "formats/XGL/models/Wuson.zgl",
+                    "name": "Wuson.zgl",
+                    "size": "133,9 Kb",
+                    "thumbnail": "formats/XGL/models/Wuson.png"
+                },
+                {
+                    "file": "formats/XGL/models/wuson_dxf.zgl",
+                    "name": "wuson_dxf.zgl",
+                    "size": "131,9 Kb",
+                    "thumbnail": "formats/XGL/models/wuson_dxf.png"
+                }
+            ]
+        }
+    ]
+}

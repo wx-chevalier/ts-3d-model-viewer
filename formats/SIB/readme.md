@@ -1,0 +1,1 @@
+Silo is a polygon/subdivision surfaces 3D modeling application created by Nevercenter. It has a focus on quick editing, a customizable interface (all mouse buttons and keyboard shortcuts can be assigned to any function), and a flexible workflow.

@@ -1,0 +1,6 @@
+github.com/go-gl/mathgl v0.0.0-20180804195959-cdf14b6b8f8a h1:2n5w2v3knlspzjJWyQPC0j88Mwvq0SZV0Jdws34GJwc=
+github.com/go-gl/mathgl v0.0.0-20180804195959-cdf14b6b8f8a/go.mod h1:dvrdneKbyWbK2skTda0nM4B9zSlS2GZSnjX7itr/skQ=
+gitlab.com/russoj88/stl v1.0.2 h1:jByJjAbp5G+Dn4yiSozUXmIDi5Jdm8tzWBkk6QsoZHk=
+gitlab.com/russoj88/stl v1.0.2/go.mod h1:+F6mWiD6X/9Z37sZdN2EUaQHNasZdsNX23f2t8iM1HY=
+golang.org/x/image v0.0.0-20180926015637-991ec62608f3 h1:5IfA9fqItkh2alJW94tvQk+6+RF9MW2q9DzwE8DBddQ=
+golang.org/x/image v0.0.0-20180926015637-991ec62608f3/go.mod h1:ux5Hcp/YLpHSI86hEcLt0YII63i6oz57MZXIpbrjZUs=

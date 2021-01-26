@@ -65,9 +65,9 @@ Add the `<model-viewer>`
 ```
 
 ```ts
-import * as React from 'react';
+import * as React from "react";
 
-import { GoogleModelViewer } from '@m-fe/react-model-viewer';
+import { GoogleModelViewer } from "@m-fe/react-model-viewer";
 
 export default function Simple() {
   return (
@@ -81,7 +81,7 @@ export default function Simple() {
         key="2"
         type="stl"
         src="https://ufc-assets.oss-cn-shanghai.aliyuncs.com/test/pr2_head_pan.stl"
-        onTopology={m => {
+        onTopology={(m) => {
           console.log(m);
         }}
       />
@@ -99,19 +99,21 @@ export default function Simple() {
   src="/error.stl"
   width={600}
   height={400}
-  onTopology={m => {
+  onTopology={(m) => {
     // console.log(m);
   }}
-  onZip={b => {
+  onZip={(b) => {
     // 执行解压缩
     const modelArray: Uint8Array = pako.inflate(new Uint8Array(b));
     console.log(modelArray);
   }}
-  onError={err => {
+  onError={(err) => {
     console.log(err);
   }}
 />
 ```
+
+### WasmViewer
 
 # About
 

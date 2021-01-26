@@ -1,0 +1,137 @@
+.rmv-gmv-container {
+  position: relative;
+}
+
+.rmv-gmv-attr-modal {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.45);
+  height: auto;
+  right: 0;
+  bottom: 0;
+  padding: 0 16px;
+}
+
+.rmv-gmv-attr-modal .item {
+  height: 25px;
+  line-height: 25px;
+  color: white;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.rmv-gmv-attr-modal .item span {
+  float: right;
+  margin-top: -5px;
+  margin-left: 4px;
+}
+
+.rmv-gmv-attr-joystick {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.rmv-gmv-attr-joystick-inner {
+  position: relative;
+}
+
+.rmv-gmv-attr-joystick-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 15px;
+  width: 40px;
+}
+
+.rmv-gmv-attr-joystick .arrow {
+  border: solid white;
+  border-width: 0 4px 4px 0;
+  display: inline-block;
+  padding: 4px;
+  height: fit-content;
+  cursor: pointer;
+}
+
+.rmv-gmv-attr-joystick-arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.rmv-gmv-attr-joystick-arrow i {
+  border: solid white;
+  display: inline-block;
+  cursor: pointer;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 12.5px 18px 12.5px;
+  border-color: transparent transparent #fff transparent;
+
+}
+
+.rmv-gmv-attr-joystick-arrow-up {
+  position: absolute;
+  height: 20px;
+  width: 100%;
+  top: 5px;
+  left: 0;
+}
+
+
+.rmv-gmv-attr-joystick-arrow-right {
+  position: absolute;
+  height: 100%;
+  width: 20px;
+  top: 0;
+  right: 5px;
+}
+
+.rmv-gmv-attr-joystick-arrow-right i {
+  transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+}
+
+.rmv-gmv-attr-joystick-arrow-left {
+  position: absolute;
+  height: 100%;
+  width: 20px;
+  top: 0;
+  left: 5px;
+}
+
+.rmv-gmv-attr-joystick-arrow-left i {
+  transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+}
+
+.rmv-gmv-attr-joystick-arrow-down {
+  position: absolute;
+  height: 20px;
+  width: 100%;
+  bottom: 50px;
+  left: 0;
+}
+
+.rmv-gmv-attr-joystick-arrow-plus {
+  position: absolute;
+  bottom: 25px;
+  right: 20px;
+  font-size: 20px;
+  color: white;
+}
+
+.rmv-gmv-attr-joystick-arrow-minus {
+  position: absolute;
+  bottom: 25px;
+  right: 5px;
+  font-size: 20px;
+  color: white;
+}
+
+.rmv-gmv-attr-joystick-arrow-down i {
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+}

@@ -1,0 +1,89 @@
+{
+  "name": "@m-fe/react-model-viewer",
+  "version": "0.3.0",
+  "description": "Micro Front-end Libs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wx-chevalier/3d-model-viewer"
+  },
+  "author": "wx-chevalier@github",
+  "license": "MIT",
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "keywords": [
+    "webpack",
+    "react"
+  ],
+  "scripts": {
+    "build": "npm run clean && run-p build:* && npm run clean:r && run-p copy:*",
+    "build-storybook": "build-storybook",
+    "build:cjs": "tsc --project ./tsconfig.cjs.json",
+    "build:es": "tsc --project ./tsconfig.es.json",
+    "build:umd": "NODE_ENV=production webpack --config ./scripts/webpack/webpack.config.umd.js -p",
+    "clean": "rimraf dist",
+    "clean:r": "rimraf ./dist/*.map && rimraf ./dist/**/*.map && rimraf ./dist/**/*.tsbuildinfo",
+    "copy:cjs": "copyfiles -u 1 './src/**/*.{less,svg,css}' dist/cjs/",
+    "copy:es": "copyfiles -u 1 './src/**/*.{less,svg,css}' dist/es/",
+    "dev": "webpack-dev-server --config ./scripts/webpack/webpack.config.dev.js --hot",
+    "lint": "run-p lint:*",
+    "lint:es": "cross-env PARSER_NO_WATCH=true eslint . --cache --ext js,md,ts,tsx -f friendly --max-warnings 10",
+    "lint:style": "stylelint **/*.less --cache",
+    "lint:ts": "tslint -p . -t stylish",
+    "lint:tsc": "tsc -p tsconfig.json --incremental false --noEmit",
+    "prepublish": "npm run clean:r",
+    "start": "npm run dev",
+    "storybook": "start-storybook -p 6006"
+  },
+  "dependencies": {
+    "@m-fe/utils": "^0.5.5",
+    "@seregpie/three.text-sprite": "^2.0.0",
+    "lodash": "^4.17.15",
+    "pako": "^1.0.11",
+    "rc-tooltip": "^5.0.1",
+    "react": "^16.13.0",
+    "react-color": "^2.18.1",
+    "react-dom": "^16.13.0",
+    "react-loader-spinner": "^3.1.5",
+    "stl-viewer": "^0.12.0",
+    "styled-components": "^5.1.0",
+    "three": "^0.114.0",
+    "three-orbitcontrols-ts": "^0.1.2",
+    "tween.js": "^16.6.0",
+    "tween.ts": "^18.6.1",
+    "ueact-utils": "^0.2.2",
+    "uzip": "^0.20200316.0",
+    "workerize": "^0.1.8"
+  },
+  "devDependencies": {
+    "@m-fe/app-config": "^0.6.5",
+    "@storybook/addon-actions": "^5.3.14",
+    "@storybook/addon-info": "^5.3.14",
+    "@storybook/addon-links": "^5.3.14",
+    "@storybook/addons": "^5.3.14",
+    "@storybook/react": "^5.3.14",
+    "@types/pako": "^1.0.1",
+    "@types/react-color": "^3.0.4",
+    "@types/tween.js": "^18.5.1",
+    "cross-env": "^7.0.2",
+    "rc-upload": "^3.0.0",
+    "webpack": "^4.42.0",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,scss,less,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true
+  }
+}

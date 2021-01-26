@@ -1,0 +1,1 @@
+The raw format is a minimalist ASCII format which contains 9 columns of data corresponding to the coordinates of the 3 points of a triangle (x y z x y z x y z).

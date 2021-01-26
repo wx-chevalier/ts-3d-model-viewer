@@ -1,0 +1,15 @@
+newmtl Model001_Material001
+map_Kd Batman_V3_Cape_DS_1-4_D.tga
+
+newmtl Model001_Material002
+map_Kd Batman_V3_Cape_DS_1-4_D.tga
+
+newmtl Model001_Material003
+map_Kd DLC3_Batman1970_head_D.tga
+
+newmtl Model001_Material004
+map_Kd DLC3_Batman1970_leg_D.tga
+
+newmtl Model001_Material005
+map_Kd DLC3_Batman1970_torso_D.tga
+

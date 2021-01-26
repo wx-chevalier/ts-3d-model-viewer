@@ -1,0 +1,1 @@
+AutoCAD DXF (Drawing Interchange Format, or Drawing Exchange Format) is a CAD data file format developed by Autodesk for enabling data interoperability between AutoCAD and other programs. It can describe 2D or 3D objects.

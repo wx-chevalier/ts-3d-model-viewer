@@ -1,0 +1,1 @@
+Onshape is a computer-aided design (CAD) software system, delivered over the Internet via a Software as a Service (SAAS) model. It makes extensive use of cloud computing, with compute-intensive processing and rendering performed on Internet-based servers, and users are able to interact with the system via a web browser or the iOS and Android apps.

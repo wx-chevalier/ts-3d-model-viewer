@@ -1,0 +1,1 @@
+3D Manufacturing Format or 3MF is an open source file format standard developed and published by the 3MF Consortium. 3MF is an XML-based data format designed for using additive manufacturing, including information about materials, colors, and other information that cannot be represented in the STL format.

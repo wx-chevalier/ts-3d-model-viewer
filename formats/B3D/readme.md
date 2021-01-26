@@ -1,0 +1,1 @@
+3D model or "entity" file used by Blitz3D, an application and simple programming language used to created 3D games. It stores model information in "chunks" and may contain textures, brushes, vertices, triangles, meshes, bones, or animation data. B3D files are used for storing video game models for characters, terrain, buildings, and other objects.

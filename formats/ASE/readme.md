@@ -1,0 +1,1 @@
+ASE file is a text file containing 2D or 3D scene information, exported by various Autodesk programs (like 3ds Max, AutoCAD, AutoCAD Architecture, Autodesk Combustion, Inventor, Maya, Revit) saved in a text format, which is more compatible with other programs. ASE files are similar to Autodesk .ASC files, but contain additional scene information, as well as points and shapes.

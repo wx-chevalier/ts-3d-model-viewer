@@ -1,0 +1,1 @@
+Terragen is a scenery generator program for Microsoft Windows and Mac OS X developed and published by Planetside Software. It can be used to create renderings and animations of landscapes

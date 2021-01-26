@@ -1,0 +1,1 @@
+Modo is a polygon and subdivision surface modeling, sculpting, 3D painting, animation and rendering package developed by Luxology, LLC, which is now merged with and known as Foundry. The program incorporates features such as n-gons and edge weighting, and runs on Microsoft Windows, Linux and macOS platforms. 
