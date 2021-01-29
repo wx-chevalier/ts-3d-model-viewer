@@ -842,7 +842,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               color={this.state.modelColor}
               onChange={({ hex }) => {
                 this.setState({ modelColor: hex }, () => {
-                  this.model.material = this.getMaterial();
+                  if (this.model) {
+                    this.model.material = this.getMaterial();
+                  }
                 });
               }}
             />

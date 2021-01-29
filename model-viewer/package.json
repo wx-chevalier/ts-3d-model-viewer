@@ -10,7 +10,7 @@
   "license": "MIT",
   "private": true,
   "workspaces": [
-    "packages/react-lib"
+    "packages/webgl"
   ],
   "keywords": [
     "react",
