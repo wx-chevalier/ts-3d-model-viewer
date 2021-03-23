@@ -27,11 +27,17 @@ import {
 import { getLocale, i18nFormat, setLocale } from '../../utils/i18n';
 import { calcTopology } from '../../utils/mesh';
 import { canTransformToGLTF, loadMesh } from '../../utils/mesh_loader';
-import { ScreenshotObject } from '../../utils/screenshot';
+import { ScreenshotObject } from '../../types/ScreenshotObject';
 import { Holdable } from '../Holdable';
 import { Switch } from '../Switch';
 
 import './index.css';
+import {
+  adjustGeometry,
+  getMaterial,
+  getThreeJsWebGLRenderer,
+  setupLights
+} from '../../stage/renderer';
 
 const OrbitControls = require('three-orbit-controls')(THREE);
 
@@ -169,54 +175,18 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     }
   }
 
-  getMaterial() {
-    const { withClipping } = this.state;
-
-    const localPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 0.5);
-
-    const material = new THREE.MeshPhongMaterial({
-      color: this.state.modelColor,
-      specular: 0x111111,
-      shininess: 20,
-      // side: THREE.DoubleSide,
-
-      // ***** Clipping setup (material): *****
-      clippingPlanes: withClipping ? [localPlane] : [],
-      clipShadows: true
-    });
-
-    return material;
-  }
-
   /** 初始化几何体 */
   initGeometry(geometry: THREE.BufferGeometry | THREE.Geometry) {
     this._setupScene();
     this._setupRenderer();
 
-    geometry.computeBoundingSphere();
-    geometry.center();
+    const material = getMaterial(this.state.withClipping, this.state.modelColor);
 
-    geometry.applyMatrix4(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
+    const { mesh, xDims, yDims, zDims } = adjustGeometry(geometry, material);
 
-    const material = this.getMaterial();
-
-    const mesh = new THREE.Mesh(geometry, material);
-
-    geometry.computeBoundingBox();
-
-    this.xDims = geometry.boundingBox.max.x - geometry.boundingBox.min.x;
-    this.yDims = geometry.boundingBox.max.y - geometry.boundingBox.min.y;
-    this.zDims = geometry.boundingBox.max.z - geometry.boundingBox.min.z;
-
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    mesh.material = material;
-
-    // reset center point
-    const box = new THREE.Box3().setFromObject(mesh);
-    box.getCenter(mesh.position);
-    mesh.position.multiplyScalar(-1);
-
+    this.xDims = xDims;
+    this.yDims = yDims;
+    this.zDims = zDims;
     this.model = mesh;
 
     if (this.state.withMaterial) {
@@ -225,9 +195,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
     this.scene.updateMatrixWorld();
 
-    this._setupLights();
-    this._setupControls();
-    this._setupDecorators();
+    if (this.model) {
+      setupLights(this.model, this.scene);
+      this._setupControls();
+      this._setupDecorators();
+    }
 
     requestAnimationFrame(time => {
       this.animate(time);
@@ -288,75 +260,18 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
   /** 初始化渲染器 */
   _setupRenderer() {
-    const { backgroundColor } = this.props;
-
     if (!this.$dom) {
       return;
     }
 
     const height = this.$dom.clientHeight;
     const width = this.$dom.clientWidth;
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true,
-      preserveDrawingBuffer: true
-    });
-    const devicePixelRatio = window.devicePixelRatio || 1;
 
-    renderer.setClearColor(new THREE.Color(backgroundColor), 1);
-    renderer.setPixelRatio(devicePixelRatio);
-    renderer.setSize(width, height);
-
-    // renderer.gammaInput = true;
-    // renderer.gammaOutput = true;
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.cullFace = THREE.CullFaceBack;
+    const renderer = getThreeJsWebGLRenderer(this.props, { height, width });
 
     this.$dom.appendChild(renderer.domElement);
 
-    const Empty = Object.freeze([]) as any;
-    renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
-    renderer.localClippingEnabled = true;
-
     this.renderer = renderer;
-  }
-
-  /** 初始化灯光 */
-  _setupLights() {
-    if (this.model) {
-      // Ambient，散射灯光
-      this.scene.add(new THREE.AmbientLight(0x505050));
-
-      const maxGeo = this.model.geometry.boundingBox.max;
-      const minGeo = this.model.geometry.boundingBox.min;
-
-      const target = new THREE.Object3D();
-      target.position.set(0, 0, 0);
-
-      const LightPosList: { x: number; y: number; z: number }[] = [
-        {
-          x: maxGeo.x * 2,
-          y: maxGeo.y * 2,
-          z: maxGeo.z * 2
-        },
-        {
-          x: minGeo.x * 2,
-          y: minGeo.y * 2,
-          z: minGeo.z * 2
-        }
-      ];
-
-      LightPosList.forEach(pos => {
-        const light = new THREE.SpotLight(0xffffff);
-        light.castShadow = true;
-        light.angle = 180;
-        light.position.set(pos.x, pos.y, pos.z);
-
-        light.target = target;
-
-        this.scene.add(light);
-      });
-    }
   }
 
   _setupAxisHelper() {
@@ -843,7 +758,10 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               onChange={({ hex }) => {
                 this.setState({ modelColor: hex }, () => {
                   if (this.model) {
-                    this.model.material = this.getMaterial();
+                    this.model.material = getMaterial(
+                      this.state.withClipping,
+                      this.state.modelColor
+                    );
                   }
                 });
               }}
@@ -898,7 +816,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               checked={withClipping}
               onChange={e => {
                 this.setState({ withClipping: e.target.checked }, () => {
-                  this.model.material = this.getMaterial();
+                  this.model.material = getMaterial(this.state.withClipping, this.state.modelColor);
                 });
               }}
             />
@@ -944,7 +862,6 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       withMaterial,
       withWireframe,
       withBoundingBox,
-      topology,
       type,
       showColorPicker,
       withClipping,
@@ -1050,7 +967,10 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                 checked={withClipping}
                 onChange={e => {
                   this.setState({ withClipping: e.target.checked }, () => {
-                    this.model.material = this.getMaterial();
+                    this.model.material = getMaterial(
+                      this.state.withClipping,
+                      this.state.modelColor
+                    );
                   });
                 }}
               />

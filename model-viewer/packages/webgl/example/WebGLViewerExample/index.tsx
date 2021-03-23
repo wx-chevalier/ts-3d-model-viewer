@@ -1,22 +1,37 @@
 import * as S from '@m-fe/utils';
 import * as React from 'react';
 
-import { WebGLViewer } from '../../src';
+import { WebGLViewer, generateScreenshot } from '../../src';
 
 export function WebGLViewerExample() {
+  React.useEffect(() => {
+    (async () => {
+      const snapshot = await generateScreenshot({
+        type: 'stl',
+        src: '/hollow_of__010.stl',
+        width: 1000,
+        height: 500
+      });
+
+      console.log(snapshot);
+
+      S.downloadUrl(snapshot as string);
+    })();
+  }, []);
+
   return (
     <div>
-      {/* <WebGLViewer
+      <WebGLViewer
         key="2"
         type="stl"
-        src="/hollow_of__010.stl.zlib"
+        src="/hollow_of__010.stl"
         fileName="AAAAAAAAAAAAAAAAAAAAAAAAA"
         width={1000}
         height={400}
         onTopology={m => {
           // console.log(m);
         }}
-      /> */}
+      />
       <br />
       {/* <WebGLViewer
         key="21"
@@ -35,7 +50,7 @@ export function WebGLViewerExample() {
           console.error('Invalid');
         }}
       /> */}
-      <WebGLViewer
+      {/* <WebGLViewer
         key="22"
         src="big.glb"
         fileName="BBB"
@@ -51,7 +66,7 @@ export function WebGLViewerExample() {
         onError={() => {
           console.error('Invalid');
         }}
-      />
+      /> */}
       <br />
       {/* <WebGLViewer
         key="3"

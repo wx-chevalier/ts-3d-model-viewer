@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 
 import { ModelAttr } from '../types/ModelAttr';
-
-import { Vector3 } from './Vector3';
+import { Vector3 } from '../types/Vector3';
 
 /** 计算某个 Mesh 的拓扑信息 */
 export async function calcTopology(mesh: THREE.Mesh): Promise<ModelAttr> {

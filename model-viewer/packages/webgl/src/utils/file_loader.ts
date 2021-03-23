@@ -1,4 +1,4 @@
-import { arrayBufferToFile, blobToFile, newUri, readFileAsArrayBufferAsync } from '@m-fe/utils';
+import { arrayBufferToFile, blobToFile, newUri } from '@m-fe/utils';
 
 import {
   IModelViewerProps,
@@ -38,7 +38,7 @@ export function getModelCompressType(fileName: string, model: ModelSrc): ModelCo
 }
 
 /** 将模型统一转化为文件对象 */
-export async function getFileObjFromModelSrc(props: IModelViewerProps): Promise<File> {
+export async function getFileObjFromModelSrc(props: Partial<IModelViewerProps>): Promise<File> {
   // 判断是否为 ZIP 文件
   if (props.compressType === 'zlib') {
     let zippedFile;
