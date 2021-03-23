@@ -101,6 +101,7 @@ export async function generateScreenshot(_props: Partial<IModelViewerProps>) {
       });
     } catch (_) {
       console.error(_);
+      reject(_);
     }
   });
 }
