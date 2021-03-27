@@ -1,19 +1,22 @@
 import * as S from '@m-fe/utils';
 import * as React from 'react';
 
-import { WebGLViewer, generateScreenshot } from '../../src';
+import { WebGLViewer, parseD3Model } from '../../src';
 
 export function WebGLViewerExample() {
   React.useEffect(() => {
     (async () => {
-      const snapshot = await generateScreenshot({
-        type: 'stl',
-        src: '/hollow_of__010.stl',
-        width: 1000,
-        height: 500
-      });
+      const { snapshot, topology } = await parseD3Model(
+        {
+          type: 'stl',
+          src: '/hollow_of__010.stl',
+          width: 1000,
+          height: 500
+        },
+        { withSnapshot: true }
+      );
 
-      console.log(snapshot);
+      console.log(topology);
 
       S.downloadUrl(snapshot as string);
     })();

@@ -37,7 +37,7 @@ import {
   getMaterial,
   getThreeJsWebGLRenderer,
   setupLights
-} from '../../stage/renderer';
+} from '../../headless/stage';
 
 const OrbitControls = require('three-orbit-controls')(THREE);
 
