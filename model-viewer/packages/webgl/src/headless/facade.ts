@@ -3,7 +3,7 @@
 import { sleep } from '@m-fe/utils';
 
 import { IModelViewerProps, ModelAttr } from '../types';
-import { ScreenshotObject } from '../types/ScreenshotObject';
+import { ObjectSnapshotGenerator } from '../types/ObjectSnapshotGenerator';
 import { calcTopology } from '../utils/mesh';
 import { render } from './render';
 
@@ -26,7 +26,7 @@ export async function parseD3Model(
 
       if (withSnapshot) {
         // 执行截图
-        new ScreenshotObject(mesh, camera, renderer, (dataUrl: string) => {
+        new ObjectSnapshotGenerator(mesh, camera, renderer, (dataUrl: string) => {
           // 执行清除操作
           resolve({ snapshot: dataUrl, topology });
           onDestroy();

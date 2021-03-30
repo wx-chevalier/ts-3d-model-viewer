@@ -27,7 +27,7 @@ import {
 import { getLocale, i18nFormat, setLocale } from '../../utils/i18n';
 import { calcTopology } from '../../utils/mesh';
 import { canTransformToGLTF, loadMesh } from '../../utils/mesh_loader';
-import { ScreenshotObject } from '../../types/ScreenshotObject';
+import { ObjectSnapshotGenerator } from '../../types/ObjectSnapshotGenerator';
 import { Holdable } from '../Holdable';
 import { Switch } from '../Switch';
 
@@ -1007,7 +1007,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
                     try {
-                      new ScreenshotObject(
+                      new ObjectSnapshotGenerator(
                         this.model,
                         this.camera,
                         this.renderer,

@@ -8,7 +8,7 @@ import {
   WebGLRenderer
 } from 'three';
 
-export class ScreenshotObject {
+export class ObjectSnapshotGenerator {
   box: Box3;
   size: { w: number; h: number };
   pos: { x: number; y: number };
