@@ -137,6 +137,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     }
   }
 
+  componentWillUnmount() {
+    // 卸载的时候强行回收资源
+    this.destroy();
+  }
+
   /** 这里根据传入的文件类型，进行不同的文件转化 */
   async loadModel(props: IProps) {
     try {
