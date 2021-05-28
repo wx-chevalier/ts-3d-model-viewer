@@ -57,6 +57,7 @@ interface IState {
 
   showColorPicker?: boolean;
   modelColor: string;
+  backgroundColor: string | number;
 
   cameraX?: number;
   cameraY?: number;
@@ -82,6 +83,8 @@ interface IState {
   withClipping?: boolean;
   // 是否英文
   withLanguageSelector?: boolean;
+  // 是否简约视图
+  isFreshViewEnabled?: boolean;
 }
 
 export class WebGLViewer extends React.Component<IProps, IState> {
@@ -103,7 +106,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     withPlane: true,
     withAxis: true,
     modelColor: this.props.modelColor,
-    withLanguageSelector: getLocale() === 'en'
+    backgroundColor: this.props.backgroundColor,
+    withLanguageSelector: getLocale() === 'en',
+    isFreshViewEnabled: false
   };
 
   model?: THREE.Mesh;
@@ -272,7 +277,10 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     const height = this.$dom.clientHeight;
     const width = this.$dom.clientWidth;
 
-    const renderer = getThreeJsWebGLRenderer(this.props, { height, width });
+    const renderer = getThreeJsWebGLRenderer(
+      { ...this.props, backgroundColor: this.state.backgroundColor },
+      { height, width }
+    );
 
     this.$dom.appendChild(renderer.domElement);
 
@@ -566,6 +574,24 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     }
   };
 
+  /** 响应底平面的变化 */
+  onPlaneChange = (selected = true) => {
+    const { withPlane } = this.state;
+
+    if (withPlane !== selected) {
+      if (this.plane && this.group) {
+        this.group.remove(this.plane);
+        this.plane = null;
+      }
+
+      if (selected) {
+        this._setupPlane();
+      }
+    }
+
+    this.setState({ withPlane: selected });
+  };
+
   /** 响应线框图的变化 */
   onWireframeChange = (selected = true) => {
     const { withWireframe } = this.state;
@@ -610,6 +636,28 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       this.zSprite = null;
     }
   };
+
+  onModelColorChange = (modelColor: string) => {
+    this.setState({ modelColor }, () => {
+      this.model.material = new THREE.MeshPhongMaterial({
+        color: this.state.modelColor,
+        specular: 0x111111,
+        shininess: 20
+      });
+    });
+  };
+
+  enableFreshView() {
+    this.onPlaneChange(false);
+    this.renderer.setClearColor(new THREE.Color('rgba(255, 255, 255)'), 1);
+    this.onModelColorChange('rgb(24,98,246)');
+  }
+
+  disableFreshView() {
+    this.onPlaneChange(true);
+    this.renderer.setClearColor(new THREE.Color(this.state.backgroundColor), 1);
+    this.onModelColorChange(this.state.modelColor);
+  }
 
   renderWebGL() {
     const { width, height, style } = this.props;
@@ -751,7 +799,8 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       withBoundingBox,
       showColorPicker,
       withClipping,
-      withLanguageSelector
+      withLanguageSelector,
+      isFreshViewEnabled
     } = this.state;
 
     return (
@@ -842,6 +891,24 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               }}
             />
           </div>
+          {typeof __DEV__ !== 'undefined' && (
+            <div className="rmv-sv-toolbar-item">
+              <label htmlFor={`isFreshViewEnabled-${this.id}`}>简约：</label>
+              <Switch
+                id={`isFreshViewEnabled-${this.id}`}
+                checked={isFreshViewEnabled}
+                onChange={e => {
+                  this.setState({ isFreshViewEnabled: e.target.checked });
+
+                  if (e.target.checked) {
+                    this.enableFreshView();
+                  } else {
+                    this.disableFreshView();
+                  }
+                }}
+              />
+            </div>
+          )}
           {withJoystick && this.renderJoySticker()}
         </div>
 
@@ -913,13 +980,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             <SketchPicker
               color={this.state.modelColor}
               onChange={({ hex }) => {
-                this.setState({ modelColor: hex }, () => {
-                  this.model.material = new THREE.MeshPhongMaterial({
-                    color: this.state.modelColor,
-                    specular: 0x111111,
-                    shininess: 20
-                  });
-                });
+                this.onModelColorChange(hex);
               }}
             />
           </div>

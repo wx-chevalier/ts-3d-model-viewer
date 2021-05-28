@@ -17,7 +17,11 @@ export async function parseD3Model(
 }> {
   return new Promise(async (resolve, reject) => {
     try {
-      const { mesh, camera, renderer, onDestroy } = await render(_props);
+      const { mesh, camera, renderer, onDestroy } = await render({
+        ..._props,
+        withPlane: false,
+        modelColor: 'rgb(34, 98, 246)'
+      });
 
       // 等待 1 秒
       await sleep(1 * 1000);

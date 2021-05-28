@@ -35,7 +35,10 @@ export async function render(_props: Partial<IModelViewerProps>) {
   const height = isNumber(props.height) ? props.height : 600;
   const width = isNumber(props.width) ? props.width : 600;
 
-  const renderer = getThreeJsWebGLRenderer(props, { height, width });
+  const renderer = getThreeJsWebGLRenderer(
+    { ...props, backgroundColor: 'rgb(255,255,255)' },
+    { height, width }
+  );
   renderer.domElement.style.opacity = '0';
   document.body.appendChild(renderer.domElement);
 
@@ -57,16 +60,16 @@ export async function render(_props: Partial<IModelViewerProps>) {
   let maxDimension = max([xDims, yDims, zDims]);
   maxDimension = Math.ceil(~~(maxDimension * 1.1) / 10) * 50;
 
-  const plane = new THREE.GridHelper(maxDimension, 50);
-
-  // reset center point
-  const box = new THREE.Box3().setFromObject(plane);
-  box.getCenter(plane.position);
-  plane.position.multiplyScalar(-1);
-
-  // plane.position.y = geometry.boundingSphere.center.y * -1;
-  plane.position.y = yDims * -1;
-  group.add(plane);
+  if (props.withPlane) {
+    const plane = new THREE.GridHelper(maxDimension, 50);
+    // reset center point
+    const box = new THREE.Box3().setFromObject(plane);
+    box.getCenter(plane.position);
+    plane.position.multiplyScalar(-1);
+    // plane.position.y = geometry.boundingSphere.center.y * -1;
+    plane.position.y = yDims * -1;
+    group.add(plane);
+  }
 
   let animationId: number;
 

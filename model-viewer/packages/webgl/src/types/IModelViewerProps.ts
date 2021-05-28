@@ -36,6 +36,7 @@ export interface IModelViewerProps {
   cameraZ: number;
 
   withJoystick: boolean;
+  withPlane?: boolean;
   // 展示类型，是在 PC 上还是在移动设备上
   layoutType: 'compact' | 'loose';
 
@@ -64,5 +65,6 @@ export const defaultModelViewerProps: Partial<IModelViewerProps> = {
   cameraX: 0,
   cameraY: 0,
   cameraZ: 0,
-  showCameraIcon: false
+  showCameraIcon: false,
+  withPlane: true
 };
