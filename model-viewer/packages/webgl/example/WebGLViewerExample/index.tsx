@@ -1,4 +1,3 @@
-import * as S from '@m-fe/utils';
 import * as React from 'react';
 
 import { WebGLViewer, parseD3Model } from '../../src';
@@ -6,19 +5,19 @@ import { WebGLViewer, parseD3Model } from '../../src';
 export function WebGLViewerExample() {
   React.useEffect(() => {
     (async () => {
-      const { snapshot, topology } = await parseD3Model(
+      const { snapshot, topology, wallThickness } = await parseD3Model(
         {
           type: 'stl',
           src: '/hollow_of__010.stl',
           width: 1000,
           height: 500
         },
-        { withSnapshot: true }
+        { withSnapshot: true, withWallThickness: true }
       );
 
-      console.log(topology);
+      console.log(topology, wallThickness);
 
-      S.downloadUrl(snapshot as string);
+      // S.downloadUrl(snapshot as string);
     })();
   }, []);
 
