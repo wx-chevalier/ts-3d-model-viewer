@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-require-imports */
-import { isNumber, max } from 'lodash';
+import isNumber from 'lodash/isNumber';
+import max from 'lodash/max';
 import * as THREE from 'three';
 
 import { defaultModelViewerProps, IModelViewerProps } from '../types';
