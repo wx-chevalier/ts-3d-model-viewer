@@ -1,39 +1,46 @@
 import * as React from 'react';
 
-import { WebGLViewer, parseD3Model } from '../../src';
+import { WebGLViewer, parseD3Model, ObjectSnapshotGenerator } from '../../src';
+import * as S from '@m-fe/utils';
 
 export function WebGLViewerExample() {
-  React.useEffect(() => {
-    (async () => {
-      const { snapshot, topology, wallThickness } = await parseD3Model(
-        {
-          type: 'stl',
-          src: '/hollow_of__010.stl',
-          width: 1000,
-          height: 500
-        },
-        { withSnapshot: true, withWallThickness: false }
-      );
-
-      console.log(topology, wallThickness);
-
-      // S.downloadUrl(snapshot as string);
-    })();
-  }, []);
+  const viewerRef = React.useRef<WebGLViewer>();
 
   return (
     <div>
       <WebGLViewer
         key="2"
         type="stl"
-        src="/hollow_of__010.stl"
+        src="/test-snapshot.stl"
         fileName="AAAAAAAAAAAAAAAAAAAAAAAAA"
         width={1000}
         height={400}
+        ref={$ref => {
+          viewerRef.current = $ref;
+        }}
         onTopology={m => {
           // console.log(m);
         }}
       />
+      <button
+        onClick={async () => {
+          const m = viewerRef.current;
+
+          m.enableFreshView();
+
+          await S.sleep(3 * 1000);
+
+          if (m) {
+            new ObjectSnapshotGenerator(m.model, m.camera, m.renderer, async (dataUrl: string) => {
+              S.downloadUrl(dataUrl);
+
+              m.disableFreshView();
+            });
+          }
+        }}
+      >
+        点击截图
+      </button>
       <br />
       {/* <WebGLViewer
         key="21"
