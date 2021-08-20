@@ -2,13 +2,11 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import { sleep, get } from '@m-fe/utils';
 import * as THREE from 'three';
-import sampleSize from 'lodash/sampleSize';
 
 import { IModelViewerProps, ModelAttr } from '../types';
 import { ObjectSnapshotGenerator } from '../types/ObjectSnapshotGenerator';
 import { calcTopology } from '../utils/mesh';
 import { render } from './render';
-import { Calculate } from '../utils/Calculate';
 
 /** 生成模型截图 */
 export async function parseD3Model(
@@ -60,39 +58,6 @@ export async function parseD3Model(
       reject(_);
     }
   });
-}
-
-/** 使用  Meshy 计算壁厚的方式 */
-export function calcWallThicknessByMeshy(mesh: THREE.Mesh) {
-  const geo = mesh.geometry as THREE.Geometry;
-  const vertices = geo.vertices;
-  const faces = geo.faces;
-  const matrixWorld = mesh.matrixWorld;
-
-  const ray = new THREE.Ray();
-  const normal = new THREE.Vector3();
-
-  const minDist = Number.MAX_VALUE;
-
-  for (let f = 0, l = faces.length; f < l; f++) {
-    const face = faces[f];
-
-    // compute ray in world space
-    ray.origin = Calculate.faceCenter(face, vertices, matrixWorld);
-    ray.direction = normal
-      .copy(face.normal)
-      .transformDirection(matrixWorld)
-      .negate();
-
-    // 待整合 https://github.com/0x00019913/meshy/blob/4767c520d99c7c6275b1cb0d8fd843e548eaac53/js/octree.js
-    // const intersection = octree.raycastInternal(ray);
-
-    // if (intersection) {
-    //   minDist = Math.min(minDist, intersection.distance);
-    // }
-  }
-
-  return minDist;
 }
 
 /** 暴力搜索计算壁厚 */

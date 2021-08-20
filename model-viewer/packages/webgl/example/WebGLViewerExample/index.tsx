@@ -12,7 +12,7 @@ export function WebGLViewerExample() {
           width: 1000,
           height: 500
         },
-        { withSnapshot: true, withWallThickness: true }
+        { withSnapshot: true, withWallThickness: false }
       );
 
       console.log(topology, wallThickness);

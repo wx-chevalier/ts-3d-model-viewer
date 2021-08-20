@@ -38,8 +38,7 @@ import {
   getThreeJsWebGLRenderer,
   setupLights
 } from '../../headless/stage';
-
-const OrbitControls = require('three-orbit-controls')(THREE);
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const fudge = 1.0;
 
