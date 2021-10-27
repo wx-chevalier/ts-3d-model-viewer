@@ -1,0 +1,16 @@
+[profile.release]
+debug = true
+codegen-units = 1
+
+[workspace]
+members = [
+    "cdt",
+    "express",
+    "step",
+    "gui",
+    "nurbs",
+    "triangulate",
+]
+exclude = [
+    "wasm",
+]

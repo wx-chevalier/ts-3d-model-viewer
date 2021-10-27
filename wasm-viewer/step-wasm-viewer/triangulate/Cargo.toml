@@ -1,0 +1,22 @@
+[package]
+name = "triangulate"
+version = "0.1.0"
+authors = ["Matt Keeter <matt.j.keeter@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+cdt = { path = "../cdt" }
+nurbs = { path = "../nurbs" }
+step = { path = "../step" }
+
+log = "0.4.14"
+nalgebra-glm = "0.13.0"
+rayon = { version = "1.5", optional = true }
+thiserror = "1.0"
+
+[features]
+parallel = ["rayon", "step/parallel"]
+
+[dev-dependencies]
+clap = "2.33"
+env_logger = "0.8"

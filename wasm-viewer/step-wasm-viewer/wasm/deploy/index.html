@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Foxtrot 365</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inconsolata&family=Lato&display=swap" rel="stylesheet">
+        <link href="style.css" rel="stylesheet">
+    </head>
+
+    <body>
+    <script type="module" src="app.js"></script>
+    <div id="main">
+        <h1>Foxtrot 365 <i style="color: #444444" class="fas fa-cloud"></i></h1>
+        <div id="canvas_div">
+            <canvas id="canvas"></canvas><br>
+            <span id="load">
+            </span>
+            <span id="axes">
+                <button id="axisX" type="button" title="X axis up"><i class="fas fa-expand-alt"></i></button>
+                <button id="axisY" type="button" title="Y axis up"><i class="fas fa-arrows-alt-v"></i></button>
+                <button id="axisZ" type="button" title="Z axis up"><i class="fas fa-arrows-alt-h"></i></button>
+                <span id="axis_label"></span>
+            </span>
+            <span id="status">Loading...</span>
+        </div>
+        <div>
+        <select name="Examples" id="example-selector">
+          <option value="0">Load example...</option>
+        </select>
+        <a id="example_src" href="">[model source]</a>
+        <div>
+        <p>
+            <a href="https://mattkeeter.com/projects/foxtrot"><i class="fas fa-home"></i> About</a>
+            <a href="https://github.com/formlabs/foxtrot"><i class="fab fa-github"></i> Source</a>
+        </p>
+    </div>
+  </body>
+</html>

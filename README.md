@@ -149,21 +149,27 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 - [Awesome-CS-Books](https://github.com/wx-chevalier/Awesome-CS-Books): :books: Awesome CS Books/Series(.pdf by git lfs) Warehouse for Geeks, ProgrammingLanguage, SoftwareEngineering, Web, AI, ServerSideApplication, Infrastructure, FE etc. :dizzy: 优秀计算机科学与技术领域相关的书籍归档。
 
-- [UZIP.js](https://github.com/photopea/UZIP.js): Simple ZIPping library for Javascript.
+- [UZIP.js #Project#](https://github.com/photopea/UZIP.js): Simple ZIPping library for Javascript.
 
-- [webgl-3d-viewer](http://piscis.github.io/webgl-3d-viewer/example/)
+### Viewer
+
+- [webgl-3d-viewer #Project#](http://piscis.github.io/webgl-3d-viewer/example/)
 
 - 参考设计：[Sketchfab](https://sketchfab.com/3d-models/lost-heritage-f8d4561b75c64769b4c88a3478b5a184)
 
+- [xeogl #Project#](https://github.com/xeolabs/xeogl): xeogl is a data-driven WebGL-based engine created by xeolabs for 3D visualization in the browser without using plugins.
+
+- [Foxtrot #Project#](https://github.com/Formlabs/foxtrot): Foxtrot is a fast viewer for STEP files, a standard interchange format for mechanical CAD. It is an experimental project built from the ground up, including new libraries for parsing and triangulation.
+
 ### Studio
 
-- [jsketcher](https://github.com/xibyte/jsketcher): JS.Sketcher is a parametric 2D and 3D CAD modeler written in pure javascript.
+- [jsketcher #Project#](https://github.com/xibyte/jsketcher): JS.Sketcher is a parametric 2D and 3D CAD modeler written in pure javascript.
 
-- [JSCAD](https://openjscad.org/dokuwiki/doku.php?id=start): JSCAD (formally know as OpenJSCAD) provides a programmer’s approach to develop 3D models. In particular, this functionality is tuned towards creating precise models for 3D printing.
+- [JSCAD #Project#](https://openjscad.org/dokuwiki/doku.php?id=start): JSCAD (formally know as OpenJSCAD) provides a programmer’s approach to develop 3D models. In particular, this functionality is tuned towards creating precise models for 3D printing.
 
-- [meshy](https://github.com/0x00019913/meshy): Slicing, measurements, transformations, and visualizations on polygon meshes.
+- [meshy #Project#](https://github.com/0x00019913/meshy): Slicing, measurements, transformations, and visualizations on polygon meshes.
 
-- https://jsfiddle.net/prisoner849/L0ecxuk4/
+- [CascadeStudio #Project#](https://github.com/zalo/CascadeStudio): A Full Live-Scripted CAD Kernel and IDE in the Browser.
 
 ## Copyright & More | 延伸阅读
 
