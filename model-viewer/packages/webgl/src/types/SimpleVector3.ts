@@ -1,7 +1,7 @@
 /**
  * 3d Vectors
  */
-export class Vector3 {
+export class SimpleVector3 {
   x: number;
   y: number;
   z: number;
@@ -18,18 +18,18 @@ export class Vector3 {
 
   /**
    * Create a copy of the Vector
-   * @returns {Vector3}
+   * @returns {SimpleVector3}
    */
   clone() {
-    return new Vector3(this.x, this.y, this.z);
+    return new SimpleVector3(this.x, this.y, this.z);
   }
 
   /**
    * Add Vectors this and v
-   * @param {Vector3} v
-   * @returns {Vector3}
+   * @param {SimpleVector3} v
+   * @returns {SimpleVector3}
    */
-  add(v: Vector3) {
+  add(v: SimpleVector3) {
     this.x = this.x + v.x;
     this.y = this.y + v.y;
     this.z = this.z + v.z;
@@ -38,10 +38,10 @@ export class Vector3 {
 
   /**
    * Subtract Vectors this and v
-   * @param {Vector3} v
-   * @returns {Vector3}
+   * @param {SimpleVector3} v
+   * @returns {SimpleVector3}
    */
-  sub(v: Vector3) {
+  sub(v: SimpleVector3) {
     this.x = this.x - v.x;
     this.y = this.y - v.y;
     this.z = this.z - v.z;
@@ -51,19 +51,19 @@ export class Vector3 {
   /**
    * Calculate the dot product of this and v.
    * from https://www.cs.uaf.edu/2013/spring/cs493/lecture/01_24_vectors.html
-   * @param {Vector3} v
-   * @returns {Vector3}
+   * @param {SimpleVector3} v
+   * @returns {SimpleVector3}
    */
-  dot(v: Vector3) {
+  dot(v: SimpleVector3) {
     return this.x * v.x + this.y * v.y + this.z * v.z;
   }
   /**
    * Calculate the cross product of this and v.
    * from https://www.cs.uaf.edu/2013/spring/cs493/lecture/01_24_vectors.html
-   * @param {Vector3} v
-   * @returns {Vector3}
+   * @param {SimpleVector3} v
+   * @returns {SimpleVector3}
    */
-  cross(v: Vector3) {
+  cross(v: SimpleVector3) {
     const x = this.x;
     const y = this.y;
     const z = this.z;

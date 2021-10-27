@@ -13,7 +13,7 @@ export const UploadStl = () => {
         customRequest={({ file, filename }) => {
           setFileMap({
             ...fileMap,
-            [filename]: file
+            [filename]: file,
           });
         }}
       >

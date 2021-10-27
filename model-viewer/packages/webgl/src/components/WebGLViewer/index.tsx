@@ -1,46 +1,63 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-require-imports */
-import { ellipsis, genId, toFixedNumber } from '@m-fe/utils';
+import 'rc-tooltip/assets/bootstrap.css';
+import './index.css';
+
+import { ellipsis, genId, isLanIp, toFixedNumber } from '@m-fe/utils';
 import TextSprite from '@seregpie/three.text-sprite';
 import each from 'lodash/each';
 import max from 'lodash/max';
 import Tooltip from 'rc-tooltip';
-import 'rc-tooltip/assets/bootstrap.css';
 import React from 'react';
 import { SketchPicker } from 'react-color';
+import { ErrorBoundary } from 'react-error-boundary';
 import Loader from 'react-loader-spinner';
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import {
-  IModelViewerProps,
-  ModelAttr,
-  ModelCompressType,
-  ModelType,
-  defaultModelViewerProps
-} from '../../types';
-import { deflate } from '../../utils/compressor';
-import {
-  getFileObjFromModelSrc,
-  getModelCompressType,
-  getModelType
-} from '../../utils/file_loader';
-import { getLocale, i18nFormat, setLocale } from '../../utils/i18n';
-import { calcTopology } from '../../utils/mesh';
-import { canTransformToGLTF, loadMesh } from '../../utils/mesh_loader';
-import { ObjectSnapshotGenerator } from '../../types/ObjectSnapshotGenerator';
-import { Holdable } from '../Holdable';
-import { Switch } from '../Switch';
-
-import './index.css';
 import {
   adjustGeometry,
   getMaterial,
   getThreeJsWebGLRenderer,
-  setupLights
-} from '../../headless/stage';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+  setupLights,
+} from '../../headless';
+import {
+  defaultModelViewerProps,
+  IModelViewerProps,
+  IModelViewerState,
+} from '../../types/';
+import { ObjectSnapshotGenerator } from '../../types/ObjectSnapshotGenerator';
+import { deflate } from '../../utils/compressor';
+import {
+  getFileObjFromModelSrc,
+  getModelCompressType,
+  getModelType,
+} from '../../utils/file_loader';
+import { getLocale, i18nFormat, setLocale } from '../../utils/i18n';
+import { calcTopology } from '../../utils/mesh';
+import { canTransformToGLTF, loadMesh } from '../../utils/mesh_loader';
+import { Holdable } from '../Holdable';
+import { Switch } from '../Switch';
 
 const fudge = 1.0;
+
+export function ErrorFallback({
+  error,
+  resetErrorBoundary,
+}: {
+  error: Error;
+  resetErrorBoundary: () => void;
+}) {
+  React.useEffect(() => {
+    console.log('>>>WebGLViewer>>>', error.message);
+  });
+
+  return (
+    <div role="alert">
+      <button onClick={resetErrorBoundary}>Try again</button>
+    </div>
+  );
+}
 
 declare global {
   const __DEV__: boolean;
@@ -48,45 +65,11 @@ declare global {
 
 interface IProps extends IModelViewerProps {}
 
-interface IState {
-  type: ModelType;
-  compressType: ModelCompressType;
-  topology?: ModelAttr;
-  modelFile?: File;
-
-  showColorPicker?: boolean;
-  modelColor: string;
-  backgroundColor: string | number;
-
-  cameraX?: number;
-  cameraY?: number;
-  cameraZ?: number;
-
-  loaded: boolean;
-
-  // 是否展示信息
-  withAttr: boolean;
-  // 是否展示线框图
-  withWireframe?: boolean;
-  // 是否展示底平面
-  withPlane?: boolean;
-  // 是否展示标尺线
-  withBoundingBox?: boolean;
-  // 是否展示球体
-  withSphere?: boolean;
-  // 是否展示坐标系
-  withAxis?: boolean;
-  // 是否渲染
-  withMaterial?: boolean;
-  // 是否剖切
-  withClipping?: boolean;
-  // 是否英文
-  withLanguageSelector?: boolean;
-  // 是否简约视图
-  isFreshViewEnabled?: boolean;
-}
+interface IState extends IModelViewerState {}
 
 export class WebGLViewer extends React.Component<IProps, IState> {
+  static displayName = 'WebGLViewer';
+
   id = genId();
   static defaultProps = { ...defaultModelViewerProps };
 
@@ -95,7 +78,8 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   state: IState = {
     type: this.props.type || getModelType(this.props.fileName, this.props.src),
     compressType:
-      this.props.compressType || getModelCompressType(this.props.fileName, this.props.src),
+      this.props.compressType ||
+      getModelCompressType(this.props.fileName, this.props.src),
     loaded: false,
     cameraX: 0,
     cameraY: 0,
@@ -107,7 +91,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     modelColor: this.props.modelColor,
     backgroundColor: this.props.backgroundColor,
     withLanguageSelector: getLocale() === 'en',
-    isFreshViewEnabled: false
+    isFreshViewEnabled: false,
   };
 
   model?: THREE.Mesh;
@@ -146,19 +130,23 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     this.destroy();
   }
 
+  componentDidCatch(error: Error) {
+    console.error('>>>WebGLViewer>>>error>>>', error);
+  }
+
   /** 这里根据传入的文件类型，进行不同的文件转化 */
   async loadModel(props: IProps) {
     try {
       const modelFile = await getFileObjFromModelSrc({
         ...props,
-        compressType: this.state.compressType
+        compressType: this.state.compressType,
       });
 
       await this.setState({ modelFile });
 
       // 判断是否有 onZip，有的话则进行压缩并且返回
       requestAnimationFrame(async () => {
-        this.handleZip();
+        this.handleCompress();
       });
 
       // 判断是否可以进行预览，不可以预览则仅设置
@@ -171,10 +159,20 @@ export class WebGLViewer extends React.Component<IProps, IState> {
         modelFile || props.src,
         this.state.type,
         this.props.onError,
-        false
+        false,
       );
 
       this.initGeometry(mesh.geometry);
+
+      // 根据 props 配置简约模式的启用
+      if (typeof this.props.simplicity === 'boolean') {
+        this.setState({ isFreshViewEnabled: this.props.simplicity });
+        if (this.props.simplicity) {
+          this.enableFreshView();
+        } else {
+          this.disableFreshView();
+        }
+      }
     } catch (e) {
       console.error('>>>WebGLViewer>>>loadModel', e);
 
@@ -185,11 +183,14 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   }
 
   /** 初始化几何体 */
-  initGeometry(geometry: THREE.BufferGeometry | THREE.Geometry) {
+  initGeometry(geometry: THREE.BufferGeometry) {
     this._setupScene();
     this._setupRenderer();
 
-    const material = getMaterial(this.state.withClipping, this.state.modelColor);
+    const material = getMaterial(
+      this.state.withClipping,
+      this.state.modelColor,
+    );
 
     const { mesh, xDims, yDims, zDims } = adjustGeometry(geometry, material);
 
@@ -278,7 +279,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
     const renderer = getThreeJsWebGLRenderer(
       { ...this.props, backgroundColor: this.state.backgroundColor },
-      { height, width }
+      { height, width },
     );
 
     this.$dom.appendChild(renderer.domElement);
@@ -286,10 +287,14 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     this.renderer = renderer;
   }
 
-  _setupAxisHelper() {
+  _setupAxisHelper(remove = false) {
     if (this.model) {
       if (this.axisHelper && this.group) {
         this.group.remove(this.axisHelper);
+      }
+
+      if (remove) {
+        return;
       }
 
       // Get max dimention and add 50% overlap for plane
@@ -303,7 +308,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
         let maxDimension: number = max([
           geometry.boundingBox.max.x,
           geometry.boundingBox.max.y,
-          geometry.boundingBox.max.z
+          geometry.boundingBox.max.z,
         ]);
         maxDimension = Math.ceil(~~(maxDimension * 1.5) / 10) * 10;
 
@@ -367,7 +372,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
         this.camera.position.set(
           this.props.cameraX,
           this.props.cameraY,
-          this.props.cameraZ || dist * fudge
+          this.props.cameraZ || dist * fudge,
         );
       }
     }
@@ -410,7 +415,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     }
 
     if (typeof __DEV__ !== 'undefined') {
-      this._setupAxisHelper();
+      if (this.props.showAxisHelper) {
+        this._setupAxisHelper();
+      }
     }
   }
 
@@ -428,7 +435,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       color: 0xffffff,
       specular: 0x111111,
       shininess: 20,
-      wireframe: true
+      wireframe: true,
     });
 
     const mesh = this.model.clone();
@@ -472,7 +479,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
           fillStyle: 'rgb(255, 153, 0)',
           fontSize: 2.5,
           fontStyle: 'italic',
-          text: `${toFixedNumber(len, 2)} mm`
+          text: `${toFixedNumber(len, 2)} mm`,
         });
 
       this.xSprite = genSprite(topology.sizeX);
@@ -542,15 +549,15 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     }
   };
 
-  handleZip = async () => {
-    const { src, onZip } = this.props;
+  handleCompress = async () => {
+    const { src, onCompress } = this.props;
     const { modelFile } = this.state;
 
     // 仅在传入了 Zipped 文件的情况下调用
-    if (modelFile && onZip && src && this.state.compressType === 'none') {
+    if (modelFile && onCompress && src && this.state.compressType === 'none') {
       const zippedFile = await deflate(modelFile);
 
-      onZip(zippedFile);
+      onCompress(zippedFile);
     }
   };
 
@@ -561,7 +568,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     }
 
     this.setState({
-      withMaterial: selected
+      withMaterial: selected,
     });
 
     if (this.group) {
@@ -616,7 +623,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     }
 
     this.setState({
-      withBoundingBox: selected
+      withBoundingBox: selected,
     });
 
     if (selected) {
@@ -641,16 +648,23 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       this.model.material = new THREE.MeshPhongMaterial({
         color: this.state.modelColor,
         specular: 0x111111,
-        shininess: 20
+        shininess: 20,
       });
     });
   };
 
-  enableFreshView() {
+  enableFreshView = (params?: { modelColor?: string; clearColor?: string }) => {
+    const { modelColor, clearColor } = params || {};
+
     this.onPlaneChange(false);
-    this.renderer.setClearColor(new THREE.Color('rgba(255, 255, 255)'), 1);
-    this.onModelColorChange('rgb(24,98,246)');
-  }
+
+    this.renderer.setClearColor(
+      new THREE.Color(clearColor || 'rgba(255, 255, 255)'),
+      1,
+    );
+
+    this.onModelColorChange(modelColor || 'rgb(24,98,246)');
+  };
 
   disableFreshView() {
     this.onPlaneChange(true);
@@ -664,47 +678,58 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     const { loaded } = this.state;
 
     return (
-      <div
-        id="webgl-container"
-        className="rmv-sv-webgl"
-        ref={this.$ref}
-        style={{ width, height, ...style }}
-      >
-        {!loaded && (
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <Loader type="Puff" color="#00BFFF" height={100} width={100} />
+      <ErrorBoundary
+        FallbackComponent={props => (
+          <div style={{ height: 150 }}>
+            <ErrorFallback {...props} />
           </div>
         )}
-      </div>
+      >
+        <div
+          id="webgl-container"
+          className="rmv-sv-webgl"
+          ref={this.$ref}
+          style={{ width, height, ...style }}
+        >
+          {!loaded ? (
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <div
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Loader type="Puff" color="#00BFFF" height={100} width={100} />
+              </div>
+            </ErrorBoundary>
+          ) : (
+            <></>
+          )}
+        </div>
+      </ErrorBoundary>
     );
   }
 
   renderAttr() {
-    const { fileName } = this.props;
+    const { fileName, src } = this.props;
 
     const { withAttr, topology } = this.state;
 
-    return (
-      withAttr &&
-      topology && (
+    return withAttr && topology ? (
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
         <div className="rmv-gmv-attr-modal">
           <div className="rmv-gmv-attr-modal-row">
             {fileName && (
               <div className="item">
-                {i18nFormat('名称')}：{ellipsis(fileName)}
+                {i18nFormat('名称')}：{`${ellipsis(fileName)}`}
               </div>
             )}
             <div className="item">
-              {i18nFormat('尺寸')}：{toFixedNumber(topology.sizeX)}*{toFixedNumber(topology.sizeY)}*
-              {toFixedNumber(topology.sizeZ)}
+              {i18nFormat('尺寸')}：{toFixedNumber(topology.sizeX)}*
+              {toFixedNumber(topology.sizeY)}*{toFixedNumber(topology.sizeZ)}
               {'mm'}
             </div>
             <div className="item">
@@ -719,12 +744,19 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               {' mm²'}
             </div>
             <div className="item">
-              {i18nFormat('面片')}：{topology.triangleCnt}
+              {i18nFormat('面片')}：{`${topology.triangleCnt}`}
             </div>
-            <div className="item">{i18nFormat('破损')}：-</div>
+            <div className="item">
+              {i18nFormat('来源')}：
+              {typeof src === 'string' && isLanIp(src)
+                ? i18nFormat('内网')
+                : i18nFormat('公网')}
+            </div>
           </div>
         </div>
-      )
+      </ErrorBoundary>
+    ) : (
+      <></>
     );
   }
 
@@ -732,60 +764,62 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     const { topology } = this.state;
 
     return (
-      <div className="rmv-sv-joystick">
-        <div
-          className="rmv-sv-joystick-center"
-          onClick={() => {
-            this._resetCamera();
-          }}
-        />
-        <Holdable
-          finite={false}
-          onPress={() => {
-            this.camera && this.camera.translateY(-topology.sizeY / 10);
-          }}
-        >
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <div className="rmv-sv-joystick">
           <div
-            className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-up"
-            style={{ top: 0 }}
+            className="rmv-sv-joystick-center"
+            onClick={() => {
+              this._resetCamera();
+            }}
+          />
+          <Holdable
+            finite={false}
+            onPress={() => {
+              this.camera && this.camera.translateY(-topology.sizeY / 10);
+            }}
           >
-            <i />
-          </div>
-        </Holdable>
-        <Holdable
-          finite={false}
-          onPress={() => {
-            this.camera && this.camera.translateY(topology.sizeY / 10);
-          }}
-        >
-          <div
-            className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-down"
-            style={{ bottom: 0 }}
+            <div
+              className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-up"
+              style={{ top: 0 }}
+            >
+              <i />
+            </div>
+          </Holdable>
+          <Holdable
+            finite={false}
+            onPress={() => {
+              this.camera && this.camera.translateY(topology.sizeY / 10);
+            }}
           >
-            <i />
-          </div>
-        </Holdable>
-        <Holdable
-          finite={false}
-          onPress={() => {
-            this.camera && this.camera.translateX(-topology.sizeX / 10);
-          }}
-        >
-          <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-left">
-            <i />
-          </div>
-        </Holdable>
-        <Holdable
-          finite={false}
-          onPress={() => {
-            this.camera && this.camera.translateX(topology.sizeX / 10);
-          }}
-        >
-          <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-right">
-            <i />
-          </div>
-        </Holdable>
-      </div>
+            <div
+              className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-down"
+              style={{ bottom: 0 }}
+            >
+              <i />
+            </div>
+          </Holdable>
+          <Holdable
+            finite={false}
+            onPress={() => {
+              this.camera && this.camera.translateX(-topology.sizeX / 10);
+            }}
+          >
+            <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-left">
+              <i />
+            </div>
+          </Holdable>
+          <Holdable
+            finite={false}
+            onPress={() => {
+              this.camera && this.camera.translateX(topology.sizeX / 10);
+            }}
+          >
+            <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-right">
+              <i />
+            </div>
+          </Holdable>
+        </div>
+      </ErrorBoundary>
     );
   }
 
@@ -799,31 +833,43 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       showColorPicker,
       withClipping,
       withLanguageSelector,
-      isFreshViewEnabled
+      isFreshViewEnabled,
     } = this.state;
 
     return (
-      <div className="rmv-sv-container rmv-sv-loose-container" style={{ width }}>
-        {showColorPicker && (
-          <div className="rmv-sv-color-picker">
-            <SketchPicker
-              color={this.state.modelColor}
-              onChange={({ hex }) => {
-                this.setState({ modelColor: hex }, () => {
-                  if (this.model) {
-                    this.model.material = getMaterial(
-                      this.state.withClipping,
-                      this.state.modelColor
-                    );
-                  }
-                });
-              }}
-            />
-          </div>
+      <div
+        className="rmv-sv-container rmv-sv-loose-container"
+        style={{ width }}
+      >
+        {showColorPicker ? (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <div className="rmv-sv-color-picker">
+              <SketchPicker
+                color={this.state.modelColor}
+                onChange={({ hex }) => {
+                  this.setState({ modelColor: hex }, () => {
+                    if (this.model) {
+                      this.model.material = getMaterial(
+                        this.state.withClipping,
+                        this.state.modelColor,
+                      );
+                    }
+                  });
+                }}
+              />
+            </div>
+          </ErrorBoundary>
+        ) : (
+          <></>
         )}
-        <div className="rmv-sv-toolbar" style={{ width: withLanguageSelector ? 150 : 100 }}>
+        <div
+          className="rmv-sv-toolbar"
+          style={{ width: withLanguageSelector ? 150 : 100 }}
+        >
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withMaterial-${this.id}`}>{i18nFormat('着色')}：</label>
+            <label htmlFor={`withMaterial-${this.id}`}>
+              {i18nFormat('着色')}：
+            </label>
             <Switch
               id={`withMaterial-${this.id}`}
               checked={withMaterial}
@@ -833,7 +879,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withWireframe-${this.id}`}>{i18nFormat('线框')}：</label>
+            <label htmlFor={`withWireframe-${this.id}`}>
+              {i18nFormat('线框')}：
+            </label>
             <Switch
               id={`withWireframe-${this.id}`}
               checked={withWireframe}
@@ -843,7 +891,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withBoundingBox-${this.id}`}>{i18nFormat('框体')}：</label>
+            <label htmlFor={`withBoundingBox-${this.id}`}>
+              {i18nFormat('框体')}：
+            </label>
             <Switch
               id={`withBoundingBox-${this.id}`}
               checked={withBoundingBox}
@@ -853,7 +903,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`showColorPicker-${this.id}`}>{i18nFormat('色盘')}：</label>
+            <label htmlFor={`showColorPicker-${this.id}`}>
+              {i18nFormat('色盘')}：
+            </label>
             <Switch
               id={`showColorPicker-${this.id}`}
               checked={showColorPicker}
@@ -863,13 +915,18 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withClipping-${this.id}`}>{i18nFormat('剖切')}：</label>
+            <label htmlFor={`withClipping-${this.id}`}>
+              {i18nFormat('剖切')}：
+            </label>
             <Switch
               id={`withClipping-${this.id}`}
               checked={withClipping}
               onChange={e => {
                 this.setState({ withClipping: e.target.checked }, () => {
-                  this.model.material = getMaterial(this.state.withClipping, this.state.modelColor);
+                  this.model.material = getMaterial(
+                    this.state.withClipping,
+                    this.state.modelColor,
+                  );
                 });
               }}
             />
@@ -890,24 +947,22 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               }}
             />
           </div>
-          {typeof __DEV__ !== 'undefined' && (
-            <div className="rmv-sv-toolbar-item">
-              <label htmlFor={`isFreshViewEnabled-${this.id}`}>简约：</label>
-              <Switch
-                id={`isFreshViewEnabled-${this.id}`}
-                checked={isFreshViewEnabled}
-                onChange={e => {
-                  this.setState({ isFreshViewEnabled: e.target.checked });
+          <div className="rmv-sv-toolbar-item">
+            <label htmlFor={`isFreshViewEnabled-${this.id}`}>简约：</label>
+            <Switch
+              id={`isFreshViewEnabled-${this.id}`}
+              checked={isFreshViewEnabled}
+              onChange={e => {
+                this.setState({ isFreshViewEnabled: e.target.checked });
 
-                  if (e.target.checked) {
-                    this.enableFreshView();
-                  } else {
-                    this.disableFreshView();
-                  }
-                }}
-              />
-            </div>
-          )}
+                if (e.target.checked) {
+                  this.enableFreshView();
+                } else {
+                  this.disableFreshView();
+                }
+              }}
+            />
+          </div>
           {withJoystick && this.renderJoySticker()}
         </div>
 
@@ -926,7 +981,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       layoutType,
       withJoystick,
       showCameraIcon,
-      onSnapshot
+      onSnapshot,
     } = this.props;
 
     const {
@@ -936,14 +991,21 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       type,
       showColorPicker,
       withClipping,
-      withLanguageSelector
+      withLanguageSelector,
+      isFreshViewEnabled,
     } = this.state;
 
+    // 如果出现异常
     if (!canTransformToGLTF(type)) {
       return (
         <div
           className="rmv-sv-container"
-          style={{ width, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+          style={{
+            width,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
           <div
             className="rmv-sv-webgl"
@@ -954,10 +1016,10 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              ...style
+              ...style,
             }}
           >
-            该类型暂不支持预览！
+            {i18nFormat('该类型暂不支持预览')}
           </div>
         </div>
       );
@@ -970,7 +1032,10 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
     // 非宽松方式，即上下布局
     return (
-      <div className="rmv-sv-container rmv-sv-compact-container" style={{ width }}>
+      <div
+        className="rmv-sv-container rmv-sv-compact-container"
+        style={{ width }}
+      >
         {showColorPicker && (
           <div
             className="rmv-sv-color-picker"
@@ -984,6 +1049,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
         )}
+
         <div className="rmv-sv-toolbar">
           <div className="rmv-sv-toolbar-left">
             <div className="rmv-sv-toolbar-item">
@@ -994,7 +1060,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                   this.onMaterialChange(e.target.checked);
                 }}
               />
-              <label htmlFor={`withMaterial-${this.id}`}>{i18nFormat('着色')}</label>
+              <label htmlFor={`withMaterial-${this.id}`}>
+                {i18nFormat('着色')}
+              </label>
             </div>
             <div className="rmv-sv-toolbar-item">
               <Switch
@@ -1004,7 +1072,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                   this.onWireframeChange(e.target.checked);
                 }}
               />
-              <label htmlFor={`withWireframe-${this.id}`}>{i18nFormat('线框')}</label>
+              <label htmlFor={`withWireframe-${this.id}`}>
+                {i18nFormat('线框')}
+              </label>
             </div>
             <div className="rmv-sv-toolbar-item">
               <Switch
@@ -1014,7 +1084,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                   this.onBoundingBoxChange(e.target.checked);
                 }}
               />
-              <label htmlFor={`withBoundingBox-${this.id}`}>{i18nFormat('框体')}</label>
+              <label htmlFor={`withBoundingBox-${this.id}`}>
+                {i18nFormat('框体')}
+              </label>
             </div>
             <div className="rmv-sv-toolbar-item">
               <Switch
@@ -1024,7 +1096,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                   this.setState({ showColorPicker: e.target.checked });
                 }}
               />
-              <label htmlFor={`showColorPicker-${this.id}`}>{i18nFormat('色盘')}</label>
+              <label htmlFor={`showColorPicker-${this.id}`}>
+                {i18nFormat('色盘')}
+              </label>
             </div>
             <div className="rmv-sv-toolbar-item">
               <Switch
@@ -1034,12 +1108,14 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                   this.setState({ withClipping: e.target.checked }, () => {
                     this.model.material = getMaterial(
                       this.state.withClipping,
-                      this.state.modelColor
+                      this.state.modelColor,
                     );
                   });
                 }}
               />
-              <label htmlFor={`withClipping-${this.id}`}>{i18nFormat('剖切')}</label>
+              <label htmlFor={`withClipping-${this.id}`}>
+                {i18nFormat('剖切')}
+              </label>
             </div>
             <div className="rmv-sv-toolbar-item">
               <Switch
@@ -1057,11 +1133,27 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               />
               <label htmlFor={`withLanguageSelector-${this.id}`}>中/EN</label>
             </div>
+            <div className="rmv-sv-toolbar-item">
+              <label htmlFor={`isFreshViewEnabled-${this.id}`}>简约：</label>
+              <Switch
+                id={`isFreshViewEnabled-${this.id}`}
+                checked={isFreshViewEnabled}
+                onChange={e => {
+                  this.setState({ isFreshViewEnabled: e.target.checked });
+
+                  if (e.target.checked) {
+                    this.enableFreshView();
+                  } else {
+                    this.disableFreshView();
+                  }
+                }}
+              />
+            </div>
           </div>
           <div className="rmv-sv-toolbar-right">
             {/** 是否显示截图 */}
             {onSnapshot && showCameraIcon && (
-              <Tooltip placement="left" overlay="点击生成截图">
+              <Tooltip placement="left" overlay={i18nFormat('点击生成截图')}>
                 <svg
                   viewBox="0 0 1024 1024"
                   version="1.1"
@@ -1078,7 +1170,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                         this.renderer,
                         (dataUrl: string) => {
                           onSnapshot(dataUrl);
-                        }
+                        },
                       );
                     } catch (_) {
                       console.error(_);
@@ -1100,8 +1192,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             )}
           </div>
         </div>
+
         {withJoystick && this.renderJoySticker()}
+
         {this.renderAttr()}
+
         {this.renderWebGL()}
       </div>
     );

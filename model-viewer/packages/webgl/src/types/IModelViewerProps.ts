@@ -1,8 +1,19 @@
 import { ModelAttr } from './ModelAttr';
 
 export type ModelSrc = File | string;
-export type ModelType = 'gltf' | 'glb' | 'obj' | 'stl' | 'ply' | 'stp' | 'step';
-export type ModelCompressType = 'none' | 'zlib';
+export type ModelType =
+  | 'gltf'
+  | 'glb'
+  | 'obj'
+  | 'stl'
+  | 'ply'
+  | 'stp'
+  | 'step'
+  | '3dxml'
+  | 'catpart'
+  | 'x_t'
+  | 'x_b';
+export type ModelCompressType = 'none' | 'zlib' | 'zip';
 export type ZippedModelMap = Record<string, Uint8Array>;
 
 // 公共的组件应该实现的 Props
@@ -25,6 +36,10 @@ export interface IModelViewerProps {
   externalAttr?: Record<string, string>;
   // 是否展示右侧摄像头按钮
   showCameraIcon?: boolean;
+  // 是否显示三维 x-y-z 指示线
+  showAxisHelper?: boolean;
+  // 简约模式
+  simplicity: boolean;
 
   cameraControls?: boolean;
   autoplay?: boolean;
@@ -42,7 +57,7 @@ export interface IModelViewerProps {
 
   onTopology?: (modelAttr: ModelAttr) => void;
   onSnapshot?: (blobOrDataUrl: Blob | string) => void;
-  onZip?: (zippedArrayBuffer: ArrayBuffer) => void;
+  onCompress?: (zippedArrayBuffer: ArrayBuffer) => void;
   onLoad?: () => void;
   onError?: (err: Error) => void;
 }
@@ -66,5 +81,6 @@ export const defaultModelViewerProps: Partial<IModelViewerProps> = {
   cameraY: 0,
   cameraZ: 0,
   showCameraIcon: false,
-  withPlane: true
+  withPlane: true,
+  showAxisHelper: true,
 };

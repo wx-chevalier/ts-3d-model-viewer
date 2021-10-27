@@ -1,5 +1,8 @@
 const path = require('path');
-const merge = require('webpack-merge');
+// webpack 版本问题导致启动报错，故修改
+// const { merge } = require('webpack-merge');
+// const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 
 const devConfig = require('../../../../scripts/webpack/webpack.config').devConfig;
 

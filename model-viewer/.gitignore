@@ -1,3 +1,6 @@
+# IDE files
+.idea
+
 # Node files
 node_modules
 
@@ -12,3 +15,4 @@ node_modules
 *.log
 dist
 build
+test-*.stl

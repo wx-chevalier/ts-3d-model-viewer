@@ -1,9 +1,7 @@
 module.exports = {
   extends: '@m-fe/eslint-config/base',
+  plugins: ['simple-import-sort'],
   parserOptions: {
-    ecmaVersion: 2018,
-    sourceType: 'module',
-    project: './tsconfig.json',
-    tsconfigRootDir: __dirname,
+    createDefaultProgram:true
   },
 };

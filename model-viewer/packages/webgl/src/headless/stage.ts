@@ -1,16 +1,18 @@
 import * as THREE from 'three';
+
 import { defaultModelViewerProps, IModelViewerProps } from '../types';
 
 export function getThreeJsWebGLRenderer(
   _props: Partial<IModelViewerProps>,
-  { height, width }: { height: number; width: number }
+  { height, width }: { height: number; width: number },
 ): THREE.WebGLRenderer {
   const props = { ...defaultModelViewerProps, ..._props };
 
   const renderer = new THREE.WebGLRenderer({
+    // 增加下面两个属性，可以抗锯齿
     antialias: true,
     alpha: true,
-    preserveDrawingBuffer: true
+    preserveDrawingBuffer: true,
   });
   const devicePixelRatio = window.devicePixelRatio || 1;
 
@@ -23,8 +25,7 @@ export function getThreeJsWebGLRenderer(
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.cullFace = THREE.CullFaceBack;
 
-  const Empty = Object.freeze([]) as any;
-  renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
+  renderer.clippingPlanes = Object.freeze([]) as any; // GUI sets it to globalPlanes
   renderer.localClippingEnabled = true;
 
   return renderer;
@@ -34,7 +35,7 @@ export function getThreeJsWebGLRenderer(
 export function getMaterial(withClipping: boolean, color: string) {
   const localPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 0.5);
 
-  const material = new THREE.MeshPhongMaterial({
+  return new THREE.MeshPhongMaterial({
     color,
     specular: 0x111111,
     shininess: 20,
@@ -42,15 +43,13 @@ export function getMaterial(withClipping: boolean, color: string) {
 
     // ***** Clipping setup (material): *****
     clippingPlanes: withClipping ? [localPlane] : [],
-    clipShadows: true
+    clipShadows: true,
   });
-
-  return material;
 }
 
 export function adjustGeometry(
-  geometry: THREE.BufferGeometry | THREE.Geometry,
-  material: THREE.Material
+  geometry: THREE.BufferGeometry,
+  material: THREE.Material,
 ) {
   geometry.computeBoundingSphere();
   geometry.center();
@@ -91,13 +90,13 @@ export function setupLights(model: THREE.Mesh, scene: THREE.Scene) {
     {
       x: maxGeo.x * 2,
       y: maxGeo.y * 2,
-      z: maxGeo.z * 2
+      z: maxGeo.z * 2,
     },
     {
       x: minGeo.x * 2,
       y: minGeo.y * 2,
-      z: minGeo.z * 2
-    }
+      z: minGeo.z * 2,
+    },
   ];
 
   LightPosList.forEach(pos => {

@@ -1,6 +1,6 @@
-import React, { ChangeEvent } from 'react';
-
 import './index.css';
+
+import React, { ChangeEvent } from 'react';
 
 interface IProps {
   id: string;
@@ -9,7 +9,12 @@ interface IProps {
   onColor?: string;
 }
 
-export const Switch = ({ id, checked, onChange, onColor = 'rgba(255,153,0,1)' }: IProps) => {
+export const Switch = ({
+  id,
+  checked,
+  onChange,
+  onColor = 'rgba(255,153,0,1)',
+}: IProps) => {
   return (
     <>
       <input
@@ -20,7 +25,10 @@ export const Switch = ({ id, checked, onChange, onColor = 'rgba(255,153,0,1)' }:
         type="checkbox"
       />
       <label className="react-switch-label" htmlFor={`react-switch-new-${id}`}>
-        <span className={`react-switch-button`} style={{ background: checked && onColor }} />
+        <span
+          className={`react-switch-button`}
+          style={{ background: checked && onColor }}
+        />
       </label>
     </>
   );

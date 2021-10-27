@@ -1,5 +1,5 @@
 {
-  "name": "@m-fe/stl-viewer",
+  "name": "@m-fe/3d-model-viewer-root",
   "version": "0.0.1",
   "description": "Micro-Frontend Libs, with React & TS & Webpack",
   "repository": {
@@ -20,26 +20,69 @@
     "typescript"
   ],
   "scripts": {
-    "bootstrap": "yarn install && yarn run build",
-    "build": "npm run clean && yarn workspaces run build",
-    "clean": "yarn workspaces run clean",
-    "clean:cov": "yarn workspaces run clean:cov",
+    "bootstrap": "pnpm install && pnpm run build",
+    "build": "npm run clean && pnpm run build --filter ./packages",
+    "clean": "pnpm run clean --filter ./packages",
+    "clean:cov": "pnpm run clean:cov --filter ./packages",
     "clean:r": "rimraf ./dist/*.map && rimraf ./dist/**/*.map && rimraf ./dist/**/*.tsbuildinfo && rimraf ./dist/**/precache-*",
     "dev": "npm start",
     "lint": "./scripts/tools/lint_all.sh",
     "lint-staged": "lint-staged",
-    "postinstall": "node ./node_modules/husky/lib/installer/bin install",
+    "postinstall": "node ./node_modules/husky/lib/bin install",
     "prepublish": "npm run clean:r",
-    "prettier-all": "prettier --write 'packages/**/src/**/*.{ts,tsx}' '!src/{assets,datas}/**'",
+    "prettier-all": "prettier --config .prettierrc.js --write 'packages/**/src/**/*.{ts,tsx}' '!src/{assets,datas}/**'",
     "test": "yarn workspaces run test",
     "test:cov": "yarn workspaces run test:cov",
     "test:watch": "yarn workspaces run test:watch",
-    "upgrade": "./scripts/tools/upgrade_pkgs.sh"
+    "upgrade": "./scripts/tools/upgrade_pkgs.sh",
+    "start": "(cd packages/webgl && pnpm start)"
+  },
+  "dependencies": {
+    "@m-fe/utils": "^0.6.1",
+    "@react-three/drei": "^7.12.3",
+    "@react-three/fiber": "^7.0.7",
+    "@seregpie/three.text-sprite": "^2.0.0",
+    "cropperjs": "^1.5.12",
+    "jszip": "^3.7.1",
+    "lodash": "^4.17.15",
+    "pako": "^1.0.11",
+    "rc-tooltip": "^5.0.1",
+    "react-color": "^2.18.1",
+    "react-cropper": "^2.1.8",
+    "react-error-boundary": "^3.1.3",
+    "react-loader-spinner": "^3.1.5",
+    "stl-viewer": "^0.12.0",
+    "styled-components": "^5.1.0",
+    "three": "^0.132.2",
+    "three-orbitcontrols-ts": "^0.1.2",
+    "uzip": "^0.20200316.0",
+    "workerize": "^0.1.8"
   },
   "devDependencies": {
-    "@m-fe/app-config": "^0.6.5",
+    "@m-fe/app-config": "^0.9.0",
+    "@m-fe/eslint-config": "^0.0.20",
+    "@m-fe/prettier-config": "^0.0.6",
+    "@m-fe/stylelint-config": "^0.0.9",
+    "@m-fe/tsconfig": "*",
+    "@storybook/addon-actions": "^5.3.14",
+    "@storybook/addon-info": "^5.3.14",
+    "@storybook/addon-links": "^5.3.14",
+    "@storybook/addons": "^5.3.14",
+    "@storybook/react": "^5.3.14",
     "@svgr/webpack": "^5.1.0",
-    "prettier": "1.19.1"
+    "@types/pako": "^1.0.1",
+    "@types/react-color": "^3.0.4",
+    "@types/three": "^0.132.1",
+    "@types/tween.js": "^18.5.1",
+    "cross-env": "^7.0.2",
+    "eslint": "^7.22.0",
+    "husky": "^7.0.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "2.2.0",
+    "rc-upload": "^3.0.0",
+    "tslib": "2.3.1",
+    "webpack": "^4.42.0",
+    "webpack-dev-server": "^3.10.3"
   },
   "browserslist": [
     "extends @m-fe/browserslist-config/modern"
@@ -49,7 +92,16 @@
       "@m-fe"
     ]
   },
-  "prettier": "@m-fe/prettier-config/semi",
+  "pnpm": {
+    "overrides": {
+      "@babel/core": "7.14.5",
+      "@babel/runtime": "7.14.5",
+      "@m-fe/app-config": "^0.9.0",
+      "@m-fe/utils": "0.6.5",
+      "tslib": "2.3.1",
+      "@m-fe/eslint-config": "0.0.20"
+    }
+  },
   "remarkConfig": {
     "plugins": [
       "@m-fe/remark-config"

@@ -42,7 +42,6 @@
   bottom: 0;
   height: 50px;
   width: 100%;
-  background: #fff;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -158,22 +157,4 @@
   top: 50%;
   transform: translateX(-50%) translateY(-50%);
   cursor: pointer;
-}
-
-.rmv-sv-joystick-left-rotate {
-  position: absolute;
-  top: 0;
-  left: 0;
-  font-size: 12px;
-  cursor: pointer;
-  z-index: 99;
-}
-
-.rmv-sv-joystick-right-rotate {
-  position: absolute;
-  top: 0;
-  right: 0;
-  font-size: 12px;
-  cursor: pointer;
-  z-index: 99;
 }

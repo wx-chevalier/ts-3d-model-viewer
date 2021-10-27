@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-require-imports */
-import { sleep, get } from '@m-fe/utils';
+import { get, sleep } from '@m-fe/utils';
 import * as THREE from 'three';
 
 import { IModelViewerProps, ModelAttr } from '../types';
@@ -13,22 +13,22 @@ export async function parseD3Model(
   _props: Partial<IModelViewerProps>,
   {
     withSnapshot = false,
-    withWallThickness = false
-  }: { withSnapshot: boolean; withWallThickness?: boolean }
+    withWallThickness = false,
+  }: { withSnapshot: boolean; withWallThickness?: boolean },
 ): Promise<{
   topology: ModelAttr;
   wallThickness: number;
   snapshot?: string;
 }> {
   let wallThickness = 0;
+
   return new Promise(async (resolve, reject) => {
     try {
       const { mesh, camera, renderer, onDestroy } = await render({
         ..._props,
         withPlane: false,
-        modelColor: 'rgb(34, 98, 246)'
+        modelColor: 'rgb(34, 98, 246)',
       });
-
       // 等待 1 秒
       await sleep(1 * 1000);
 
@@ -36,7 +36,7 @@ export async function parseD3Model(
 
       if (withWallThickness) {
         try {
-          wallThickness = await calcWallThicknessByViolence(mesh);
+          wallThickness = calcWallThicknessByViolence(mesh);
         } catch (_) {
           console.error('>>>parseD3Model>>>getWallThickness>>>', _);
         }
@@ -44,11 +44,16 @@ export async function parseD3Model(
 
       if (withSnapshot) {
         // 执行截图
-        new ObjectSnapshotGenerator(mesh, camera, renderer, (dataUrl: string) => {
-          // 执行清除操作
-          resolve({ snapshot: dataUrl, topology, wallThickness });
-          onDestroy();
-        });
+        await new ObjectSnapshotGenerator(
+          mesh,
+          camera,
+          renderer,
+          (dataUrl: string) => {
+            // 执行清除操作
+            resolve({ snapshot: dataUrl, topology, wallThickness });
+            onDestroy();
+          },
+        );
       } else {
         resolve({ topology, wallThickness });
         onDestroy();
@@ -67,8 +72,8 @@ export function calcWallThicknessByViolence(mesh: THREE.Mesh) {
   const raycaster = new THREE.Raycaster();
   let intersects = [];
 
-  const pos: THREE.BufferAttribute = (mesh.geometry as THREE.BufferGeometry).attributes
-    .position as THREE.BufferAttribute;
+  const pos: THREE.BufferAttribute = (mesh.geometry as THREE.BufferGeometry)
+    .attributes.position as THREE.BufferAttribute;
 
   const ori = new THREE.Vector3();
   const dir = new THREE.Vector3();
@@ -93,7 +98,7 @@ export function calcWallThicknessByViolence(mesh: THREE.Mesh) {
     const thisWallThickness = get(
       intersects,
       intersects => intersects[intersects.length > 1 ? 1 : 0].distance,
-      Number.MAX_VALUE
+      Number.MAX_VALUE,
     );
 
     if (thisWallThickness === 0) {

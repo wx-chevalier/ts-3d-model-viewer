@@ -22,4 +22,8 @@ export class ModelAttr {
   // 其他辅助属性
   boundary: number;
   nonManifol: number;
+
+  constructor(attr: Partial<ModelAttr> = {}) {
+    Object.assign(this, attr);
+  }
 }

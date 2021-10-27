@@ -5,7 +5,7 @@ import {
   Object3D,
   PerspectiveCamera,
   Vector3,
-  WebGLRenderer
+  WebGLRenderer,
 } from 'three';
 
 export class ObjectSnapshotGenerator {
@@ -17,25 +17,24 @@ export class ObjectSnapshotGenerator {
     protected obj: Object3D,
     protected camera: PerspectiveCamera,
     protected renderer: WebGLRenderer,
-    protected onDataUrl: (dataUrl: string) => void
+    protected onDataUrl: (dataUrl: string) => void,
   ) {
-    this.box = new Box3().setFromObject(obj);
-    this.size = { w: 0, h: 0 };
-    this.pos = { x: 0, y: 0 };
-
-    const distance = this.distance();
-
-    this.size = this.getSizeInPixel(distance);
-    this.pos = this.getPositionInPixel();
-    this.getImage(this.size.w, this.size.h, this.pos.x, this.pos.y);
+    // this.box = new Box3().setFromObject(obj);
+    // this.size = { w: 0, h: 0 };
+    // this.pos = { x: 0, y: 0 };
+    //
+    // const distance = this.distance();
+    //
+    // this.size = this.getSizeInPixel(distance);
+    // this.pos = this.getPositionInPixel();
+    // this.getImage(this.size.w, this.size.h, this.pos.x, this.pos.y);
+    this.getImage();
   }
 
   distance = () => {
     const size = new Vector3();
     this.box.getSize(size);
-    const z = this.camera.position.z - this.obj.position.z - size.z / 2;
-
-    return z;
+    return this.camera.position.z - this.obj.position.z - size.z / 2;
   };
 
   getSizeInPixel = (distance: number) => {
@@ -48,12 +47,13 @@ export class ObjectSnapshotGenerator {
     const vFOV = MathUtils.degToRad(this.camera.fov);
     // visible height
     let height = 2 * Math.tan(vFOV / 2) * Math.abs(distance);
-    let width = height * (this.renderer.domElement.width / this.renderer.domElement.height); // visible width
     // Calc ratio between pixel and visible z-unit of threejs
     const ratio = this.renderer.domElement.height / height;
 
-    width = size.x * ratio;
     height = size.y * ratio;
+    const width =
+      height *
+      (this.renderer.domElement.width / this.renderer.domElement.height); // visible width
 
     return { w: width, h: height };
   };
@@ -64,7 +64,10 @@ export class ObjectSnapshotGenerator {
     const viewMatrix = new Matrix4();
     viewMatrix.copy(this.camera.matrixWorldInverse);
 
-    viewProjectionMatrix.multiplyMatrices(this.camera.projectionMatrix, viewMatrix);
+    viewProjectionMatrix.multiplyMatrices(
+      this.camera.projectionMatrix,
+      viewMatrix,
+    );
     const widthHalf = 0.5 * this.renderer.domElement.width;
     const heightHalf = 0.5 * this.renderer.domElement.height;
     this.obj.updateMatrixWorld();
@@ -81,15 +84,9 @@ export class ObjectSnapshotGenerator {
     return { x: x, y: y };
   };
 
-  getImage = (w: number, h: number, x: number, y: number) => {
+  getImage = () => {
     const oldCanvas = this.renderer.domElement;
-    const newCanvas = document.createElement('canvas');
-    newCanvas.width = w;
-    newCanvas.height = h;
-    const newContext = newCanvas.getContext('2d');
-    newContext.drawImage(oldCanvas, x, y, w, h, 0, 0, w, h);
-    const imgData = newCanvas.toDataURL('image/png');
-
+    const imgData = oldCanvas.toDataURL('image/png');
     this.onDataUrl(imgData);
   };
 }

@@ -23,11 +23,11 @@ export class Holdable extends Component<IProps, IState> {
     pressCallbackTimeout: 100,
     onPress: undefined,
     finite: true,
-    className: ''
+    className: '',
   };
 
   state: IState = {
-    isPressed: false
+    isPressed: false,
   };
 
   longPressTimeout: NodeJS.Timeout;
@@ -36,14 +36,17 @@ export class Holdable extends Component<IProps, IState> {
   onMouseDown = () => {
     this.clearTimeout();
 
-    this.longPressTimeout = setTimeout(this.onPressStart, this.props.startTimeout);
+    this.longPressTimeout = setTimeout(
+      this.onPressStart,
+      this.props.startTimeout,
+    );
   };
 
   onMouseOut = () => {
     this.clearTimeout();
     if (this.isCurrentlyPressed()) {
       this.setState({
-        isPressed: false
+        isPressed: false,
       });
     }
   };
@@ -64,13 +67,19 @@ export class Holdable extends Component<IProps, IState> {
     if (!this.props.finite) {
       this.props.onPress();
 
-      this.pressInterval = setInterval(this.props.onPress, this.props.pressCallbackTimeout);
+      this.pressInterval = setInterval(
+        this.props.onPress,
+        this.props.pressCallbackTimeout,
+      );
     } else if (this.props.finite) {
-      this.pressInterval = setTimeout(this.longPressEnd, this.props.pressCallbackTimeout);
+      this.pressInterval = setTimeout(
+        this.longPressEnd,
+        this.props.pressCallbackTimeout,
+      );
     }
 
     this.setState({
-      isPressed: true
+      isPressed: true,
     });
   };
 

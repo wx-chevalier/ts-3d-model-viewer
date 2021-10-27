@@ -17,7 +17,7 @@ export function NetworkStl() {
         onTopology={m => {
           // console.log(m);
         }}
-        onZip={b => {
+        onCompress={b => {
           // S.downloadArraybuffer(b, 'application/zlib', 'stl.zlib');
         }}
       />

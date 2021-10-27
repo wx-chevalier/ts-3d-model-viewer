@@ -18,7 +18,9 @@ export function setLocale(_i: string) {
   let i = _i;
 
   if (!i) {
-    i = get(null, () => localStorage.getItem('3d_model_viewer_lang')) || getDefaultLocale();
+    i =
+      get(null, () => localStorage.getItem('3d_model_viewer_lang')) ||
+      getDefaultLocale();
   }
 
   if (localStorage) {
@@ -31,7 +33,10 @@ export function setLocale(_i: string) {
 export function getLocale() {
   if (!locale) {
     // en/en, zh/zh
-    return get(null, () => localStorage.getItem('3d_model_viewer_lang')) || getDefaultLocale();
+    return (
+      get(null, () => localStorage.getItem('3d_model_viewer_lang')) ||
+      getDefaultLocale()
+    );
   }
   return locale;
 }
@@ -49,7 +54,11 @@ const enMessages = {
   面积: 'Area',
   面片: 'Facets',
   破损: 'Broken',
-  个: ''
+  个: '',
+  内网: 'Lan',
+  公网: 'Internet',
+  来源: 'Source',
+  简约: 'Simplicity',
 };
 
 // 这里的 id 就是中文键名
@@ -62,6 +71,12 @@ export function i18nFormat(id: string) {
 }
 
 /** Mock i18n 相关操作，详情参考 */
-export function formatMessage({ id, defaultMessage }: { id: string; defaultMessage?: string }) {
+export function formatMessage({
+  id,
+  defaultMessage,
+}: {
+  id: string;
+  defaultMessage?: string;
+}) {
   return defaultMessage || id;
 }

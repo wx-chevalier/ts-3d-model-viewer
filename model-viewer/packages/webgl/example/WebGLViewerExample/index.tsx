@@ -1,48 +1,99 @@
+import './index.css';
+
+import * as S from '@m-fe/utils';
 import * as React from 'react';
 
-import { WebGLViewer, parseD3Model, ObjectSnapshotGenerator } from '../../src';
-import * as S from '@m-fe/utils';
-
+import {
+  ImageClipViewer,
+  ObjectSnapshotGenerator,
+  WebGLViewer,
+} from '../../src';
+import { deflate, zipped } from '../../src/utils/compressor';
 export function WebGLViewerExample() {
   const viewerRef = React.useRef<WebGLViewer>();
+  const [imgUrl, setImgUrl] = React.useState('');
+
+  const getWebGLViewer = async () => {
+    const m = viewerRef.current;
+    m.enableFreshView();
+
+    await S.sleep(3 * 1000);
+
+    if (m) {
+      new ObjectSnapshotGenerator(
+        m.model,
+        m.camera,
+        m.renderer,
+        async (dataUrl: string) => {
+          setImgUrl(dataUrl);
+          m.disableFreshView();
+        },
+      );
+    }
+  };
+
+  const getModelFile = async (type: string) => {
+    const m = viewerRef.current;
+
+    await S.sleep(3 * 1000);
+
+    if (m) {
+      const modelFile = m.state.modelFile;
+      let modelArray: Uint8Array;
+      let filetype: string;
+      let filename: string;
+      if (type === 'zip') {
+        modelArray = await zipped(modelFile);
+        filetype = 'application/zip';
+        filename = `${modelFile.name}.zip`;
+      }
+
+      if (type === 'zlib') {
+        modelArray = await deflate(modelFile);
+        filetype = 'application/zlib';
+        filename = `${modelFile.name}.zlib`;
+      }
+
+      if (type === 'stl') {
+        const buffer = await S.readFileAsArrayBufferAsync(modelFile);
+        modelArray = new Uint8Array(buffer);
+        filetype = 'application/stl';
+        filename = `${modelFile.name}`;
+      }
+
+      if (modelArray && filetype && filename) {
+        S.downloadArraybuffer(modelArray, filetype, filename);
+      } else {
+        console.log('下载失败');
+      }
+    }
+  };
 
   return (
-    <div>
-      <WebGLViewer
-        key="2"
-        type="stl"
-        src="/test-snapshot.stl"
-        fileName="AAAAAAAAAAAAAAAAAAAAAAAAA"
-        width={1000}
-        height={400}
-        ref={$ref => {
-          viewerRef.current = $ref;
-        }}
-        onTopology={m => {
-          // console.log(m);
-        }}
-      />
-      <button
-        onClick={async () => {
-          const m = viewerRef.current;
-
-          m.enableFreshView();
-
-          await S.sleep(3 * 1000);
-
-          if (m) {
-            new ObjectSnapshotGenerator(m.model, m.camera, m.renderer, async (dataUrl: string) => {
-              S.downloadUrl(dataUrl);
-
-              m.disableFreshView();
-            });
-          }
-        }}
-      >
-        点击截图
-      </button>
-      <br />
-      {/* <WebGLViewer
+    <>
+      <div>
+        <WebGLViewer
+          key="2"
+          type="stl"
+          src="aa.stl"
+          fileName="hollow_of__010.stl"
+          width={1000}
+          height={500}
+          ref={$ref => {
+            viewerRef.current = $ref;
+          }}
+          // onTopology={m => {
+          //   // console.log(m);
+          // }}
+        />
+        <button onClick={getWebGLViewer}>点击截图</button>
+        <button onClick={() => getModelFile('stl')}>下载 .stl 模型文件</button>
+        <button onClick={() => getModelFile('zip')}>下载 .zip 模型文件</button>
+        <button onClick={() => getModelFile('zlib')}>
+          下载 .zlib 模型文件
+        </button>
+        <br />
+        {/* <WebGLViewer
         key="21"
         src="big.stl"
         fileName="BBB"
@@ -59,7 +110,7 @@ export function WebGLViewerExample() {
           console.error('Invalid');
         }}
       /> */}
-      {/* <WebGLViewer
+        {/* <WebGLViewer
         key="22"
         src="big.glb"
         fileName="BBB"
@@ -76,8 +127,8 @@ export function WebGLViewerExample() {
           console.error('Invalid');
         }}
       /> */}
-      <br />
-      {/* <WebGLViewer
+        <br />
+        {/* <WebGLViewer
         key="3"
         type="obj"
         src="/file.obj"
@@ -87,7 +138,7 @@ export function WebGLViewerExample() {
           // console.log(m);
         }}
       /> */}
-      {/*
+        {/*
       <WebGLViewer
         key="33"
         type="stl"
@@ -97,7 +148,7 @@ export function WebGLViewerExample() {
         onTopology={m => {
           // console.log(m);
         }}
-        onZip={b => {
+        onCompress={b => {
           // 执行解压缩
           const modelArray: Uint8Array = pako.inflate(new Uint8Array(b));
           console.log(modelArray);
@@ -115,14 +166,14 @@ export function WebGLViewerExample() {
         onTopology={m => {
           // console.log(m);
         }}
-        // onZip={b => {
+        // onCompress={b => {
         //   // S.downloadArraybuffer(b, 'application/zlib', 'ap203.stp.zlib');
         //   // 执行解压缩
         //   const modelArray: Uint8Array = pako.inflate(new Uint8Array(b));
         //   // S.downloadArraybuffer(modelArray, 'application/stp', 'ap203.stp');
         // }}
       /> */}
-      {/* <WebGLViewer
+        {/* <WebGLViewer
         key="3"
         type="stl"
         src="https://ufc-prod.oss-cn-shenzhen.aliyuncs.com/1/model/202003/rc-upload-1584548085737-2/5.stl.zlib"
@@ -138,7 +189,7 @@ export function WebGLViewerExample() {
           // S.downloadUrl(URL.createObjectURL(b));
         }}
       /> */}
-      {/* <WebGLViewer
+        {/* <WebGLViewer
         key="4"
         type="stl"
         src="/hollow_of__010.stl.zlib"
@@ -161,10 +212,12 @@ export function WebGLViewerExample() {
         // onSnapshot={b => {
         //   S.downloadUrl(URL.createObjectURL(b));
         // }}
-        onZip={b => {
+        onCompress={b => {
           // S.downloadArraybuffer(b, 'application/zlib', 'hollow_of__010.stl.zlib');
         }}
       /> */}
-    </div>
+      </div>
+      <ImageClipViewer imgUrl={imgUrl} />
+    </>
   );
 }
