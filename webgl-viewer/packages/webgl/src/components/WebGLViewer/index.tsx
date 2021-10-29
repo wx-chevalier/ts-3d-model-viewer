@@ -162,7 +162,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
         false,
       );
 
-      this.initGeometry(mesh.geometry);
+      this.initGeometry(mesh.geometry as THREE.BufferGeometry);
 
       // 根据 props 配置简约模式的启用
       if (typeof this.props.simplicity === 'boolean') {
@@ -177,7 +177,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       console.error('>>>WebGLViewer>>>loadModel', e);
 
       if (props.onError) {
-        props.onError(e);
+        props.onError(e as Error);
       }
     }
   }
@@ -555,9 +555,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
     // 仅在传入了 Zipped 文件的情况下调用
     if (modelFile && onCompress && src && this.state.compressType === 'none') {
-      const zippedFile = await deflate(modelFile);
+      const compressedFile = await deflate(modelFile);
 
-      onCompress(zippedFile);
+      onCompress(compressedFile);
     }
   };
 

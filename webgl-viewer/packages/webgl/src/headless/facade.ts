@@ -5,6 +5,7 @@ import * as THREE from 'three';
 
 import { IModelViewerProps, ModelAttr } from '../types';
 import { ObjectSnapshotGenerator } from '../types/ObjectSnapshotGenerator';
+import { deflate } from '../utils/compressor';
 import { calcTopology } from '../utils/mesh';
 import { render } from './render';
 
@@ -14,25 +15,59 @@ export async function parseD3Model(
   {
     withSnapshot = false,
     withWallThickness = false,
-  }: { withSnapshot: boolean; withWallThickness?: boolean },
+    withCompress = false,
+  }: {
+    withSnapshot: boolean;
+    withWallThickness?: boolean;
+    withCompress?: boolean;
+  },
 ): Promise<{
   topology: ModelAttr;
   wallThickness: number;
   snapshot?: string;
+  compressedArrayBuffer?: ArrayBuffer;
 }> {
   let wallThickness = 0;
+  let topology: ModelAttr;
+  let snapshot: string;
+  let compressedArrayBuffer: ArrayBuffer;
 
   return new Promise(async (resolve, reject) => {
     try {
-      const { mesh, camera, renderer, onDestroy } = await render({
+      const { mesh, camera, renderer, modelFile, onDestroy } = await render({
         ..._props,
         withPlane: false,
         modelColor: 'rgb(34, 98, 246)',
       });
+
+      /** 回调归结函数 */
+      const onFinish = () => {
+        if (!topology) {
+          return;
+        }
+
+        if (withSnapshot && !snapshot) {
+          return;
+        }
+
+        if (withCompress && !compressedArrayBuffer) {
+          return;
+        }
+
+        resolve({ wallThickness, topology, snapshot, compressedArrayBuffer });
+        onDestroy();
+      };
+
+      // 异步进行压缩操作
+      deflate(modelFile).then(ab => {
+        compressedArrayBuffer = ab;
+        onFinish();
+      });
+
       // 等待 1 秒
       await sleep(1 * 1000);
 
-      const topology = await calcTopology(mesh);
+      topology = await calcTopology(mesh);
 
       if (withWallThickness) {
         try {
@@ -50,16 +85,15 @@ export async function parseD3Model(
           renderer,
           (dataUrl: string) => {
             // 执行清除操作
-            resolve({ snapshot: dataUrl, topology, wallThickness });
-            onDestroy();
+            snapshot = dataUrl;
+            onFinish();
           },
         );
-      } else {
-        resolve({ topology, wallThickness });
-        onDestroy();
       }
+
+      onFinish();
     } catch (_) {
-      console.error(_);
+      console.error('>>>facade>>>parseD3Model>>>error:' + JSON.stringify(_));
       reject(_);
     }
   });

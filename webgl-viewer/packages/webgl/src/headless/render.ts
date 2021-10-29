@@ -52,7 +52,10 @@ export async function render(_props: Partial<IModelViewerProps>) {
     document.body.appendChild(renderer.domElement);
 
     const material = getMaterial(false, props.modelColor);
-    const { mesh, xDims, yDims, zDims } = adjustGeometry(geometry, material);
+    const { mesh, xDims, yDims, zDims } = adjustGeometry(
+      geometry as THREE.BufferGeometry,
+      material,
+    );
 
     group.add(mesh);
     scene.updateMatrixWorld();
@@ -98,6 +101,7 @@ export async function render(_props: Partial<IModelViewerProps>) {
     });
 
     return {
+      modelFile,
       mesh,
       camera,
       renderer,
