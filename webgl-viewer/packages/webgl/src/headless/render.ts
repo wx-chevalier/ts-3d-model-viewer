@@ -114,6 +114,6 @@ export async function render(_props: Partial<IModelViewerProps>) {
       },
     };
   } catch (error) {
-    console.error(error);
+    console.error('>>>webgl-viewer>>>headless>>>render>>>error: ', error);
   }
 }

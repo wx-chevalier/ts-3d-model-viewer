@@ -140,8 +140,9 @@ export async function loadMesh(
             }
           },
         );
+      } else {
+        reject('The format of the model does not support parsing!');
       }
-      reject('The format of the model does not support parsing!');
     } catch (_) {
       console.error(_);
       reject(_);

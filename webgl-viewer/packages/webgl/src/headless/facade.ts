@@ -93,7 +93,7 @@ export async function parseD3Model(
 
       onFinish();
     } catch (_) {
-      console.error('>>>facade>>>parseD3Model>>>error:' + JSON.stringify(_));
+      console.error('>>>facade>>>parseD3Model>>>error:', _);
       reject(_);
     }
   });
