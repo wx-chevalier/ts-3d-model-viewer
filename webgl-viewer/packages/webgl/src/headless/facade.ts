@@ -55,6 +55,7 @@ export async function parseD3Model(
         }
 
         resolve({ wallThickness, topology, snapshot, compressedArrayBuffer });
+
         onDestroy();
       };
 

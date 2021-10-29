@@ -106,11 +106,25 @@ export async function render(_props: Partial<IModelViewerProps>) {
       camera,
       renderer,
       onDestroy: () => {
-        cancelAnimationFrame(animationId);
-        renderer.dispose();
-        renderer.forceContextLoss();
+        try {
+          cancelAnimationFrame(animationId);
+          renderer.dispose();
+          renderer.forceContextLoss();
 
-        document.body.removeChild(renderer.domElement);
+          const parent =
+            renderer.domElement.parentElement || renderer.domElement.parentNode;
+
+          if (parent) {
+            parent.removeChild(renderer.domElement);
+          } else {
+            renderer.domElement.remove();
+          }
+        } catch (_) {
+          console.error(
+            '>>>webgl-viewer>>>headless>>>render>>>onDestroy>>>error:',
+            _,
+          );
+        }
       },
     };
   } catch (error) {
