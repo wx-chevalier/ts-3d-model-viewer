@@ -1,6 +1,4 @@
-/**
- * 3d Vectors
- */
+/** 3d Vectors */
 export class SimpleVector3 {
   x: number;
   y: number;

@@ -16,7 +16,7 @@ import { render } from './render';
 export async function compressD3Model(
   props: Partial<IModelViewerProps>,
   _targetCompressType: D3ModelCompressType, // TODO: 后续支持不同的压缩类型
-) {
+): Promise<ArrayBuffer> {
   const compressType =
     props.compressType || getModelCompressType(props.fileName, props.src);
   const modelFile = await getFileObjFromModelSrc({
