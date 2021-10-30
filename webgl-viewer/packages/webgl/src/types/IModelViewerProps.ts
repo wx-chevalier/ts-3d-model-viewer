@@ -1,27 +1,40 @@
 import { ModelAttr } from './ModelAttr';
 
-export type ModelSrc = File | string;
-export type ModelType =
-  | 'gltf'
-  | 'glb'
-  | 'obj'
-  | 'stl'
-  | 'ply'
-  | 'stp'
-  | 'step'
-  | '3dxml'
-  | 'catpart'
-  | 'x_t'
-  | 'x_b';
-export type ModelCompressType = 'none' | 'zlib' | 'zip';
-export type ZippedModelMap = Record<string, Uint8Array>;
+export type D3ModelSrc = File | string;
+export const D3ModelTypes = [
+  'stl',
+  'obj',
+  'stp',
+  'step',
+  '3dm',
+  '3ds',
+  '3mf',
+  'cob',
+  'blender',
+  'dxf',
+  'ply',
+  'x3d',
+  'gitf',
+  'gltf',
+  'glb',
+  'igs',
+  'iges',
+  'fbx',
+  '3dxml',
+  'catpart',
+  'x_t',
+  'x_b',
+] as const;
+export type D3ModelType = typeof D3ModelTypes[number];
+export type D3ModelCompressType = 'none' | 'zlib' | 'zip' | 'zip-dir';
+export type CompressedD3ModelMap = Record<string, Uint8Array>;
 
 // 公共的组件应该实现的 Props
 export interface IModelViewerProps {
   // 传入的源文件类型
-  src: ModelSrc;
-  type: ModelType;
-  compressType: ModelCompressType;
+  src: D3ModelSrc;
+  type: D3ModelType;
+  compressType: D3ModelCompressType;
 
   fileName?: string;
   width?: number | string;

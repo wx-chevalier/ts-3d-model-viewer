@@ -3,11 +3,32 @@
 import { get, sleep } from '@m-fe/utils';
 import * as THREE from 'three';
 
-import { IModelViewerProps, ModelAttr } from '../types';
+import { D3ModelCompressType, IModelViewerProps, ModelAttr } from '../types';
 import { ObjectSnapshotGenerator } from '../types/ObjectSnapshotGenerator';
 import { deflate } from '../utils/compressor';
+import {
+  getFileObjFromModelSrc,
+  getModelCompressType,
+} from '../utils/file_loader';
 import { calcTopology } from '../utils/mesh';
 import { render } from './render';
+
+export async function compressD3Model(
+  props: Partial<IModelViewerProps>,
+  _targetCompressType: D3ModelCompressType, // TODO: 后续支持不同的压缩类型
+) {
+  const compressType =
+    props.compressType || getModelCompressType(props.fileName, props.src);
+  const modelFile = await getFileObjFromModelSrc({
+    ...props,
+    compressType,
+  });
+
+  // 异步进行压缩操作
+  const ab = await deflate(modelFile);
+
+  return ab;
+}
 
 /** 生成模型截图 */
 export async function parseD3Model(

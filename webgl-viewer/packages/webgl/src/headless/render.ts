@@ -35,7 +35,10 @@ export async function render(_props: Partial<IModelViewerProps>) {
     // 进行模型实际加载，注意，不需要转化为
     const {
       mesh: { geometry },
-    } = await loadMesh(modelFile || props.src, type, props.onError, false);
+    } = await loadMesh(modelFile || props.src, type, {
+      withGltf: false,
+      onError: props.onError,
+    });
     // 执行回收操作
     const scene = new THREE.Scene();
     const group = new THREE.Group();

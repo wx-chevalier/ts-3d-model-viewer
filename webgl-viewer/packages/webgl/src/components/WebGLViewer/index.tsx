@@ -35,7 +35,7 @@ import {
 } from '../../utils/file_loader';
 import { getLocale, i18nFormat, setLocale } from '../../utils/i18n';
 import { calcTopology } from '../../utils/mesh';
-import { canTransformToGLTF, loadMesh } from '../../utils/mesh_loader';
+import { isSupportBrowserParse, loadMesh } from '../../utils/mesh_loader';
 import { Holdable } from '../Holdable';
 import { Switch } from '../Switch';
 
@@ -150,17 +150,15 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       });
 
       // 判断是否可以进行预览，不可以预览则仅设置
-      if (!canTransformToGLTF(this.state.type) || !props.showModelViewer) {
+      if (!isSupportBrowserParse(this.state.type) || !props.showModelViewer) {
         return;
       }
 
       // 进行模型实际加载，注意，不需要转化为
-      const { mesh } = await loadMesh(
-        modelFile || props.src,
-        this.state.type,
-        this.props.onError,
-        false,
-      );
+      const { mesh } = await loadMesh(modelFile || props.src, this.state.type, {
+        withGltf: false,
+        onError: this.props.onError,
+      });
 
       this.initGeometry(mesh.geometry as THREE.BufferGeometry);
 
@@ -996,7 +994,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     } = this.state;
 
     // 如果出现异常
-    if (!canTransformToGLTF(type)) {
+    if (!isSupportBrowserParse(type)) {
       return (
         <div
           className="rmv-sv-container"

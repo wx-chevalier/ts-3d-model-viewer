@@ -6,9 +6,10 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
-import { ModelSrc, ModelType } from '../types/IModelViewerProps';
+import { D3ModelSrc, D3ModelType } from '../types/IModelViewerProps';
 
-export const canTransformToGLTF = (type: ModelType) =>
+/** 是否支持浏览器端解析 */
+export const isSupportBrowserParse = (type: D3ModelType) =>
   type === 'glb' ||
   type === 'gltf' ||
   type === 'ply' ||
@@ -23,10 +24,12 @@ function createURL(json: any) {
 
 /** 将其他类型的文件，转化为 GLTF 类型 */
 export async function loadMesh(
-  src: ModelSrc,
-  type: ModelType,
-  onError?: (err: Error) => void,
-  withGltf = true,
+  src: D3ModelSrc,
+  type: D3ModelType,
+  {
+    withGltf = true,
+    onError,
+  }: { withGltf?: boolean; onError?: (err: Error) => void } = {},
 ): Promise<{ gltf?: string; mesh?: THREE.Mesh; srcUrl: string }> {
   const material = new THREE.MeshStandardMaterial();
   return await new Promise((resolve, reject) => {

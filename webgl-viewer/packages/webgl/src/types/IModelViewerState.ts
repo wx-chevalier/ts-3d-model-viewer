@@ -1,9 +1,9 @@
-import { ModelCompressType, ModelType } from './IModelViewerProps';
+import { D3ModelCompressType, D3ModelType } from './IModelViewerProps';
 import { ModelAttr } from './ModelAttr';
 
 export interface IModelViewerState {
-  type: ModelType;
-  compressType: ModelCompressType;
+  type: D3ModelType;
+  compressType: D3ModelCompressType;
   topology?: ModelAttr;
   modelFile?: File;
 

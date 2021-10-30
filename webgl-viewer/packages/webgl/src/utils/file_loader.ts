@@ -1,20 +1,20 @@
 import { arrayBufferToFile, blobToFile, newUri } from '@m-fe/utils';
 
 import {
+  D3ModelCompressType,
+  D3ModelSrc,
+  D3ModelType,
   IModelViewerProps,
-  ModelCompressType,
-  ModelSrc,
-  ModelType,
 } from '../types/IModelViewerProps';
 import { IModelViewerState } from '../types/IModelViewerState';
 import { inflate, unzip } from './compressor';
 
 /** 根据模型名称推导出可能的类型 */
-export function getModelType(fileName: string, model: ModelSrc): ModelType {
+export function getModelType(fileName: string, model: D3ModelSrc): D3ModelType {
   const name: string =
     (model instanceof File ? model.name : model) || fileName || '';
 
-  // FIXME 模型类型不在下列判断时，都会返回 stl, loadMesh 可能出现异常行为
+  // FIXME:模型类型不在下列判断时，都会返回 stl, loadMesh 可能出现异常行为
   if (name.indexOf('.stl') > -1) {
     return 'stl';
   } else if (name.indexOf('.glb') > -1) {
@@ -39,8 +39,8 @@ export function getModelType(fileName: string, model: ModelSrc): ModelType {
 /** 根据模型名称推导出可能的压缩类型 */
 export function getModelCompressType(
   fileName: string,
-  model: ModelSrc,
-): ModelCompressType {
+  model: D3ModelSrc,
+): D3ModelCompressType {
   const name: string =
     (model instanceof File ? model.name : model) || fileName || '';
 

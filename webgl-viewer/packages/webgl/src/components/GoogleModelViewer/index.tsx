@@ -9,9 +9,9 @@ import * as THREE from 'three';
 import {
   defaultModelViewerProps,
   IModelViewerProps,
-  ModelCompressType,
-  ModelSrc,
-  ModelType,
+  D3ModelCompressType,
+  D3ModelSrc,
+  D3ModelType,
 } from '../../types/IModelViewerProps';
 import { ModelAttr } from '../../types/ModelAttr';
 import { toFixedNumber } from '../../utils';
@@ -21,16 +21,16 @@ import {
   getModelType,
 } from '../../utils/file_loader';
 import { calcTopology } from '../../utils/mesh';
-import { canTransformToGLTF, loadMesh } from '../../utils/mesh_loader';
+import { isSupportBrowserParse, loadMesh } from '../../utils/mesh_loader';
 import { Holdable } from '../Holdable';
 
 export interface GoogleModelViewerProps extends IModelViewerProps {}
 
 interface GoogleModelViewerState {
-  type: ModelType;
-  compressType: ModelCompressType;
+  type: D3ModelType;
+  compressType: D3ModelCompressType;
 
-  gltfSrc?: ModelSrc;
+  gltfSrc?: D3ModelSrc;
   mesh?: THREE.Mesh;
   topology?: ModelAttr;
   modelFile?: File;
@@ -78,7 +78,7 @@ export class GoogleModelViewer extends React.Component<
     });
 
     // 判断是否可以进行预览
-    if (!canTransformToGLTF(this.state.type)) {
+    if (!isSupportBrowserParse(this.state.type)) {
       // 仅执行 ZIP 操作
       this.handleCompress();
       return;
@@ -88,7 +88,7 @@ export class GoogleModelViewer extends React.Component<
       const { gltf: gltfSrc, mesh } = await loadMesh(
         modelFile || props.src,
         this.state.type,
-        this.props.onError,
+        { onError: this.props.onError },
       );
 
       this.setState({ gltfSrc, mesh, modelFile }, () => {
