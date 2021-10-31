@@ -12,6 +12,7 @@ import { D3ModelSrc, D3ModelType } from '../types/IModelViewerProps';
 export const isSupportBrowserParse = (type: D3ModelType) =>
   type === 'glb' ||
   type === 'gltf' ||
+  type === 'gitf' ||
   type === 'ply' ||
   type === 'stl' ||
   type === 'obj';
@@ -36,7 +37,7 @@ export async function loadMesh(
     const srcUrl = src instanceof File ? URL.createObjectURL(src) : src;
 
     try {
-      if (type === 'glb' || type === 'gltf') {
+      if (type === 'glb' || type === 'gltf' || type === 'gitf') {
         const loader = new GLTFLoader();
 
         const dracoLoader = new DRACOLoader();

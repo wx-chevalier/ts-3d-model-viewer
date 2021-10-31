@@ -32,7 +32,7 @@ export function WebGLViewerExample() {
     }
   };
 
-  const getModelFile = async (type: string) => {
+  const saveModelFileAs = async (type: string) => {
     const m = viewerRef.current;
 
     await S.sleep(3 * 1000);
@@ -75,21 +75,23 @@ export function WebGLViewerExample() {
         <WebGLViewer
           key="2"
           type="stl"
-          src="aa.stl"
-          fileName="hollow_of__010.stl"
+          src="https://oss-huitong-foshan-pri.oss-cn-shenzhen.aliyuncs.com/TENANT-109/model/202110/d3381eb6-08c1-4f06-9456-36edfaad6d5f/Spider_ascii.stl"
+          fileName="Spider_ascii.stl"
+          compressType="zlib"
           width={1000}
           height={500}
           ref={$ref => {
             viewerRef.current = $ref;
           }}
-          // onTopology={m => {
-          //   // console.log(m);
-          // }}
         />
         <button onClick={getWebGLViewer}>点击截图</button>
-        <button onClick={() => getModelFile('stl')}>下载 .stl 模型文件</button>
-        <button onClick={() => getModelFile('zip')}>下载 .zip 模型文件</button>
-        <button onClick={() => getModelFile('zlib')}>
+        <button onClick={() => saveModelFileAs('stl')}>
+          下载 .stl 模型文件
+        </button>
+        <button onClick={() => saveModelFileAs('zip')}>
+          下载 .zip 模型文件
+        </button>
+        <button onClick={() => saveModelFileAs('zlib')}>
           下载 .zlib 模型文件
         </button>
         <br />
