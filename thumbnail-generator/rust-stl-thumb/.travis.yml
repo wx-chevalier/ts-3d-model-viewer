@@ -1,0 +1,55 @@
+dist: bionic
+language: rust
+cache: cargo
+
+addons:
+    apt:
+        packages:
+            - libxcursor-dev
+            - libxxf86vm-dev
+            - libosmesa6-dev
+            - xvfb
+
+matrix:
+    include:
+        - env: TARGET=x86_64-unknown-linux-gnu
+        - env: TARGET=armv7-unknown-linux-gnueabihf DISABLE_TESTS=1
+          addons:
+            apt:
+                packages:
+                    - gcc-arm-linux-gnueabihf
+                    - libc-dev-armhf-cross
+        - env: TARGET=aarch64-unknown-linux-gnu DISABLE_TESTS=1
+          addons:
+            apt:
+                packages:
+                    - gcc-aarch64-linux-gnu
+                    - libc-dev-arm64-cross
+
+before_install:
+    - cargo install cargo-deb || echo "cargo-deb already installed"
+
+install:
+    - rustup self update
+    - rustup target add $TARGET; true
+
+script:
+    - cargo build --release --target $TARGET
+    - if [ ! $DISABLE_TESTS ]; then RUST_BACKTRACE=1 xvfb-run cargo test --target $TARGET; fi
+
+before_deploy:
+    - mkdir target/deploy/
+    - cargo deb --target $TARGET
+    - cp target/$TARGET/debian/*.deb target/deploy/
+
+deploy:
+    provider: releases
+    api_key:
+        secure: "Z2WQjcI8tTWpQd2sYeawuKJSOYMqEgp4HcMNvawe7BgL1frYNUfmmOYXcrpho4B11AnqKxUafFODnsAc0KgwES9NDtoVFOF+vX1Atu9swMs98zin2+L0c5Nbz+cxptaTkA3uz2D3/DaukMahEtAoutibtOh6oK7hI2Nj3eL+MdW7lSoyfh9rDD0yw1/ITr1nrZ9svhXTaT60BNH30IY44Kpg8BHHLqvMFgQwpzQtG14gv3BaINb+EvwjzG/xDjNqMt8of4tkOXsC8Din5Mt/dVPFltfXxcChATzWbE8+YPNOcUl3s8QEpMZ+E89iazEsj6N+FJu1eX9pJlbhQsV+ZpnC35p7PLk+5JV6l63+A7SN9F/Oh1jPN9Dzn80F1GzoRzS9BvgJvTLmX3WrQt/tyjAejtGBWwpnJaV6kn0MwyzVkHH5KONgIoVngiqjyNhwu2NWUXfX/tL3HQ6liNicXA++ybphsm65pMQXX/TFXypjDYUMluO0KwomRaPP0HX+BU14B/If/uKb5/ssedZsptPf88x2PDJQaQ1AHB9Vv6gi+tUiZUIzGIjleuyzHGZwo2p7evG4/Bi6sn2vdR/VysgAkjAzZccWXtQLwJ2Df6632KsQHb3H5cEYwlMFUTXtflZbbm8TCeGy1Esx/xBV5mc92ExUBw0QrCW/gjH8ZVo="
+    file_glob: true
+    file: "target/deploy/*"
+    on:
+        repo: unlimitedbacon/stl-thumb
+        tags: true
+    skip_cleanup: true
+    draft: true
