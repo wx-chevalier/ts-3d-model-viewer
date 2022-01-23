@@ -161,6 +161,10 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 - [Foxtrot #Project#](https://github.com/Formlabs/foxtrot): Foxtrot is a fast viewer for STEP files, a standard interchange format for mechanical CAD. It is an experimental project built from the ground up, including new libraries for parsing and triangulation.
 
+- [f3d #Project#](https://github.com/f3d-app/f3d): A fast and minimalist 3D viewer.
+
+- [mayo #Project#](https://github.com/fougue/mayo): 3D CAD viewer and converter based on Qt + OpenCascade
+
 ### Optimizer
 
 - [meshoptimizer #Project#](https://github.com/zeux/meshoptimizer): Mesh optimization library that makes meshes smaller and faster to render
