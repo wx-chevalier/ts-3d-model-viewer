@@ -165,6 +165,8 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 - [mayo #Project#](https://github.com/fougue/mayo): 3D CAD viewer and converter based on Qt + OpenCascade
 
+- [Online3DViewer #Project#](https://github.com/kovacsv/Online3DViewer): A free and open source web solution to visualize and explore 3D models right in your browser.
+
 ### Optimizer
 
 - [meshoptimizer #Project#](https://github.com/zeux/meshoptimizer): Mesh optimization library that makes meshes smaller and faster to render
