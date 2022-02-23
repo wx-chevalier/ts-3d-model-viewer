@@ -21,9 +21,9 @@
   ],
   "scripts": {
     "bootstrap": "pnpm install && pnpm run build",
-    "build": "npm run clean && pnpm run build --filter ./packages",
-    "clean": "pnpm run clean --filter ./packages",
-    "clean:cov": "pnpm run clean:cov --filter ./packages",
+    "build": "npm run clean && npm run build --filter ./packages",
+    "clean": "npm run clean --filter ./packages",
+    "clean:cov": "npm run clean:cov --filter ./packages",
     "clean:r": "rimraf ./dist/*.map && rimraf ./dist/**/*.map && rimraf ./dist/**/*.tsbuildinfo && rimraf ./dist/**/precache-*",
     "dev": "npm start",
     "lint": "./scripts/tools/lint_all.sh",

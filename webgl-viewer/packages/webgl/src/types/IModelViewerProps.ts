@@ -62,6 +62,7 @@ export interface IModelViewerProps {
   cameraX: number;
   cameraY: number;
   cameraZ: number;
+  unit?: string;
 
   withJoystick: boolean;
   withPlane?: boolean;
@@ -93,6 +94,7 @@ export const defaultModelViewerProps: Partial<IModelViewerProps> = {
   cameraX: 0,
   cameraY: 0,
   cameraZ: 0,
+  unit: 'mm',
   showCameraIcon: false,
   withPlane: true,
   showAxisHelper: true,
