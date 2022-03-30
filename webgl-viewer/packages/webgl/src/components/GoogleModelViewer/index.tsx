@@ -7,11 +7,11 @@ import Loader from 'react-loader-spinner';
 import * as THREE from 'three';
 
 import {
-  defaultModelViewerProps,
-  IModelViewerProps,
   D3ModelCompressType,
   D3ModelSrc,
   D3ModelType,
+  defaultModelViewerProps,
+  IModelViewerProps,
 } from '../../types/IModelViewerProps';
 import { ModelAttr } from '../../types/ModelAttr';
 import { toFixedNumber } from '../../utils';

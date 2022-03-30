@@ -713,7 +713,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
   renderAttr() {
     const { fileName, src, unit } = this.props;
-    
+
     const { withAttr, topology } = this.state;
 
     return withAttr && topology ? (
@@ -726,16 +726,23 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               </div>
             )}
             <div className="item">
-              {i18nFormat('尺寸')}：{topology.sizeX ? topology.sizeX.toFixed(2) : 0}*{topology.sizeY ? topology.sizeY.toFixed(2) : 0}*{topology.sizeZ ? topology.sizeZ.toFixed(2) : 0} {unit}
+              {i18nFormat('尺寸')}：
+              {topology.sizeX ? topology.sizeX.toFixed(2) : 0}*
+              {topology.sizeY ? topology.sizeY.toFixed(2) : 0}*
+              {topology.sizeZ ? topology.sizeZ.toFixed(2) : 0} {unit}
             </div>
             <div className="item">
-              {i18nFormat('体积')}：{topology.volume ? topology.volume.toFixed(2) : 0} {unit}<sup>3</sup>
+              {i18nFormat('体积')}：
+              {topology.volume ? topology.volume.toFixed(2) : 0} {unit}
+              <sup>3</sup>
             </div>
           </div>
 
           <div className="rmv-gmv-attr-modal-row">
             <div className="item">
-              {i18nFormat('面积')}：{topology.area ? topology.area.toFixed(2) : 0} {unit}<sup>2</sup>
+              {i18nFormat('面积')}：
+              {topology.area ? topology.area.toFixed(2) : 0} {unit}
+              <sup>2</sup>
             </div>
             <div className="item">
               {i18nFormat('面片')}：{`${topology.triangleCnt}`}

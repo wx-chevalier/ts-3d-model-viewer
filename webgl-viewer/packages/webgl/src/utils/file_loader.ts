@@ -4,6 +4,7 @@ import {
   D3ModelCompressType,
   D3ModelSrc,
   D3ModelType,
+  D3ModelTypes,
   IModelViewerProps,
 } from '../types/IModelViewerProps';
 import { IModelViewerState } from '../types/IModelViewerState';
@@ -14,23 +15,10 @@ export function getModelType(fileName: string, model: D3ModelSrc): D3ModelType {
   const name: string =
     (model instanceof File ? model.name : model) || fileName || '';
 
-  // FIXME:模型类型不在下列判断时，都会返回 stl, loadMesh 可能出现异常行为
-  if (name.indexOf('.stl') > -1) {
-    return 'stl';
-  } else if (name.indexOf('.glb') > -1) {
-    return 'glb';
-  } else if (name.indexOf('.obj') > -1) {
-    return 'obj';
-  } else if (name.indexOf('.ply') > -1) {
-    return 'ply';
-  } else if (name.indexOf('.3dxml') > -1) {
-    return '3dxml';
-  } else if (name.indexOf('.catpart') > -1) {
-    return 'catpart';
-  } else if (name.indexOf('.x_t') > -1) {
-    return 'x_t';
-  } else if (name.indexOf('.x_b') > -1) {
-    return 'x_b';
+  for (const d3ModelType of D3ModelTypes) {
+    if (name.indexOf('.' + d3ModelType) > -1) {
+      return d3ModelType;
+    }
   }
 
   return 'stl';
