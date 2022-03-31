@@ -162,6 +162,8 @@ var CascadeEnvironment = function (goldenContainer) {
       return;
     } // Do nothing if the results are null
 
+    console.log(facelist, edgeList);
+
     // The old mainObject is dead!  Long live the mainObject!
     this.environment.scene.remove(this.mainObject);
     this.mainObject = new THREE.Group();

@@ -30,7 +30,7 @@ export async function compressD3Model(
   return ab;
 }
 
-/** 生成模型截图 */
+/** 解析模型并且进行一系列计算 */
 export async function parseD3Model(
   _props: Partial<IModelViewerProps>,
   {

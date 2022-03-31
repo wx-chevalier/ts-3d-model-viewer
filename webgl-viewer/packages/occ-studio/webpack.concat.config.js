@@ -39,6 +39,9 @@ const webpackConfig = {
               './js/CADWorker/CascadeStudioMainWorker.js',
               './js/CADWorker/CascadeStudioFileUtils.js',
             ],
+            // dest: code => {
+            //   return { 'cad-worker.js': code };
+            // },
             dest: code => {
               const min = uglifyJS.minify(code, {
                 sourceMap: {

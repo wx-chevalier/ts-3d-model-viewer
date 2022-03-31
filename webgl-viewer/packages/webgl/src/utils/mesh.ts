@@ -56,11 +56,17 @@ export async function calcTopology(mesh: THREE.Mesh): Promise<ModelAttr> {
           // 计算表面积
           const ab = v2.clone().sub(v1);
           const ac = v3.clone().sub(v1);
-          area += ab.clone().cross(ac).length() / 2;
+
+          const currentArea = ab.clone().cross(ac).length() / 2;
+          if (!Number.isNaN(currentArea)) {
+            area += currentArea;
+          }
 
           const mVol = signedVolumeOfTriangle(t1, t2, t3);
 
-          vol += mVol;
+          if (!Number.isNaN(mVol)) {
+            vol += mVol;
+          }
         }
       }
     });

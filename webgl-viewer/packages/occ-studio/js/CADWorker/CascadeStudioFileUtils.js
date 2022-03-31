@@ -46,7 +46,7 @@ function loadFiles(files) {
           if (lastImportedShape) {
             console.log('Imports complete, rendering shapes now...');
             let response = messageHandlers['combineAndRenderShapes']({
-              maxDeviation: GUIState['MeshRes'] || 0.1,
+              maxDeviation: 0.1,
             });
             postMessage({ type: 'combineAndRenderShapes', payload: response });
           }

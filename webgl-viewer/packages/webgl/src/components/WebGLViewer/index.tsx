@@ -28,6 +28,7 @@ import {
 } from '../../types/';
 import { ObjectSnapshotGenerator } from '../../types/ObjectSnapshotGenerator';
 import { deflate } from '../../utils/compressor';
+import { ErrorFallback } from '../../utils/error';
 import {
   getFileObjFromModelSrc,
   getModelCompressType,
@@ -35,35 +36,19 @@ import {
 } from '../../utils/file_loader';
 import { getLocale, i18nFormat, setLocale } from '../../utils/i18n';
 import { calcTopology } from '../../utils/mesh';
-import { isSupportBrowserParse, loadMesh } from '../../utils/mesh_loader';
+import { isSupportThreejsLoader, loadMesh } from '../../utils/mesh_loader';
 import { Holdable } from '../Holdable';
 import { Switch } from '../Switch';
 
 const fudge = 1.0;
 
-export function ErrorFallback({
-  error,
-  resetErrorBoundary,
-}: {
-  error: Error;
-  resetErrorBoundary: () => void;
-}) {
-  React.useEffect(() => {
-    console.log('>>>WebGLViewer>>>', error.message);
-  });
-
-  return (
-    <div role="alert">
-      <button onClick={resetErrorBoundary}>Try again</button>
-    </div>
-  );
-}
-
 declare global {
   const __DEV__: boolean;
 }
 
-interface IProps extends IModelViewerProps {}
+interface IProps extends IModelViewerProps {
+  mesh?: THREE.Mesh;
+}
 
 interface IState extends IModelViewerState {}
 
@@ -120,7 +105,10 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   }
 
   componentWillReceiveProps(nextProps: IProps) {
-    if (nextProps.src !== this.props.src) {
+    if (
+      nextProps.src !== this.props.src ||
+      nextProps.mesh !== this.props.mesh
+    ) {
       this.loadModel(nextProps);
     }
   }
@@ -137,28 +125,41 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   /** 这里根据传入的文件类型，进行不同的文件转化 */
   async loadModel(props: IProps) {
     try {
-      const modelFile = await getFileObjFromModelSrc({
-        ...props,
-        compressType: this.state.compressType,
-      });
+      let mesh: THREE.Mesh;
 
-      await this.setState({ modelFile });
+      if (props.mesh) {
+        mesh = props.mesh;
+      } else {
+        const modelFile = await getFileObjFromModelSrc({
+          ...props,
+          compressType: this.state.compressType,
+        });
 
-      // 判断是否有 onZip，有的话则进行压缩并且返回
-      requestAnimationFrame(async () => {
-        this.handleCompress();
-      });
+        await this.setState({ modelFile });
 
-      // 判断是否可以进行预览，不可以预览则仅设置
-      if (!isSupportBrowserParse(this.state.type) || !props.showModelViewer) {
-        return;
+        // 判断是否有 onZip，有的话则进行压缩并且返回
+        requestAnimationFrame(async () => {
+          this.handleCompress();
+        });
+
+        // 判断是否可以进行预览，不可以预览则仅设置
+        if (
+          !isSupportThreejsLoader(this.state.type) ||
+          !props.showModelViewer
+        ) {
+          return;
+        }
+
+        // 进行模型实际加载，注意，不需要转化为
+        ({ mesh } = await loadMesh(
+          this.state.modelFile || props.src,
+          this.state.type,
+          {
+            withGltf: false,
+            onError: this.props.onError,
+          },
+        ));
       }
-
-      // 进行模型实际加载，注意，不需要转化为
-      const { mesh } = await loadMesh(modelFile || props.src, this.state.type, {
-        withGltf: false,
-        onError: this.props.onError,
-      });
 
       this.initGeometry(mesh.geometry as THREE.BufferGeometry);
 
@@ -997,7 +998,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     } = this.state;
 
     // 如果出现异常
-    if (!isSupportBrowserParse(type)) {
+    if (!isSupportThreejsLoader(type) && !this.props.mesh) {
       return (
         <div
           className="rmv-sv-container"

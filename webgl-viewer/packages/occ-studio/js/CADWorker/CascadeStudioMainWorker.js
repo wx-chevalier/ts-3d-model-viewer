@@ -11,7 +11,7 @@ preloadedFonts.forEach(fontURL => {
     if (err) {
       console.log(err);
     }
-    let fontName = fontURL.split('./fonts/')[1].split('.ttf')[0];
+    let fontName = fontURL.split('/fonts/')[1].split('.ttf')[0];
     fonts[fontName] = font;
   });
 });

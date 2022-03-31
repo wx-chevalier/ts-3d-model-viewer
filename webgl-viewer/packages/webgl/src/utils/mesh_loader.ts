@@ -9,7 +9,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 import { D3ModelSrc, D3ModelType } from '../types/IModelViewerProps';
 
 /** 是否支持浏览器端解析 */
-export const isSupportBrowserParse = (type: D3ModelType) =>
+export const isSupportThreejsLoader = (type: D3ModelType) =>
   type === 'glb' ||
   type === 'gltf' ||
   type === 'gitf' ||

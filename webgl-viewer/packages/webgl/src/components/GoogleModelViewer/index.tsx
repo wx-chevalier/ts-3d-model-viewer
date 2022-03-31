@@ -21,7 +21,7 @@ import {
   getModelType,
 } from '../../utils/file_loader';
 import { calcTopology } from '../../utils/mesh';
-import { isSupportBrowserParse, loadMesh } from '../../utils/mesh_loader';
+import { isSupportThreejsLoader, loadMesh } from '../../utils/mesh_loader';
 import { Holdable } from '../Holdable';
 
 export interface GoogleModelViewerProps extends IModelViewerProps {}
@@ -78,7 +78,7 @@ export class GoogleModelViewer extends React.Component<
     });
 
     // 判断是否可以进行预览
-    if (!isSupportBrowserParse(this.state.type)) {
+    if (!isSupportThreejsLoader(this.state.type)) {
       // 仅执行 ZIP 操作
       this.handleCompress();
       return;
