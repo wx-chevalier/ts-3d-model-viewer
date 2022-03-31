@@ -28,14 +28,13 @@
     "dev": "npm start",
     "lint": "./scripts/tools/lint_all.sh",
     "lint-staged": "lint-staged",
-    "postinstall": "node ./node_modules/husky/lib/bin install",
     "prepublish": "npm run clean:r",
     "prettier-all": "prettier --config .prettierrc.js --write 'packages/**/src/**/*.{ts,tsx}' '!src/{assets,datas}/**'",
+    "start": "(cd packages/webgl && pnpm start)",
     "test": "yarn workspaces run test",
     "test:cov": "yarn workspaces run test:cov",
     "test:watch": "yarn workspaces run test:watch",
-    "upgrade": "./scripts/tools/upgrade_pkgs.sh",
-    "start": "(cd packages/webgl && pnpm start)"
+    "upgrade": "./scripts/tools/upgrade_pkgs.sh"
   },
   "dependencies": {
     "@m-fe/utils": "^0.6.1",
