@@ -1,8 +1,8 @@
 // Preload the Various Fonts that are available via Text3D
 var preloadedFonts = [
-  '/bundle/fonts/Roboto.ttf',
-  '/bundle/fonts/Papyrus.ttf',
-  '/bundle/fonts/Consolas.ttf',
+  '/cad-worker/fonts/Roboto.ttf',
+  '/cad-worker/fonts/Papyrus.ttf',
+  '/cad-worker/fonts/Consolas.ttf',
 ];
 
 var fonts = {};
@@ -21,7 +21,7 @@ var messageHandlers = {};
 new opencascade({
   locateFile(path) {
     if (path.endsWith('.wasm')) {
-      return '/bundle/cad-worker.wasm';
+      return '/cad-worker/cad-worker.wasm';
     }
     return path;
   },
