@@ -13,11 +13,17 @@
   "license": "MIT",
   "bundleDependencies": false,
   "dependencies": {
-    "tweakpane": "^3.0.5",
     "golden-layout": "^1.5.9",
     "jquery": "^3.5.1",
     "monaco-editor": "^0.20.0",
     "opencascade.js": "^0.1.15",
-    "three": "^0.129.0"
+    "three": "^0.129.0",
+    "tweakpane": "^3.0.5"
+  },
+  "scripts": {
+    "build": "webpack --config ./webpack.concat.config.js --progress"
+  },
+  "devDependencies": {
+    "webpack-merge-and-include-globally": "^2.3.4"
   }
 }

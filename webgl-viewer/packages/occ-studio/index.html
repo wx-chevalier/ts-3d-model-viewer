@@ -35,9 +35,7 @@
 
       // Begins loading the CAD Kernel Web Worker
       if (window.Worker) {
-        var cascadeStudioWorker = new Worker(
-          './js/CADWorker/CascadeStudioMainWorker.js',
-        );
+        var cascadeStudioWorker = new Worker('/bundle/cad-worker.js');
         // Ping Pong Messages Back and Forth based on their registration in messageHandlers
         var messageHandlers = {};
         cascadeStudioWorker.onmessage = function (e) {

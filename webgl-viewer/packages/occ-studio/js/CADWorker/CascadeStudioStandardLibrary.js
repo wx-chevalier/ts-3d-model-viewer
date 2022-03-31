@@ -12,7 +12,7 @@
 //  - From there, you can graft those into CascadeStudio/libs/opencascade.js/dist (following its existing conventions)
 
 /** Import Misc. Utilities that aren't part of the Exposed Library */
-importScripts('./CascadeStudioStandardUtils.js');
+// importScripts('./CascadeStudioStandardUtils.js');
 
 function Box(x, y, z, centered) {
   if (!centered) {
