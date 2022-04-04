@@ -25,7 +25,8 @@ console.error = function (err, url, line, colno, errorObj) {
   }, 0);
 
   realConsoleError.apply(console, arguments);
-}; // This is actually accessed via worker.onerror in the main thread
+};
+// This is actually accessed via worker.onerror in the main thread
 
 // Import the set of scripts we'll need to perform all the CAD operations
 // importScripts(
