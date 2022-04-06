@@ -1,8 +1,8 @@
 // Preload the Various Fonts that are available via Text3D
 var preloadedFonts = [
-  '/cad-worker/fonts/Roboto.ttf',
-  '/cad-worker/fonts/Papyrus.ttf',
-  '/cad-worker/fonts/Consolas.ttf',
+  (window.cadWorkerBasePath || '/cad-worker') + '/fonts/Roboto.ttf',
+  (window.cadWorkerBasePath || '/cad-worker') + '/fonts/Papyrus.ttf',
+  (window.cadWorkerBasePath || '/cad-worker') + '/fonts/Consolas.ttf',
 ];
 
 var fonts = {};
@@ -21,7 +21,7 @@ var messageHandlers = {};
 new opencascade({
   locateFile(path) {
     if (path.endsWith('.wasm')) {
-      return '/cad-worker/cad-worker.wasm';
+      return (window.cadWorkerBasePath || '/cad-worker') + '/cad-worker.wasm';
     }
     return path;
   },

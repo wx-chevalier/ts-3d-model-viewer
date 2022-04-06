@@ -24,6 +24,7 @@ interface IState {
 declare global {
   interface Window {
     cadWorker: Worker;
+    cadWorkerBasePath: string;
     messageHandlers: Record<string, Function>;
   }
 }
@@ -59,7 +60,9 @@ export class OccWebGLViewer extends React.Component<IProps, IState> {
     // 注册到全局上下文中
     // Begins loading the CAD Kernel Web Worker
     if (window.Worker) {
-      window.cadWorker = new Worker('/cad-worker/cad-worker.js');
+      window.cadWorker = new Worker(
+        (window.cadWorkerBasePath || '/cad-worker') + '/cad-worker.js',
+      );
       if (!window.messageHandlers) {
         window.messageHandlers = {};
       }
