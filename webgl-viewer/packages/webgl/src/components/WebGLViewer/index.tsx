@@ -224,13 +224,15 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     try {
       cancelAnimationFrame(this.animationId);
 
-      if (this.scene !== null) {
+      if (this.group !== null) {
         each(this.group.children, object => {
           if (this.group) {
             this.group.remove(object);
           }
         });
+      }
 
+      if (this.scene !== null) {
         each(this.scene.children, object => {
           if (this.scene) {
             this.scene.remove(object);

@@ -15,24 +15,6 @@ export function OccWebGLViewerExample() {
   const viewerRef = React.useRef<OccWebGLViewer>();
   const [imgUrl, setImgUrl] = React.useState('');
 
-  const [previewFile, setPreviewFile] = React.useState<File>();
-
-  React.useEffect(() => {
-    (async () => {
-      const blob = await (
-        await fetch(
-          'http://192.168.3.61:4243/file/md5/4a564a1978bc761e1ea67a4edb84e760/download?name=abc.stl' as string,
-          {
-            cache: 'force-cache',
-            mode: 'cors',
-          },
-        )
-      ).blob();
-
-      setPreviewFile(S.blobToFile(blob, 'abc.stl'));
-    })();
-  }, []);
-
   const generateSnapshot = async () => {
     const m = viewerRef.current;
     m.enableFreshView();
@@ -92,23 +74,21 @@ export function OccWebGLViewerExample() {
   return (
     <>
       <div>
-        {previewFile && (
-          <OccWebGLViewer
-            key="2"
-            type="stl"
-            src={previewFile}
-            fileName="abc.stl"
-            compressType="none"
-            width={1000}
-            height={500}
-            ref={$ref => {
-              viewerRef.current = $ref;
-            }}
-            onTopology={topo => {
-              console.log(topo);
-            }}
-          />
-        )}
+        <OccWebGLViewer
+          key="2"
+          type="stp"
+          src="/2.stp"
+          fileName="2.stp"
+          compressType="none"
+          width={1000}
+          height={500}
+          ref={$ref => {
+            viewerRef.current = $ref;
+          }}
+          onTopology={topo => {
+            console.log(topo);
+          }}
+        />
         <button onClick={generateSnapshot}>点击截图</button>
         <button
           onClick={async () => {
