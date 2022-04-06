@@ -16,7 +16,8 @@ export function getModelType(fileName: string, model: D3ModelSrc): D3ModelType {
     (model instanceof File ? model.name : model) || fileName || '';
 
   for (const d3ModelType of D3ModelTypes) {
-    if (name.indexOf('.' + d3ModelType) > -1) {
+    // 统一设置为小写
+    if (`${name}`.toLocaleLowerCase().indexOf('.' + d3ModelType) > -1) {
       return d3ModelType;
     }
   }
