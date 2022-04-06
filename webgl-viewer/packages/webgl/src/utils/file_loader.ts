@@ -59,6 +59,7 @@ export async function getFileObjFromModelSrc(
       const blob = await (
         await fetch(props.src as string, {
           cache: 'force-cache',
+          mode: 'cors',
         })
       ).blob();
 
