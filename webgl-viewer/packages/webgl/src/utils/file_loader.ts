@@ -49,6 +49,11 @@ export async function getFileObjFromModelSrc(
   props: Partial<IModelViewerProps>,
   state?: Partial<IModelViewerState>,
 ): Promise<File> {
+  const fileName: string =
+    props.fileName || typeof props.src === 'string'
+      ? newUri(props.src as string)
+      : '';
+
   // 判断是否为 ZIP 文件
   if (props.compressType !== 'none') {
     let zippedFile;
@@ -64,7 +69,7 @@ export async function getFileObjFromModelSrc(
         })
       ).blob();
 
-      zippedFile = blobToFile(blob);
+      zippedFile = blobToFile(blob, fileName);
     }
 
     // 解压缩文件
@@ -96,7 +101,7 @@ export async function getFileObjFromModelSrc(
           })
         ).blob();
 
-        return blobToFile(blob, newUri(props.src).filename());
+        return blobToFile(blob, fileName);
       } catch (e) {
         return null;
       }
