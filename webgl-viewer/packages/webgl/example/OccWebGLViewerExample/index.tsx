@@ -85,8 +85,12 @@ export function OccWebGLViewerExample() {
           ref={$ref => {
             viewerRef.current = $ref;
           }}
+          autoSnapshot={true}
           onTopology={topo => {
             console.log(topo);
+          }}
+          onSnapshot={dataUrl => {
+            console.log('>>>dataUrl>>>', dataUrl);
           }}
         />
         {/* <OccWebGLViewer

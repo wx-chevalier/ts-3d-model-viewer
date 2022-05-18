@@ -42,21 +42,24 @@ export interface IModelViewerProps {
   modelColor?: string;
   backgroundColor?: string | number;
   style?: Record<string, string | number>;
-  // 是否展示模型
+
+  /** 简约模式 */
+  simplicity: boolean;
+  /** 是否展示模型 */
   showModelViewer?: boolean;
-  // 是否展示属性浮窗
+  /** 是否展示属性浮窗 */
   withAttr?: boolean;
   externalAttr?: Record<string, string>;
-  // 是否展示右侧摄像头按钮
+  /** 是否展示右侧摄像头按钮 */
   showCameraIcon?: boolean;
-  // 是否显示三维 x-y-z 指示线
+  /** 是否显示三维 x-y-z 指示线 */
   showAxisHelper?: boolean;
-  // 简约模式
-  simplicity: boolean;
-
   cameraControls?: boolean;
+
   autoplay?: boolean;
   autoRotate?: boolean;
+  /** 是否自动截图 */
+  autoSnapshot?: boolean;
   shadowIntensity?: number;
   timeout?: number;
   cameraX: number;

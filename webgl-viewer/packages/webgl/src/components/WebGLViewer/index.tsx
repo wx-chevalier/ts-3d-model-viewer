@@ -532,7 +532,13 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   }
 
   onLoad = async () => {
-    const { withAttr, onTopology, onLoad } = this.props;
+    const {
+      withAttr,
+      autoSnapshot,
+      onTopology,
+      onLoad,
+      onSnapshot,
+    } = this.props;
 
     if (onLoad) {
       onLoad();
@@ -547,6 +553,18 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       if (onTopology) {
         onTopology(topology);
       }
+    }
+
+    // 自动截图
+    if (autoSnapshot && onSnapshot) {
+      new ObjectSnapshotGenerator(
+        this.model,
+        this.camera,
+        this.renderer,
+        (dataUrl: string) => {
+          onSnapshot(dataUrl);
+        },
+      );
     }
   };
 
