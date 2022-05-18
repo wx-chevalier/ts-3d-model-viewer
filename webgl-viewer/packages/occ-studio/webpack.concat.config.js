@@ -2,7 +2,6 @@ const path = require('path');
 const uglifyJS = require('uglify-js');
 const CleanCSS = require('clean-css');
 const MergeIntoSingle = require('webpack-merge-and-include-globally');
-// const MergeIntoSingle = require('./index.js');
 
 // Webpack Config
 const webpackConfig = {

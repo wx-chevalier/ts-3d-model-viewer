@@ -59,6 +59,30 @@ function loadFiles(files) {
 }
 messageHandlers['loadFiles'] = loadFiles;
 
+
+function loadCadFiles(cadFiles) {
+  sceneShapes = [];
+  let lastImportedShape;
+  for (let i = 0; i < cadFiles.length; i++) {
+    const cadFile = cadFiles[i];
+    lastImportedShape = importSTEPorIGES(cadFile.fileName, cadFile.text);
+    if (lastImportedShape) {
+      sceneShapes.push(lastImportedShape);
+    }
+    if (i === cadFiles.length - 1) {
+      if (lastImportedShape) {
+        console.log('Imports complete, rendering shapes now...');
+        let response = messageHandlers['combineAndRenderShapes']({
+          maxDeviation: 0.1,
+        });
+        postMessage({ type: 'combineAndRenderShapes', payload: response });
+      }
+    }
+  }
+}
+
+messageHandlers['loadCadFiles'] = loadCadFiles;
+
 /** This function parses the ASCII contents of a `.STEP` or `.IGES`
  * File as a Shape into the `externalShapes` dictionary. */
 function importSTEPorIGES(fileName, fileText) {

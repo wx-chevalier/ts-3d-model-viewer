@@ -76,6 +76,21 @@ export function OccWebGLViewerExample() {
       <div>
         <OccWebGLViewer
           key="2"
+          // src="https://assets.unionfab.com/%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%9E%8B/formats/STEP/abstract_pca.step"
+          src="http://192.168.3.71:4243/file/md5/b3474995f06b6af2f62262ecccc727b5/download?name=6-DOFRobotMechanicalArmKitsv19.step"
+          fileName="6-DOFRobotMechanicalArmKitsv19.step"
+          compressType="none"
+          width={1000}
+          height={500}
+          ref={$ref => {
+            viewerRef.current = $ref;
+          }}
+          onTopology={topo => {
+            console.log(topo);
+          }}
+        />
+        {/* <OccWebGLViewer
+          key="2"
           type="stp"
           src="/2.stp"
           fileName="2.stp"
@@ -88,7 +103,7 @@ export function OccWebGLViewerExample() {
           onTopology={topo => {
             console.log(topo);
           }}
-        />
+        /> */}
         <button onClick={generateSnapshot}>点击截图</button>
         <button
           onClick={async () => {

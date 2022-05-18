@@ -2,7 +2,7 @@ import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import Loader from 'react-loader-spinner';
 
-import { IModelViewerProps } from '../../types';
+import { D3ModelType, IModelViewerProps } from '../../types';
 import { ErrorFallback } from '../../utils/error';
 import {
   getFileObjFromModelSrc,
@@ -13,12 +13,15 @@ import { isSupportThreejsLoader } from '../../utils/mesh_loader';
 import { WebGLViewer } from '../WebGLViewer';
 import { OccEdge, OccFace, ShapesCombiner } from './ShapesCombiner';
 
-interface IProps extends Partial<IModelViewerProps> {}
+interface IProps extends Partial<IModelViewerProps> {
+  onReadCadFileTextError?: () => void;
+}
 
 interface IState {
   mesh?: THREE.Mesh;
-  modelFile?: File;
   isWorkerReady?: boolean;
+
+  cadFileText?: string;
 }
 
 declare global {
@@ -57,6 +60,8 @@ export class OccWebGLViewer extends React.Component<IProps, IState> {
   }
 
   componentDidMount(): void {
+    console.log('>>>OccWebGLViewer>>>componentDidMount>>>props:', this.props);
+
     // 注册到全局上下文中
     // Begins loading the CAD Kernel Web Worker
     if (window.Worker) {
@@ -113,43 +118,58 @@ export class OccWebGLViewer extends React.Component<IProps, IState> {
 
   /** 这里根据传入的文件类型，进行不同的文件转化 */
   async triggerModelConvert(props: IProps) {
-    const type = props.type || getModelType(props.fileName, undefined);
+    const type = `${
+      props.type || getModelType(props.fileName, undefined)
+    }`.toLowerCase();
 
-    if (['stp', 'step', 'iges'].includes(type)) {
+    if (['stp', 'step', 'iges', 'igs', 'x_t'].includes(type)) {
       const modelFile = await getFileObjFromModelSrc({
         ...props,
         compressType:
           props.compressType || getModelCompressType(props.fileName, props.src),
       });
 
-      this.setState({ modelFile });
+      const reader = new FileReader();
+      reader.onerror = ((_: FileReader, ev: any) => {
+        console.error(ev);
+        if (this.props.onReadCadFileTextError) {
+          this.props.onReadCadFileTextError();
+        }
+      }) as any;
+      
+      reader.onload = async () => {
+        const cadFileText = reader.result;
 
-      // 触发 OCC 转化
-      window.cadWorker.postMessage({
-        type: 'loadFiles',
-        payload: [modelFile],
-      });
+        console.log(
+          '>>>triggerModelConvert>>>modelFile:',
+          modelFile,
+          '>>>cadFileText:',
+          cadFileText,
+        );
+
+        // 触发 OCC 转化
+        // window.cadWorker.postMessage({
+        //   type: 'loadFiles',
+        //   payload: [modelFile],
+        // });
+
+        window.cadWorker.postMessage({
+          type: 'loadCadFiles',
+          payload: [{ text: cadFileText, fileName: props.fileName }],
+        });
+      };
+
+      await reader.readAsText(modelFile);
     }
   }
 
   render() {
-    const type =
-      this.props.type || getModelType(this.props.fileName, undefined);
+    const type = `${
+      this.props.type || getModelType(this.props.fileName, undefined)
+    }`.toLowerCase() as D3ModelType;
 
     if (isSupportThreejsLoader(type)) {
-      return (
-        <WebGLViewer
-          ref={this.viewerRef}
-          {...this.props}
-          onLoad={() => {
-            if (this.viewerRef.current.state.modelFile) {
-              this.setState({
-                modelFile: this.viewerRef.current.state.modelFile,
-              });
-            }
-          }}
-        />
-      );
+      return <WebGLViewer ref={this.viewerRef} {...this.props} />;
     }
 
     if (this.state.mesh && this.state.isWorkerReady) {
