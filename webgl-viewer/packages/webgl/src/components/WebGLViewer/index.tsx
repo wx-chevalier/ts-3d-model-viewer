@@ -166,6 +166,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       // 根据 props 配置简约模式的启用
       if (typeof this.props.simplicity === 'boolean') {
         this.setState({ isFreshViewEnabled: this.props.simplicity });
+
         if (this.props.simplicity) {
           this.enableFreshView();
         } else {
