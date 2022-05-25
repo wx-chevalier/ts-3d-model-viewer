@@ -88,7 +88,6 @@ export class GoogleModelViewer extends React.Component<
       const { gltf: gltfSrc, mesh } = await loadMesh(
         modelFile || props.src,
         this.state.type,
-        { onError: this.props.onError },
       );
 
       this.setState({ gltfSrc, mesh, modelFile }, () => {

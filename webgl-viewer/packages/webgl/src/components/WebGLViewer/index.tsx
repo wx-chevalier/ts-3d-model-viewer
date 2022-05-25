@@ -36,7 +36,11 @@ import {
 } from '../../utils/file_loader';
 import { getLocale, i18nFormat, setLocale } from '../../utils/i18n';
 import { calcTopology } from '../../utils/mesh';
-import { isSupportThreejsLoader, loadMesh } from '../../utils/mesh_loader';
+import {
+  isSupportThreejsLoader,
+  loadMesh,
+  loadMeshWithRetry,
+} from '../../utils/mesh_loader';
 import { Holdable } from '../Holdable';
 import { Switch } from '../Switch';
 
@@ -151,12 +155,12 @@ export class WebGLViewer extends React.Component<IProps, IState> {
         }
 
         // 进行模型实际加载，注意，不需要转化为
-        ({ mesh } = await loadMesh(
+        ({ mesh } = await loadMeshWithRetry(
           this.state.modelFile || props.src,
           this.state.type,
           {
-            withGltf: false,
-            onError: this.props.onError,
+            toGltf: false,
+            originSrc: props.src as string,
           },
         ));
       }

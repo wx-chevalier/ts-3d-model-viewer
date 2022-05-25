@@ -36,8 +36,7 @@ export async function render(_props: Partial<IModelViewerProps>) {
     const {
       mesh: { geometry },
     } = await loadMesh(modelFile || props.src, type, {
-      withGltf: false,
-      onError: props.onError,
+      toGltf: false,
     });
     // 执行回收操作
     const scene = new THREE.Scene();
@@ -132,5 +131,8 @@ export async function render(_props: Partial<IModelViewerProps>) {
     };
   } catch (error) {
     console.error('>>>webgl-viewer>>>headless>>>render>>>error: ', error);
+    if (_props.onError) {
+      _props.onError(error as Error);
+    }
   }
 }

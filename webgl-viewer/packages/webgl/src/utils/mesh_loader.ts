@@ -23,14 +23,38 @@ function createURL(json: any) {
   return URL.createObjectURL(blob);
 }
 
+/** 支持重试的加载 */
+export async function loadMeshWithRetry(
+  src: D3ModelSrc,
+  type: D3ModelType,
+  {
+    originSrc,
+    toGltf = true,
+  }: {
+    originSrc?: string;
+    toGltf?: boolean;
+  } = {},
+): Promise<{ gltf?: string; mesh?: THREE.Mesh; srcUrl: string }> {
+  try {
+    const resp = await loadMesh(src, type, { toGltf });
+
+    return resp;
+  } catch (_) {
+    console.error('>>>mesh_loader>>>loadMeshWithRetry>>>error:', _);
+    if (originSrc && typeof originSrc === 'string') {
+      // 尝试重新加载
+      return loadMesh(originSrc, type, { toGltf });
+    } else {
+      throw _;
+    }
+  }
+}
+
 /** 将其他类型的文件，转化为 GLTF 类型 */
 export async function loadMesh(
   src: D3ModelSrc,
   type: D3ModelType,
-  {
-    withGltf = true,
-    onError,
-  }: { withGltf?: boolean; onError?: (err: Error) => void } = {},
+  { toGltf = true }: { toGltf?: boolean } = {},
 ): Promise<{ gltf?: string; mesh?: THREE.Mesh; srcUrl: string }> {
   const material = new THREE.MeshStandardMaterial();
   return await new Promise((resolve, reject) => {
@@ -56,7 +80,7 @@ export async function loadMesh(
         loader.load(
           srcUrl,
           obj => {
-            if (withGltf) {
+            if (toGltf) {
               const exporter = new GLTFExporter();
 
               exporter.parse(
@@ -89,9 +113,7 @@ export async function loadMesh(
           },
           () => {},
           err => {
-            if (onError) {
-              onError(new Error(err.message));
-            }
+            reject(err);
           },
         );
       } else if (type === 'ply') {
@@ -111,9 +133,7 @@ export async function loadMesh(
           },
           () => {},
           err => {
-            if (onError) {
-              onError(new Error(err.message));
-            }
+            reject(err);
           },
         );
       } else if (type === 'stl') {
@@ -124,7 +144,7 @@ export async function loadMesh(
           geometry => {
             const mesh = new THREE.Mesh(geometry, material);
 
-            if (withGltf) {
+            if (toGltf) {
               const exporter = new GLTFExporter();
               exporter.parse(
                 mesh,
@@ -139,16 +159,14 @@ export async function loadMesh(
           },
           () => {},
           err => {
-            if (onError) {
-              onError(new Error(err.message));
-            }
+            reject(err);
           },
         );
       } else {
         reject('The format of the model does not support parsing!');
       }
     } catch (_) {
-      console.error(_);
+      console.error('>>>loadMesh>>>error:', _);
       reject(_);
     }
   });
