@@ -136,7 +136,7 @@ export class OccWebGLViewer extends React.Component<IProps, IState> {
           this.props.onReadCadFileTextError();
         }
       }) as any;
-      
+
       reader.onload = async () => {
         const cadFileText = reader.result;
 
