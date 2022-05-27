@@ -3,13 +3,13 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Loader from 'react-loader-spinner';
 
 import { D3ModelType, IModelViewerProps } from '../../types';
-import { ErrorFallback } from '../../utils/error';
+import { ErrorFallback } from '../../utils/core/error';
 import {
   getFileObjFromModelSrc,
   getModelCompressType,
   getModelType,
-} from '../../utils/file_loader';
-import { isSupportThreejsLoader } from '../../utils/mesh_loader';
+} from '../../utils/io/importer/file-loader';
+import { isSupportThreejsLoader } from '../../utils/io/importer/mesh-loader';
 import { WebGLViewer } from '../WebGLViewer';
 import { OccEdge, OccFace, ShapesCombiner } from './ShapesCombiner';
 

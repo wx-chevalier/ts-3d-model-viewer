@@ -9,7 +9,7 @@ import {
   parseD3Model,
   WebGLViewer,
 } from '../../src';
-import { deflate, zipped } from '../../src/utils/compressor';
+import { deflate, zipped } from '../../src/utils';
 export function WebGLViewerExample() {
   const viewerRef = React.useRef<WebGLViewer>();
   const [imgUrl, setImgUrl] = React.useState('');

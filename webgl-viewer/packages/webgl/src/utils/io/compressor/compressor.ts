@@ -3,7 +3,7 @@ import JSZip from 'jszip';
 import Pako from 'pako';
 import workerize from 'workerize';
 
-import { zipSourceCode } from './jsZip';
+import { zipSourceCode } from './js-zip';
 import { pakoSourceCode } from './pako';
 
 /** 模型压缩 */

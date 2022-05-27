@@ -25,24 +25,22 @@ import {
   defaultModelViewerProps,
   IModelViewerProps,
   IModelViewerState,
-} from '../../types/';
-import { ObjectSnapshotGenerator } from '../../types/ObjectSnapshotGenerator';
-import { deflate } from '../../utils/compressor';
-import { ErrorFallback } from '../../utils/error';
+} from '../../types';
 import {
+  calcTopology,
+  deflate,
+  ErrorFallback,
   getFileObjFromModelSrc,
+  getLocale,
   getModelCompressType,
   getModelType,
-} from '../../utils/file_loader';
-import { getLocale, i18nFormat, setLocale } from '../../utils/i18n';
-import { calcTopology } from '../../utils/mesh';
-import {
+  i18nFormat,
   isSupportThreejsLoader,
-  loadMesh,
   loadMeshWithRetry,
-} from '../../utils/mesh_loader';
-import { Holdable } from '../Holdable';
-import { Switch } from '../Switch';
+  ObjectSnapshotGenerator,
+  setLocale,
+} from '../../utils';
+import { Holdable, Switch } from '../../widgets';
 
 const fudge = 1.0;
 

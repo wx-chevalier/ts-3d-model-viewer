@@ -4,12 +4,12 @@ import { get, sleep } from '@m-fe/utils';
 import * as THREE from 'three';
 
 import { D3ModelCompressType, IModelViewerProps, ModelAttr } from '../types';
-import { ObjectSnapshotGenerator } from '../types/ObjectSnapshotGenerator';
-import { deflate } from '../utils/compressor';
+import { ObjectSnapshotGenerator } from '../utils/three/ObjectSnapshotGenerator';
+import { deflate } from '../utils/io/compressor/compressor';
 import {
   getFileObjFromModelSrc,
   getModelCompressType,
-} from '../utils/file_loader';
+} from '../utils/io/importer/file-loader';
 import { calcTopology } from '../utils/mesh';
 import { render } from './render';
 

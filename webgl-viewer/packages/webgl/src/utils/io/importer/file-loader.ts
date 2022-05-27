@@ -6,9 +6,9 @@ import {
   D3ModelType,
   D3ModelTypes,
   IModelViewerProps,
-} from '../types/IModelViewerProps';
-import { IModelViewerState } from '../types/IModelViewerState';
-import { inflate, unzip } from './compressor';
+} from '../../../types';
+import { IModelViewerState } from '../../../types';
+import { inflate, unzip } from '../compressor';
 
 /** 根据模型名称推导出可能的类型 */
 export function getModelType(fileName: string, model: D3ModelSrc): D3ModelType {

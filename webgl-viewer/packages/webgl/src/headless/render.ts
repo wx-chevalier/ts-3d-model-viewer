@@ -9,8 +9,8 @@ import {
   getFileObjFromModelSrc,
   getModelCompressType,
   getModelType,
-} from '../utils/file_loader';
-import { loadMesh } from '../utils/mesh_loader';
+} from '../utils/io/importer/file-loader';
+import { loadMesh } from '../utils/io/importer/mesh-loader';
 import {
   adjustGeometry,
   getMaterial,

@@ -58,7 +58,8 @@
     "jsdoc": "^3.6.10",
     "mocha": "^10.0.0",
     "oslllo-svg-fixer": "^2.0.1",
-    "svgo": "^2.3.1"
+    "svgo": "^2.3.1",
+    "@m-fe/app-config": "^0.9.0"
   },
   "dependencies": {
     "@simonwep/pickr": "1.8.2",
@@ -68,56 +69,5 @@
     "three": "0.140.2",
     "web-ifc": "0.0.33",
     "occt-import-js": "0.0.7"
-  },
-  "eslintConfig": {
-    "env": {
-      "browser": true,
-      "es2021": true
-    },
-    "extends": "eslint:recommended",
-    "globals": {
-      "OV": "writable",
-      "$": "readonly",
-      "fflate": "readonly",
-      "Pickr": "readonly",
-      "THREE": "readonly",
-      "DracoDecoderModule": "readonly",
-      "rhino3dm": "readonly",
-      "WebIFC": "readonly",
-      "occtimportjs": "readonly"
-    },
-    "parserOptions": {
-      "ecmaVersion": 12,
-      "sourceType": "module"
-    },
-    "plugins": [
-      "unused-imports"
-    ],
-    "rules": {
-      "semi": "error",
-      "no-var": "error",
-      "guard-for-in": "error",
-      "no-new": "error",
-      "no-new-object": "error",
-      "no-new-func": "error",
-      "no-array-constructor": "error",
-      "no-prototype-builtins": "error",
-      "no-eval": "error",
-      "no-useless-escape": "error",
-      "no-multiple-empty-lines": "error",
-      "comma-spacing": "error",
-      "prefer-arrow-callback": "error",
-      "quotes": [
-        "error",
-        "single"
-      ],
-      "block-scoped-var": "error",
-      "no-undef": "error",
-      "no-extend-native": "error",
-      "eqeqeq": "error",
-      "no-unused-vars": "off",
-      "no-use-before-define": "off",
-      "unused-imports/no-unused-imports": "error"
-    }
   }
 }

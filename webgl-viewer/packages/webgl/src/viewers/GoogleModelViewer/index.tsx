@@ -12,17 +12,18 @@ import {
   D3ModelType,
   defaultModelViewerProps,
   IModelViewerProps,
-} from '../../types/IModelViewerProps';
-import { ModelAttr } from '../../types/ModelAttr';
-import { toFixedNumber } from '../../utils';
+  ModelAttr,
+} from '../../types';
 import {
+  calcTopology,
   getFileObjFromModelSrc,
   getModelCompressType,
   getModelType,
-} from '../../utils/file_loader';
-import { calcTopology } from '../../utils/mesh';
-import { isSupportThreejsLoader, loadMesh } from '../../utils/mesh_loader';
-import { Holdable } from '../Holdable';
+  isSupportThreejsLoader,
+  loadMesh,
+  toFixedNumber,
+} from '../../utils';
+import { Holdable } from '../../widgets';
 
 export interface GoogleModelViewerProps extends IModelViewerProps {}
 
