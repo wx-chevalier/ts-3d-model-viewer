@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+	<title>Online 3D Viewer</title>
+
+	<script type="text/javascript" src="../build/o3dv.min-dev.js"></script>
+
+    <script type='text/javascript'>
+        OV.Init3DViewerElements ();
+    </script>
+
+    <style>
+        iframe, div.online_3d_viewer
+        {
+            float: left;
+            border: 1px solid #eeeeee;
+            margin: 0px 4px 4px 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <iframe
+        src="../../website/embed.html#model=https://github.com/kovacsv/Online3DViewer/blob/master/test/testfiles/3ds/cube_four_instances.3ds,https://github.com/kovacsv/Online3DViewer/blob/master/test/testfiles/3ds/texture.png"
+        width=360 height=240
+        style="border:1px solid #eeeeee;">
+    </iframe>
+    <iframe
+        src="../../website/embed.html#model=https://www.dropbox.com/s/wd6lt7h4xa8fuv0/cube_four_instances.3ds?dl=0,https://www.dropbox.com/s/6dfk1jveevbofxm/texture.png?dl=0"
+        width=360 height=240
+        style="border:1px solid #eeeeee;">
+    </iframe>
+    <iframe
+        src="../../website/embed.html#model=https://raw.githubusercontent.com/kovacsv/Online3DViewer/master/test/testfiles/3ds/cube_four_instances.3ds,https://raw.githubusercontent.com/kovacsv/Online3DViewer/master/test/testfiles/3ds/texture.png"
+        width=360 height=240
+        style="border:1px solid #eeeeee;">
+    </iframe>
+    <iframe
+        src="../../website/embed.html#model=https://dl.dropbox.com/s/wd6lt7h4xa8fuv0/cube_four_instances.3ds,https://dl.dropbox.com/s/6dfk1jveevbofxm/texture.png"
+        width=360 height=240
+        style="border:1px solid #eeeeee;">
+    </iframe>
+    <div class="online_3d_viewer"
+		style="width: 360px; height: 240px;"
+        model="https://github.com/kovacsv/Online3DViewer/blob/master/test/testfiles/3ds/cube_four_instances.3ds,https://github.com/kovacsv/Online3DViewer/blob/master/test/testfiles/3ds/texture.png">
+    </div>
+    <div class="online_3d_viewer"
+		style="width: 360px; height: 240px;"
+        model="https://www.dropbox.com/s/wd6lt7h4xa8fuv0/cube_four_instances.3ds?dl=0,https://www.dropbox.com/s/6dfk1jveevbofxm/texture.png?dl=0">
+    </div>
+</body>
+
+</html>

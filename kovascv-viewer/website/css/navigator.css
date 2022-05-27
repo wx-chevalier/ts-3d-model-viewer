@@ -1,0 +1,84 @@
+div.ov_navigator_buttons
+{
+	border-bottom: 1px solid var(--ov_border_color);
+	margin-bottom: 10px;
+	padding: 5px 5px 5px 0px;
+	overflow: auto;
+}
+
+div.ov_navigator_button
+{
+	float: left;
+	cursor: pointer;
+	padding: 5px;
+}
+
+div.ov_navigator_button.right
+{
+	float: right;
+}
+
+div.ov_navigator_buttons div.ov_navigator_buttons_separator
+{
+	background: var(--ov_border_color);
+	width: 1px;
+	height: 28px;
+	margin: 0px 2px;
+	float: left;
+}
+
+div.ov_navigator_tree_title
+{
+	font-weight: bold;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid var(--ov_border_color);
+}
+
+div.ov_navigator_tree_title.withbuttons
+{
+	padding-bottom: 6px;
+}
+
+div.ov_navigator_tree_title.nomargin
+{
+	margin-bottom: 0px;
+}
+
+div.ov_navigator_tree_title_buttons
+{
+	float: right;
+	margin-right: 5px;
+	margin-top: -4px;
+}
+
+div.ov_navigator_tree_panel
+{
+	overflow: auto;
+}
+
+div.ov_navigator_info_panel
+{
+	margin-top: 10px;
+	border-top: 1px solid var(--ov_border_color);
+	overflow: auto;
+}
+
+@media (hover)
+{
+
+div.ov_navigator_info_panel div.ov_navigator_info_panel_title:hover
+{
+	background: var(--ov_hover_color);
+}
+
+div.ov_navigator_button:hover
+{
+	background: var(--ov_hover_color);
+}
+
+}

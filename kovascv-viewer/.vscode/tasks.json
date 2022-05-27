@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "build_website_dev",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "label": "npm: build_website_dev"
+        },
+        {
+            "type": "npm",
+            "script": "build_engine_dev",
+            "group": "build",
+            "label": "npm: build_engine_dev"
+        },
+        {
+            "type": "npm",
+            "script": "lint",
+            "group": "build",
+            "label": "npm: lint"
+        }
+    ]
+}

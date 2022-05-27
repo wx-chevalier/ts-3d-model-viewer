@@ -1,0 +1,262 @@
+div.ov_svg_icon
+{
+	color: var(--ov_icon_color);
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+}
+
+div.ov_svg_icon.left
+{
+	margin-right: 10px;
+	float: left;
+}
+
+div.ov_svg_icon.left_inline
+{
+	margin-right: 10px;
+	margin-top: 2px;
+	float: left;
+}
+
+div.ov_svg_icon.light
+{
+	color: var(--ov_light_icon_color);
+}
+
+div.ov_svg_icon.selected
+{
+	color: var(--ov_selected_icon_color);
+}
+
+div.ov_svg_icon.disabled
+{
+	color: var(--ov_disabled_icon_color);
+}
+
+div.ov_thin_scrollbar
+{
+	scrollbar-color: var(--ov_border_color) transparent;
+	scrollbar-width: thin;
+}
+
+div.ov_thin_scrollbar::-webkit-scrollbar
+{
+	width: 3px;
+	height: 3px;
+}
+
+div.ov_thin_scrollbar::-webkit-scrollbar-thumb
+{
+	background: #cccccc;
+}
+
+div.ov_button
+{
+	color: var(--ov_button_text_color);
+	background: var(--ov_button_color);
+	text-align: center;
+	padding: 3px;
+	border: 1px solid var(--ov_button_color);
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+div.ov_button.outline
+{
+	color: var(--ov_outline_button_text_color);
+	background: transparent;
+	border: 1px solid var(--ov_outline_button_color);
+}
+
+div.ov_tooltip
+{
+	color: var(--ov_dialog_foreground_color);
+	background: var(--ov_dialog_background_color);
+	padding: 5px 10px;
+	border-radius: 5px;
+	position: absolute;
+	box-shadow: var(--ov_shadow);
+}
+
+input[type=text]
+{
+	color: var(--ov_dialog_foreground_color);
+	background: var(--ov_dialog_background_color);
+}
+
+input[type=text]:disabled
+{
+	color: var(--ov_disabled_foreground_color);
+}
+
+textarea
+{
+	color: var(--ov_dialog_foreground_color);
+	background: var(--ov_dialog_background_color);
+}
+
+input.ov_radio_button
+{
+	position: relative;
+	top: 2px;
+	width: 14px;
+	height: 14px;
+	margin-right: 10px;
+	border: 1px solid var(--ov_foreground_color);
+	border-radius: 50%;
+	transition: 0.2s all linear;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+input.ov_radio_button:checked
+{
+	border: 5px solid var(--ov_button_color);
+}
+
+input.ov_checkbox
+{
+	position: relative;
+	top: 4px;
+	width: 14px;
+	height: 14px;
+	margin-right: 10px;
+	border-radius: 2px;
+	border: 1px solid var(--ov_foreground_color);
+	transition: 0.2s all linear;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+input.ov_checkbox:checked
+{
+	background-color: var(--ov_button_color);
+	background-image: url('O3DVIcons/checkmark.svg');
+	background-position: center;
+	border: 0px;
+}
+
+div.ov_select_container
+{
+	position: relative;
+}
+
+div.ov_select_container:after
+{
+	font-family: "O3DVIcons";
+	font-size: 18px;
+    content: "\f101";
+	position: absolute;
+    right: 6px;
+    top: 6px;
+	pointer-events: none;
+}
+
+select.ov_select
+{
+	color: var(--ov_dialog_foreground_color);
+	background: var(--ov_dialog_background_color);
+	font-size: 16px;
+	margin: 0px;
+	padding: 5px;
+	border: 1px solid var(--ov_border_color);
+	border-radius: 5px;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+input.ov_slider
+{
+	height: 1px;
+	background: var(--ov_border_color);
+	outline: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+input.ov_slider::-webkit-slider-thumb
+{
+	background: var(--ov_button_color);
+	width: 14px;
+	height: 14px;
+	border-radius: 14px;
+	cursor: pointer;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+input.ov_slider::-moz-range-thumb
+{
+	background: var(--ov_button_color);
+	width: 14px;
+	height: 14px;
+	border: 0px;
+	border-radius: 14px;
+	cursor: pointer;
+}
+
+span.ov_slider_label
+{
+	margin-left: 10px;
+	position: relative;
+	bottom: -4px;
+}
+
+div.ov_toggle
+{
+	width: 24px;
+	height: 8px;
+	padding: 2px;
+	transition: 0.4s;
+	border: 1px solid var(--ov_foreground_color);
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+div.ov_toggle_slider
+{
+	width: 6px;
+	height: 6px;
+	transition: .4s;
+	border-radius: 8px;
+	border: 1px solid var(--ov_foreground_color);
+}
+
+div.ov_toggle.on
+{
+	background: var(--ov_foreground_color);
+}
+
+div.ov_toggle.on div.ov_toggle_slider
+{
+	background: var(--ov_background_color);
+	transform: translateX(16px);
+	border: 1px solid var(--ov_background_color);
+}
+
+@media (hover)
+{
+
+div.ov_svg_icon.selected:hover
+{
+	color: var(--ov_hover_text_color);
+}
+
+div.ov_button:hover
+{
+	background: var(--ov_button_hover_color);
+    border: 1px solid var(--ov_button_hover_color);
+}
+
+div.ov_button.outline:hover
+{
+	background: var(--ov_outline_button_hover_color);
+	border: 1px solid var(--ov_outline_button_color);
+}
+
+}

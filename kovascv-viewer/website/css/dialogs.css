@@ -1,0 +1,319 @@
+div.ov_modal
+{
+	position: absolute;
+}
+
+div.ov_modal_overlay
+{
+	width: 100%;
+	height: 100%;
+	left : 0;
+	top : 0;
+	position: absolute;
+}
+
+div.ov_dialog
+{
+	color: var(--ov_dialog_foreground_color);
+	background: var(--ov_dialog_background_color);
+	width: 400px;
+	padding: 20px;
+	box-shadow: var(--ov_shadow);
+	border-radius: 5px;
+}
+
+div.ov_dialog div.ov_dialog_title
+{
+	font-size: 19px;
+	font-weight: bold;
+}
+
+div.ov_dialog div.ov_dialog_inner_title
+{
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+div.ov_dialog div.ov_dialog_content
+{
+	padding: 20px 0px;
+	overflow: auto;
+}
+
+div.ov_dialog div.ov_dialog_section
+{
+	margin: 10px 0px;
+	overflow: auto;
+}
+
+div.ov_dialog div.ov_dialog_buttons
+{
+	overflow: auto;
+}
+
+div.ov_dialog div.ov_dialog_buttons_inner
+{
+	float: right;
+	overflow: auto;
+}
+
+div.ov_dialog div.ov_dialog_buttons div.ov_dialog_button
+{
+	margin-left: 10px;
+	width: 80px;
+	float: left;
+}
+
+div.ov_dialog div.ov_dialog_message
+{
+	overflow: auto;
+}
+
+div.ov_dialog div.ov_dialog_submessage
+{
+	font-size: 14px;
+	font-style: italic;
+	margin-top: 10px;
+}
+
+div.ov_dialog input.ov_dialog_text
+{
+	padding: 5px;
+	border: 1px solid var(--ov_border_color);
+	border-radius: 5px;
+	overflow: auto;
+}
+
+div.ov_dialog textarea.ov_dialog_textarea
+{
+	margin: 10px 0px;
+	width: 100%;
+	height: 120px;
+	border: 1px solid var(--ov_border_color);
+	box-sizing: border-box;
+}
+
+div.ov_dialog div.ov_dialog_options
+{
+	height: 50px;
+}
+
+div.ov_dialog div.ov_dialog_import_file_list
+{
+	max-height: 300px;
+	overflow: auto;
+}
+
+div.ov_dialog div.ov_dialog_file_link
+{
+	color: var(--ov_button_color);
+	padding: 5px;
+	display: block;
+	overflow: auto;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+div.ov_dialog div.ov_dialog_file_link div.ov_file_link_img
+{
+	color: var(--ov_button_color);
+	margin-top: 2px;
+	margin-right: 10px;
+	float: left;
+}
+
+div.ov_dialog div.ov_dialog_file_link div.ov_dialog_file_link_text
+{
+	float: left;
+}
+
+div.ov_dialog div.ov_dialog_copyable_input
+{
+	padding: 3px;
+	border: 1px solid var(--ov_border_color);
+	border-radius: 5px;
+	overflow: auto;
+}
+
+div.ov_dialog div.ov_dialog_copyable_input input
+{
+	width: 70%;
+	margin-top: 3px;
+	box-sizing: border-box;
+	float: left;
+	border: 0px;
+	box-sizing: border-box;
+}
+
+div.ov_dialog div.ov_dialog_copyable_input div.ov_dialog_copyable_input_button
+{
+	width: 28%;
+	margin-left: 0px;
+	box-sizing: border-box;
+	cursor: pointer;
+	float: right;
+}
+
+div.ov_dialog div.ov_dialog_row
+{
+	padding: 3px 0px;
+	overflow: auto;
+}
+
+div.ov_dialog div.ov_dialog_row_name
+{
+	width: 30%;
+	margin-top: 6px;
+	float: left;
+}
+
+div.ov_dialog div.ov_dialog_row_value
+{
+	width: 70%;
+	float: left;
+}
+
+div.ov_dialog select.ov_select
+{
+	width: 100%;
+	box-sizing: border-box;
+}
+
+div.ov_popup
+{
+	color: var(--ov_dialog_foreground_color);
+	background: var(--ov_dialog_background_color);
+	width: 200px;
+	padding: 10px;
+	box-shadow: var(--ov_shadow);
+	border-radius: 5px;
+}
+
+div.ov_popup div.ov_popup_list
+{
+	max-height: 200px;
+	overflow: auto;
+}
+
+div.ov_popup div.ov_popup_list_item
+{
+	padding: 10px;
+	border-radius: 5px;
+	cursor: pointer;
+	overflow: auto;
+}
+
+div.ov_popup div.ov_popup_list_item_icon
+{
+	float: left;
+}
+
+div.ov_popup div.ov_popup_list_item_name
+{
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+div.ov_progress
+{
+	color: var(--ov_dialog_foreground_color);
+	background: var(--ov_dialog_background_color);
+	text-align: center;
+	width: 400px;
+	padding: 20px;
+	box-shadow: var(--ov_shadow);
+	border-radius: 5px;
+}
+
+div.ov_progress div.ov_progress_img svg
+{
+	width: 80px;
+	height: 80px;
+	margin-top: 5px;
+	margin-bottom: 15px;
+	display: inline-block;
+	animation: ov_progress_img_kf 5.0s linear infinite;
+}
+
+@keyframes ov_progress_img_kf {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+div.ov_progress div.ov_progress_text
+{
+	font-size: 19px;
+	text-align: center;
+}
+
+div.ov_snapshot_dialog_left
+{
+	width: 190px;
+	float: left;
+}
+
+img.ov_snapshot_dialog_preview
+{
+	background: var(--ov_border_color);
+	border: 1px solid var(--ov_border_color);
+	width: 183px;
+	height: 183px;
+	object-fit: contain;
+	float: right;
+}
+
+div.ov_snapshot_dialog_param_name
+{
+	width: 60px;
+	margin-left: 30px;
+	margin-top: 6px;
+	float: left;
+}
+
+input.ov_snapshot_dialog_param_value
+{
+	width: 80px;
+	text-align: right;
+	float: left;
+}
+
+@media (hover)
+{
+
+div.ov_dialog div.ov_dialog_file_link:hover
+{
+	color: var(--ov_hover_text_color);
+	background: var(--ov_hover_color);
+}
+
+div.ov_dialog div.ov_dialog_file_link:hover div.ov_file_link_img
+{
+	color: var(--ov_hover_text_color);
+}
+
+div.ov_popup div.ov_popup_list_item:hover
+{
+	background: var(--ov_hover_color);
+}
+
+}
+
+@media only screen and (max-width: 700px)
+{
+
+div.ov_dialog
+{
+	max-width: 80%;
+}
+
+div.ov_progress
+{
+	max-width: 80%;
+}
+
+}

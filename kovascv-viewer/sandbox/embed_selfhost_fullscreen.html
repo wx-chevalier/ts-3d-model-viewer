@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <title>Online 3D Viewer</title>
+
+	<script type="text/javascript" src="../build/o3dv.min-dev.js"></script>
+
+    <script type='text/javascript'>
+        OV.Init3DViewerElements ();
+    </script>
+
+    <style>
+        html, body
+        {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="online_3d_viewer"
+		style="width: 100%; height: 100%;"
+        model="../../test/testfiles/obj/hundred_cubes.obj,../../test/testfiles/obj/hundred_cubes.mtl"
+        camera="3,1,2,0,0,0,0,0,1">
+    </div>
+</body>
+
+</html>

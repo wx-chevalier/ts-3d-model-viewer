@@ -1,0 +1,117 @@
+div.ov_sidebar_title
+{
+	font-weight: bold;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid var(--ov_border_color);
+	overflow: hidden;
+}
+
+div.ov_sidebar_title div.ov_sidebar_title_text
+{
+	float: left;
+}
+
+div.ov_sidebar_title div.ov_sidebar_title_img
+{
+	color: var(--ov_light_icon_color);
+	float: right;
+	cursor: pointer;
+}
+
+div.ov_sidebar_parameter
+{
+	margin: 10px 0px;
+	overflow: hidden;
+}
+
+div.ov_sidebar_parameter div.ov_sidebar_parameter_toggle
+{
+	margin-right: 10px;
+	margin-top: 3px;
+	float: left;
+}
+
+div.ov_sidebar_parameter div.ov_sidebar_parameter_text
+{
+	float: left;
+}
+
+div.ov_sidebar_content
+{
+	overflow: auto;
+}
+
+div.ov_sidebar_section
+{
+	overflow: auto;
+}
+
+div.ov_sidebar_content div.ov_sidebar_settings_section
+{
+	margin-bottom: 20px;
+	overflow: auto;
+}
+
+div.ov_sidebar_content div.ov_sidebar_settings_sections
+{
+	margin-bottom: 10px;
+	overflow: auto;
+}
+
+div.ov_sidebar_content div.ov_sidebar_settings_row
+{
+	margin: 5px 0px;
+	overflow: auto;
+}
+
+div.ov_sidebar_content div.ov_sidebar_settings_row input.ov_slider
+{
+	width: 80%;
+}
+
+div.ov_sidebar_content div.ov_sidebar_settings_row.large
+{
+	height: 25px;
+}
+
+div.ov_sidebar_content div.ov_sidebar_settings_padded
+{
+	margin: 10px 0px 0px 40px;
+	overflow: hidden;
+}
+
+div.ov_sidebar_content button.pcr-button
+{
+	width: 30px;
+	height: 15px;
+	margin: 3px 10px 3px 0px;
+	border: 1px solid var(--ov_border_color);
+	box-shadow: none;
+	outline: none;
+	float: left;
+}
+
+img.ov_environment_map_preview
+{
+	width: 160px;
+	height: 90px;
+	display: block;
+	float: left;
+	padding: 1px;
+	border: 5px solid transparent;
+	cursor: pointer;
+}
+
+img.ov_environment_map_preview.selected
+{
+	border: 5px solid var(--ov_button_color);
+}
+
+div.ov_popup.sidebar
+{
+	width: 344px;
+}
