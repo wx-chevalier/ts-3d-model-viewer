@@ -5,9 +5,9 @@ import {
   D3ModelSrc,
   D3ModelType,
   D3ModelTypes,
-  IModelViewerProps,
+  D3ModelViewerProps,
 } from '../../../types';
-import { IModelViewerState } from '../../../types';
+import { D3ModelViewerState } from '../../../types';
 import { inflate, unzip } from '../compressor';
 
 /** 根据模型名称推导出可能的类型 */
@@ -46,8 +46,8 @@ export function getModelCompressType(
 
 /** 将模型统一转化为文件对象 */
 export async function getFileObjFromModelSrc(
-  props: Partial<IModelViewerProps>,
-  state?: Partial<IModelViewerState>,
+  props: Partial<D3ModelViewerProps>,
+  state?: Partial<D3ModelViewerState>,
 ): Promise<File> {
   const fileName: string =
     props.fileName || typeof props.src === 'string'

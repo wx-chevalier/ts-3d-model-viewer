@@ -6,7 +6,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
-import { D3ModelSrc, D3ModelType } from '../../../types/IModelViewerProps';
+import { D3ModelSrc, D3ModelType } from '../../../types/D3ModelViewerProps';
 
 /** 是否支持浏览器端解析 */
 export const isSupportThreejsLoader = (type: D3ModelType) =>

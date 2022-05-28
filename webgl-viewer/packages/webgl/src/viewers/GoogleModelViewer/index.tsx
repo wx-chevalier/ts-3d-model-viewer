@@ -11,7 +11,7 @@ import {
   D3ModelSrc,
   D3ModelType,
   defaultModelViewerProps,
-  IModelViewerProps,
+  D3ModelViewerProps,
   ModelAttr,
 } from '../../types';
 import {
@@ -25,7 +25,7 @@ import {
 } from '../../utils';
 import { Holdable } from '../../widgets';
 
-export interface GoogleModelViewerProps extends IModelViewerProps {}
+export interface GoogleModelViewerProps extends D3ModelViewerProps {}
 
 interface GoogleModelViewerState {
   type: D3ModelType;
@@ -152,7 +152,7 @@ export class GoogleModelViewer extends React.Component<
 
   render() {
     const {
-      cameraControls,
+      withCameraControls,
       autoplay,
       autoRotate,
       shadowIntensity,
@@ -173,7 +173,7 @@ export class GoogleModelViewer extends React.Component<
 
     const attrs: any = { backgroundColor };
 
-    if (cameraControls) {
+    if (withCameraControls) {
       attrs['camera-controls'] = true;
     }
 

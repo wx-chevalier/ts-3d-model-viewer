@@ -4,26 +4,32 @@ import isNumber from 'lodash/isNumber';
 import max from 'lodash/max';
 import * as THREE from 'three';
 
-import { defaultModelViewerProps, IModelViewerProps } from '../types';
+import {
+  D3ModelViewerProps,
+  defaultModelViewerProps,
+  mergeD3ModelViewerProps,
+} from '../../../types';
 import {
   getFileObjFromModelSrc,
   getModelCompressType,
   getModelType,
-} from '../utils/io/importer/file-loader';
-import { loadMesh } from '../utils/io/importer/mesh-loader';
+  loadMesh,
+} from '../..';
 import {
   adjustGeometry,
   getMaterial,
   getThreeJsWebGLRenderer,
   setupLights,
-} from './stage';
+} from '../stages';
 
 const fudge = 1.0;
 
-/** 生成模型截图 */
-export async function render(_props: Partial<IModelViewerProps>) {
+/** 直接渲染而不是组件 */
+export async function dryRenderThreeModelFile(
+  _props: Partial<D3ModelViewerProps>,
+) {
   try {
-    const props = { ...defaultModelViewerProps, ..._props };
+    const props = mergeD3ModelViewerProps(_props, defaultModelViewerProps);
     const type = props.type || getModelType(props.fileName, props.src);
     const compressType =
       props.compressType || getModelCompressType(props.fileName, props.src);
@@ -43,17 +49,23 @@ export async function render(_props: Partial<IModelViewerProps>) {
     const group = new THREE.Group();
     scene.add(group);
 
-    const height = isNumber(props.height) ? props.height : 600;
-    const width = isNumber(props.width) ? props.width : 600;
+    const height = isNumber(props.layoutOptions.height)
+      ? props.layoutOptions.height
+      : 600;
+    const width = isNumber(props.layoutOptions.width)
+      ? props.layoutOptions.width
+      : 600;
 
     const renderer = getThreeJsWebGLRenderer(
-      { ...props, backgroundColor: 'rgb(255,255,255)' },
+      mergeD3ModelViewerProps(props, {
+        renderOptions: { backgroundColor: 'rgb(255,255,255)' },
+      }),
       { height, width },
     );
     renderer.domElement.style.opacity = '0';
     document.body.appendChild(renderer.domElement);
 
-    const material = getMaterial(false, props.modelColor);
+    const material = getMaterial(false, props.renderOptions.modelColor);
     const { mesh, xDims, yDims, zDims } = adjustGeometry(
       geometry as THREE.BufferGeometry,
       material,
@@ -70,15 +82,15 @@ export async function render(_props: Partial<IModelViewerProps>) {
     const dist = g * 3;
     // fudge factor so you can see the boundaries
     camera.position.set(
-      props.cameraX,
-      props.cameraY,
-      props.cameraZ || dist * fudge,
+      props.renderOptions.cameraX,
+      props.renderOptions.cameraY,
+      props.renderOptions.cameraZ || dist * fudge,
     );
 
     let maxDimension = max([xDims, yDims, zDims]);
     maxDimension = Math.ceil(~~(maxDimension * 1.1) / 10) * 50;
 
-    if (props.withPlane) {
+    if (props.renderOptions.withPlane) {
       const plane = new THREE.GridHelper(maxDimension, 50);
       // reset center point
       const box = new THREE.Box3().setFromObject(plane);

@@ -4,7 +4,6 @@ import 'rc-tooltip/assets/bootstrap.css';
 import './index.css';
 
 import { ellipsis, genId, isLanIp, toFixedNumber } from '@m-fe/utils';
-import TextSprite from '@seregpie/three.text-sprite';
 import each from 'lodash/each';
 import max from 'lodash/max';
 import Tooltip from 'rc-tooltip';
@@ -13,94 +12,51 @@ import { SketchPicker } from 'react-color';
 import { ErrorBoundary } from 'react-error-boundary';
 import Loader from 'react-loader-spinner';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import {
-  adjustGeometry,
-  getMaterial,
-  getThreeJsWebGLRenderer,
-  setupLights,
-} from '../../headless';
-import {
+  D3ModelViewerProps,
+  D3ModelViewerState,
   defaultModelViewerProps,
-  IModelViewerProps,
-  IModelViewerState,
+  getInitialStateFromProps,
+  mergeD3ModelViewerProps,
 } from '../../types';
 import {
   calcTopology,
   deflate,
   ErrorFallback,
-  getFileObjFromModelSrc,
-  getLocale,
-  getModelCompressType,
-  getModelType,
   i18nFormat,
   isSupportThreejsLoader,
-  loadMeshWithRetry,
   ObjectSnapshotGenerator,
   setLocale,
 } from '../../utils';
 import { Holdable, Switch } from '../../widgets';
-
-const fudge = 1.0;
+import {
+  adjustGeometry,
+  getMaterial,
+  getThreeJsWebGLRenderer,
+  setupLights,
+} from '../ThreeViewer';
 
 declare global {
   const __DEV__: boolean;
 }
 
-interface IProps extends IModelViewerProps {
-  mesh?: THREE.Mesh;
-}
+interface IProps extends D3ModelViewerProps {}
 
-interface IState extends IModelViewerState {}
+interface IState extends D3ModelViewerState {}
 
 export class WebGLViewer extends React.Component<IProps, IState> {
   static displayName = 'WebGLViewer';
 
   id = genId();
-  static defaultProps = { ...defaultModelViewerProps };
-
-  $ref = React.createRef<HTMLDivElement>();
 
   state: IState = {
-    type: this.props.type || getModelType(this.props.fileName, this.props.src),
-    compressType:
-      this.props.compressType ||
-      getModelCompressType(this.props.fileName, this.props.src),
-    loaded: false,
-    cameraX: 0,
-    cameraY: 0,
-    cameraZ: 0,
-    withMaterial: true,
-    withAttr: this.props.withAttr,
-    withPlane: true,
-    withAxis: true,
-    modelColor: this.props.modelColor,
-    backgroundColor: this.props.backgroundColor,
-    withLanguageSelector: getLocale() === 'en',
-    isFreshViewEnabled: false,
+    ...getInitialStateFromProps(
+      mergeD3ModelViewerProps(this.props, defaultModelViewerProps),
+    ),
   };
 
-  model?: THREE.Mesh;
-  modelWireframe?: THREE.Mesh;
-
-  animationId: number;
-  scene: THREE.Scene;
-  group: THREE.Group;
-  renderer: THREE.WebGLRenderer;
-  camera: THREE.PerspectiveCamera;
-  // controls: ViewerControl;
-  orbitControls: any;
-  boundingBox: THREE.BoxHelper;
-  xSprite: any;
-  ySprite: any;
-  zSprite: any;
-  plane: THREE.GridHelper;
-  axisHelper: THREE.AxesHelper;
-
-  xDims: number;
-  yDims: number;
-  zDims: number;
+  $ref = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
     this.loadModel(this.props);
@@ -124,464 +80,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     console.error('>>>WebGLViewer>>>error>>>', error);
   }
 
-  /** 这里根据传入的文件类型，进行不同的文件转化 */
-  async loadModel(props: IProps) {
-    try {
-      let mesh: THREE.Mesh;
-
-      if (props.mesh) {
-        mesh = props.mesh;
-      } else {
-        const modelFile = await getFileObjFromModelSrc({
-          ...props,
-          compressType: this.state.compressType,
-        });
-
-        await this.setState({ modelFile });
-
-        // 判断是否有 onZip，有的话则进行压缩并且返回
-        requestAnimationFrame(async () => {
-          this.handleCompress();
-        });
-
-        // 判断是否可以进行预览，不可以预览则仅设置
-        if (
-          !isSupportThreejsLoader(this.state.type) ||
-          !props.showModelViewer
-        ) {
-          return;
-        }
-
-        // 进行模型实际加载，注意，不需要转化为
-        ({ mesh } = await loadMeshWithRetry(
-          this.state.modelFile || props.src,
-          this.state.type,
-          {
-            toGltf: false,
-            originSrc: props.src as string,
-          },
-        ));
-      }
-
-      this.initGeometry(mesh.geometry as THREE.BufferGeometry);
-
-      // 根据 props 配置简约模式的启用
-      if (typeof this.props.simplicity === 'boolean') {
-        this.setState({ isFreshViewEnabled: this.props.simplicity });
-
-        if (this.props.simplicity) {
-          this.enableFreshView();
-        } else {
-          this.disableFreshView();
-        }
-      }
-    } catch (e) {
-      console.error('>>>WebGLViewer>>>loadModel', e);
-
-      if (props.onError) {
-        props.onError(e as Error);
-      }
-    }
-  }
-
-  /** 初始化几何体 */
-  initGeometry(geometry: THREE.BufferGeometry) {
-    this._setupScene();
-    this._setupRenderer();
-
-    const material = getMaterial(
-      this.state.withClipping,
-      this.state.modelColor,
-    );
-
-    const { mesh, xDims, yDims, zDims } = adjustGeometry(geometry, material);
-
-    this.xDims = xDims;
-    this.yDims = yDims;
-    this.zDims = zDims;
-    this.model = mesh;
-
-    if (this.state.withMaterial) {
-      this.group.add(this.model);
-    }
-
-    this.scene.updateMatrixWorld();
-
-    if (this.model) {
-      setupLights(this.model, this.scene);
-      this._setupControls();
-      this._setupDecorators();
-    }
-
-    requestAnimationFrame(time => {
-      this.animate(time);
-      // 已加载完毕
-      this.setState({ loaded: true }, () => {
-        this.onLoad();
-      });
-    });
-  }
-
-  /** 清除实体 */
-  destroy() {
-    try {
-      cancelAnimationFrame(this.animationId);
-
-      if (this.group !== null) {
-        each(this.group.children, object => {
-          if (this.group) {
-            this.group.remove(object);
-          }
-        });
-      }
-
-      if (this.scene !== null) {
-        each(this.scene.children, object => {
-          if (this.scene) {
-            this.scene.remove(object);
-          }
-        });
-      }
-
-      this.scene = null;
-      this.group = null;
-      this.model = null;
-      this.modelWireframe = null;
-      this.boundingBox = null;
-
-      this.renderer.dispose();
-      this.renderer.forceContextLoss();
-      this.$ref.current.remove();
-    } catch (_) {
-      console.error(_);
-    }
-  }
-
-  /** 初始化场景 */
-  _setupScene() {
-    const scene = new THREE.Scene();
-    const group = new THREE.Group();
-
-    this.scene = scene;
-    this.group = group;
-
-    this.scene.add(this.group);
-  }
-
   get $dom() {
     return this.$ref.current || document.getElementById('webgl-container');
   }
-
-  /** 初始化渲染器 */
-  _setupRenderer() {
-    if (!this.$dom) {
-      return;
-    }
-
-    const height = this.$dom.clientHeight;
-    const width = this.$dom.clientWidth;
-
-    const renderer = getThreeJsWebGLRenderer(
-      { ...this.props, backgroundColor: this.state.backgroundColor },
-      { height, width },
-    );
-
-    this.$dom.appendChild(renderer.domElement);
-
-    this.renderer = renderer;
-  }
-
-  _setupAxisHelper(remove = false) {
-    if (this.model) {
-      if (this.axisHelper && this.group) {
-        this.group.remove(this.axisHelper);
-      }
-
-      if (remove) {
-        return;
-      }
-
-      // Get max dimention and add 50% overlap for plane
-      // with a gutter of 10
-      const geometry = this.model.geometry;
-
-      if (geometry) {
-        geometry.computeBoundingBox();
-        geometry.computeBoundingSphere();
-
-        let maxDimension: number = max([
-          geometry.boundingBox.max.x,
-          geometry.boundingBox.max.y,
-          geometry.boundingBox.max.z,
-        ]);
-        maxDimension = Math.ceil(~~(maxDimension * 1.5) / 10) * 10;
-
-        const axisHelper = new THREE.AxesHelper(maxDimension);
-
-        // reset center point
-        axisHelper.position.x = 0;
-        axisHelper.position.y = 0;
-        axisHelper.position.z = 0;
-
-        this.axisHelper = axisHelper;
-        this.group.add(this.axisHelper);
-      }
-    }
-  }
-
-  /** 初始化控制器 */
-  _setupControls() {
-    this._setupCamera();
-
-    if (this.camera && this.$dom) {
-      this.orbitControls = new OrbitControls(this.camera, this.$dom);
-      this.orbitControls.enableKeys = false;
-      this.orbitControls.enableZoom = true;
-      this.orbitControls.enablePan = true;
-      this.orbitControls.addEventListener('change', this.renderScene);
-    }
-  }
-
-  _setupCamera() {
-    if (!this.$dom) {
-      return;
-    }
-
-    const height = this.$dom.clientHeight;
-    const width = this.$dom.clientWidth;
-    const camera = new THREE.PerspectiveCamera(45, width / height, 1, 99999);
-
-    const { model } = this;
-
-    this.camera = camera;
-
-    camera.add(new THREE.PointLight(0xcccccc, 2));
-
-    if (model) {
-      this._resetCamera();
-    }
-  }
-
-  private _resetCamera() {
-    if (this.model) {
-      const geometry = this.model.geometry;
-
-      if (geometry) {
-        geometry.computeBoundingSphere();
-
-        const g = this.model.geometry.boundingSphere.radius;
-        const dist = g * 3;
-
-        // fudge factor so you can see the boundaries
-        this.camera.position.set(
-          this.props.cameraX,
-          this.props.cameraY,
-          this.props.cameraZ || dist * fudge,
-        );
-      }
-    }
-  }
-
-  animate(_time: number) {
-    this.animationId = requestAnimationFrame(time => {
-      this.animate(time);
-    });
-
-    // if (this.controls) {
-    //   this.controls.update(_time);
-    // }
-
-    this.renderScene();
-  }
-
-  renderScene = () => {
-    // horizontal rotation
-    if (!this.group) {
-      return;
-    }
-
-    if (this.renderer) {
-      this.renderer.render(this.scene, this.camera);
-    }
-  };
-
-  _setupDecorators() {
-    const { withWireframe, withBoundingBox } = this.state;
-
-    this._setupPlane();
-
-    if (withWireframe) {
-      this._setupModelWireframe();
-    }
-
-    if (withBoundingBox) {
-      this._setupBoundingBox();
-    }
-
-    if (typeof __DEV__ !== 'undefined') {
-      if (this.props.showAxisHelper) {
-        this._setupAxisHelper();
-      }
-    }
-  }
-
-  _setupModelWireframe() {
-    const { model } = this;
-    if (!model) {
-      return;
-    }
-
-    if (this.modelWireframe && this.group) {
-      this.group.remove(this.modelWireframe);
-    }
-
-    const material = new THREE.MeshPhongMaterial({
-      color: 0xffffff,
-      specular: 0x111111,
-      shininess: 20,
-      wireframe: true,
-    });
-
-    const mesh = this.model.clone();
-    mesh.material = material;
-
-    this.modelWireframe = mesh;
-    this.group.add(mesh);
-  }
-
-  /** 设置包裹体 */
-  private _setupBoundingBox() {
-    if (this.model) {
-      if (this.boundingBox && this.group) {
-        this.group.remove(this.boundingBox);
-      }
-
-      const wireframe = new THREE.WireframeGeometry(this.model.geometry);
-      const line = new THREE.LineSegments(wireframe);
-
-      (line.material as THREE.Material).depthTest = false;
-      (line.material as THREE.Material).opacity = 0.75;
-      (line.material as THREE.Material).transparent = true;
-
-      // reset center point
-      const box = new THREE.Box3().setFromObject(line);
-      box.getCenter(line.position);
-      line.position.multiplyScalar(-1);
-
-      this.boundingBox = new THREE.BoxHelper(line);
-
-      this.group.add(this.boundingBox);
-
-      line.updateMatrix();
-      const lineBox = line.geometry.boundingBox;
-      const lineBoxMaxVertex = lineBox.max;
-
-      const { topology } = this.state;
-
-      const genSprite = (len: number) =>
-        new TextSprite({
-          fillStyle: 'rgb(255, 153, 0)',
-          fontSize: 2.5,
-          fontStyle: 'italic',
-          text: `${toFixedNumber(len, 2)} mm`,
-        });
-
-      this.xSprite = genSprite(topology.sizeX);
-      this.ySprite = genSprite(topology.sizeY);
-      this.zSprite = genSprite(topology.sizeZ);
-
-      this.xSprite.position.set(0, lineBoxMaxVertex.y, lineBoxMaxVertex.z);
-      this.ySprite.position.set(lineBoxMaxVertex.x, 0, lineBoxMaxVertex.z);
-      this.zSprite.position.set(lineBoxMaxVertex.x, lineBoxMaxVertex.y, 0);
-
-      this.group.add(this.xSprite);
-      this.group.add(this.ySprite);
-      this.group.add(this.zSprite);
-    }
-  }
-
-  /** 设置平面 */
-  _setupPlane() {
-    if (this.model) {
-      if (this.plane && this.group) {
-        this.group.remove(this.plane);
-      }
-
-      // Getmax dimention and add 10% overlap for plane
-      // with a gutter of 10
-      const geometry = this.model.geometry;
-
-      if (geometry) {
-        geometry.computeBoundingBox();
-        geometry.computeBoundingSphere();
-      }
-
-      let maxDimension = max([this.xDims, this.yDims, this.zDims]);
-      maxDimension = Math.ceil(~~(maxDimension * 1.1) / 10) * 50;
-
-      const plane = new THREE.GridHelper(maxDimension, 50);
-
-      // reset center point
-      const box = new THREE.Box3().setFromObject(plane);
-      box.getCenter(plane.position);
-      plane.position.multiplyScalar(-1);
-
-      // plane.position.y = geometry.boundingSphere.center.y * -1;
-      plane.position.y = this.yDims * -1;
-
-      this.plane = plane;
-      this.group.add(this.plane);
-    }
-  }
-
-  onLoad = async () => {
-    const {
-      withAttr,
-      autoSnapshot,
-      onTopology,
-      onLoad,
-      onSnapshot,
-    } = this.props;
-
-    if (onLoad) {
-      onLoad();
-    }
-
-    // 计算基础信息
-    if ((onTopology || withAttr) && this.model) {
-      const topology = await calcTopology(this.model);
-
-      this.setState({ topology });
-
-      if (onTopology) {
-        onTopology(topology);
-      }
-    }
-
-    // 自动截图
-    if (autoSnapshot && onSnapshot) {
-      new ObjectSnapshotGenerator(
-        this.model,
-        this.camera,
-        this.renderer,
-        (dataUrl: string) => {
-          onSnapshot(dataUrl);
-        },
-      );
-    }
-  };
-
-  handleCompress = async () => {
-    const { src, onCompress } = this.props;
-    const { modelFile } = this.state;
-
-    // 仅在传入了 Zipped 文件的情况下调用
-    if (modelFile && onCompress && src && this.state.compressType === 'none') {
-      const compressedFile = await deflate(modelFile);
-
-      onCompress(compressedFile);
-    }
-  };
 
   /** 响应着色图变化 */
   onMaterialChange = (selected = true) => {
@@ -600,79 +101,6 @@ export class WebGLViewer extends React.Component<IProps, IState> {
         this.group.remove(this.model);
       }
     }
-  };
-
-  /** 响应底平面的变化 */
-  onPlaneChange = (selected = true) => {
-    const { withPlane } = this.state;
-
-    if (withPlane !== selected) {
-      if (this.plane && this.group) {
-        this.group.remove(this.plane);
-        this.plane = null;
-      }
-
-      if (selected) {
-        this._setupPlane();
-      }
-    }
-
-    this.setState({ withPlane: selected });
-  };
-
-  /** 响应线框图的变化 */
-  onWireframeChange = (selected = true) => {
-    const { withWireframe } = this.state;
-
-    if (withWireframe !== selected) {
-      if (this.modelWireframe && this.group) {
-        this.group.remove(this.modelWireframe);
-        this.modelWireframe = null;
-      }
-
-      if (selected) {
-        this._setupModelWireframe();
-      }
-    }
-
-    this.setState({ withWireframe: selected });
-  };
-
-  /** 响应框体变化 */
-  onBoundingBoxChange = (selected = true) => {
-    if (this.state.withBoundingBox === selected) {
-      return;
-    }
-
-    this.setState({
-      withBoundingBox: selected,
-    });
-
-    if (selected) {
-      this._setupBoundingBox();
-    } else {
-      if (this.group) {
-        this.group.remove(this.boundingBox);
-        this.group.remove(this.xSprite);
-        this.group.remove(this.ySprite);
-        this.group.remove(this.zSprite);
-      }
-
-      this.boundingBox = null;
-      this.xSprite = null;
-      this.ySprite = null;
-      this.zSprite = null;
-    }
-  };
-
-  onModelColorChange = (modelColor: string) => {
-    this.setState({ modelColor }, () => {
-      this.model.material = new THREE.MeshPhongMaterial({
-        color: this.state.modelColor,
-        specular: 0x111111,
-        shininess: 20,
-      });
-    });
   };
 
   enableFreshView = (params?: { modelColor?: string; clearColor?: string }) => {
@@ -785,69 +213,6 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     );
   }
 
-  renderJoySticker() {
-    const { topology } = this.state;
-
-    return (
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <div className="rmv-sv-joystick">
-          <div
-            className="rmv-sv-joystick-center"
-            onClick={() => {
-              this._resetCamera();
-            }}
-          />
-          <Holdable
-            finite={false}
-            onPress={() => {
-              this.camera && this.camera.translateY(-topology.sizeY / 10);
-            }}
-          >
-            <div
-              className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-up"
-              style={{ top: 0 }}
-            >
-              <i />
-            </div>
-          </Holdable>
-          <Holdable
-            finite={false}
-            onPress={() => {
-              this.camera && this.camera.translateY(topology.sizeY / 10);
-            }}
-          >
-            <div
-              className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-down"
-              style={{ bottom: 0 }}
-            >
-              <i />
-            </div>
-          </Holdable>
-          <Holdable
-            finite={false}
-            onPress={() => {
-              this.camera && this.camera.translateX(-topology.sizeX / 10);
-            }}
-          >
-            <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-left">
-              <i />
-            </div>
-          </Holdable>
-          <Holdable
-            finite={false}
-            onPress={() => {
-              this.camera && this.camera.translateX(topology.sizeX / 10);
-            }}
-          >
-            <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-right">
-              <i />
-            </div>
-          </Holdable>
-        </div>
-      </ErrorBoundary>
-    );
-  }
-
   renderLoose() {
     const { width, withJoystick } = this.props;
 
@@ -855,7 +220,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       withMaterial,
       withWireframe,
       withBoundingBox,
-      showColorPicker,
+      withColorPicker,
       withClipping,
       withLanguageSelector,
       isFreshViewEnabled,
@@ -866,7 +231,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
         className="rmv-sv-container rmv-sv-loose-container"
         style={{ width }}
       >
-        {showColorPicker ? (
+        {withColorPicker ? (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <div className="rmv-sv-color-picker">
               <SketchPicker
@@ -928,14 +293,14 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             />
           </div>
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`showColorPicker-${this.id}`}>
+            <label htmlFor={`withColorPicker-${this.id}`}>
               {i18nFormat('色盘')}：
             </label>
             <Switch
-              id={`showColorPicker-${this.id}`}
-              checked={showColorPicker}
+              id={`withColorPicker-${this.id}`}
+              checked={withColorPicker}
               onChange={e => {
-                this.setState({ showColorPicker: e.target.checked });
+                this.setState({ withColorPicker: e.target.checked });
               }}
             />
           </div>
@@ -1014,7 +379,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       withWireframe,
       withBoundingBox,
       type,
-      showColorPicker,
+      withColorPicker,
       withClipping,
       withLanguageSelector,
       isFreshViewEnabled,
@@ -1061,7 +426,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
         className="rmv-sv-container rmv-sv-compact-container"
         style={{ width }}
       >
-        {showColorPicker && (
+        {withColorPicker && (
           <div
             className="rmv-sv-color-picker"
             style={{ bottom: -8, background: 'none', top: 'unset' }}
@@ -1115,13 +480,13 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             </div>
             <div className="rmv-sv-toolbar-item">
               <Switch
-                id={`showColorPicker-${this.id}`}
-                checked={showColorPicker}
+                id={`withColorPicker-${this.id}`}
+                checked={withColorPicker}
                 onChange={e => {
-                  this.setState({ showColorPicker: e.target.checked });
+                  this.setState({ withColorPicker: e.target.checked });
                 }}
               />
-              <label htmlFor={`showColorPicker-${this.id}`}>
+              <label htmlFor={`withColorPicker-${this.id}`}>
                 {i18nFormat('色盘')}
               </label>
             </div>

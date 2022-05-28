@@ -2,7 +2,7 @@ import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import Loader from 'react-loader-spinner';
 
-import { D3ModelType, IModelViewerProps } from '../../types';
+import { D3ModelType, D3ModelViewerProps } from '../../types';
 import { ErrorFallback } from '../../utils/core/error';
 import {
   getFileObjFromModelSrc,
@@ -13,7 +13,7 @@ import { isSupportThreejsLoader } from '../../utils/io/importer/mesh-loader';
 import { WebGLViewer } from '../WebGLViewer';
 import { OccEdge, OccFace, ShapesCombiner } from './ShapesCombiner';
 
-interface IProps extends Partial<IModelViewerProps> {
+interface IProps extends Partial<D3ModelViewerProps> {
   onReadCadFileTextError?: () => void;
 }
 
