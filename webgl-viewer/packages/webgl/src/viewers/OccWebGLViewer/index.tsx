@@ -15,6 +15,7 @@ import { OccEdge, OccFace, ShapesCombiner } from './ShapesCombiner';
 
 interface IProps extends Partial<D3ModelViewerProps> {
   onReadCadFileTextError?: () => void;
+  onRef?: (ref: React.RefObject<WebGLViewer>) => void;
 }
 
 interface IState {
@@ -38,26 +39,6 @@ export class OccWebGLViewer extends React.Component<IProps, IState> {
   viewerRef = React.createRef<WebGLViewer>();
 
   state: IState = {};
-
-  get enableFreshView() {
-    return this.viewerRef.current.enableFreshView;
-  }
-
-  get model() {
-    return this.viewerRef.current.model;
-  }
-
-  get camera() {
-    return this.viewerRef.current.camera;
-  }
-
-  get renderer() {
-    return this.viewerRef.current.renderer;
-  }
-
-  get disableFreshView() {
-    return this.viewerRef.current.disableFreshView;
-  }
 
   componentDidMount(): void {
     console.log('>>>OccWebGLViewer>>>componentDidMount>>>props:', this.props);
@@ -107,6 +88,10 @@ export class OccWebGLViewer extends React.Component<IProps, IState> {
           }
         }
       };
+
+      if (this.props.onRef) {
+        this.props.onRef(this.viewerRef);
+      }
     }
   }
 
@@ -147,12 +132,6 @@ export class OccWebGLViewer extends React.Component<IProps, IState> {
           cadFileText,
         );
 
-        // 触发 OCC 转化
-        // window.cadWorker.postMessage({
-        //   type: 'loadFiles',
-        //   payload: [modelFile],
-        // });
-
         window.cadWorker.postMessage({
           type: 'loadCadFiles',
           payload: [{ text: cadFileText, fileName: props.fileName }],
@@ -169,14 +148,14 @@ export class OccWebGLViewer extends React.Component<IProps, IState> {
     }`.toLowerCase() as D3ModelType;
 
     if (isSupportThreejsLoader(type)) {
-      return <WebGLViewer ref={this.viewerRef} {...this.props} />;
+      return <WebGLViewer {...this.props} ref={this.viewerRef} />;
     }
 
     if (this.state.mesh && this.state.isWorkerReady) {
       return (
         <WebGLViewer
-          ref={this.viewerRef}
           {...this.props}
+          ref={this.viewerRef}
           mesh={this.state.mesh}
         />
       );
