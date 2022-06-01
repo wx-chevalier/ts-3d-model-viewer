@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 /** 获得材料 */
-export function getMaterial(withClipping: boolean, color: string) {
+export function cookMeshMaterial(withClipping: boolean, color: string) {
   const localPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 0.5);
 
   return new THREE.MeshPhongMaterial({

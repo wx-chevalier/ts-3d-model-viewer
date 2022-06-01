@@ -8,7 +8,9 @@ import {
 export interface D3ModelViewerState
   extends Partial<D3ModelViewerCustomOptions>,
     Partial<D3ModelViewerLayoutOptions>,
-    Partial<D3ModelViewerRenderOptions> {}
+    Partial<D3ModelViewerRenderOptions> {
+  hasModelFileLoaded?: boolean;
+}
 
 export const getInitialStateFromProps = (
   props: Partial<D3ModelViewerProps>,

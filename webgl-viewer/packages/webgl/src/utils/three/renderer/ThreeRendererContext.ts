@@ -12,7 +12,6 @@ export class ThreeRendererContext {
   modelWireframe?: THREE.Mesh;
 
   theme?: D3ModelViewerTheme = 'default';
-  hasModelFileLoaded?: boolean;
   topology?: ModelAttr;
   withClipping?: boolean;
 

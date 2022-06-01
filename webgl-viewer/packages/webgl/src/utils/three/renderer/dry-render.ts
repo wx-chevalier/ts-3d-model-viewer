@@ -17,7 +17,7 @@ import {
 } from '../..';
 import {
   adjustGeometry,
-  getMaterial,
+  cookMeshMaterial,
   getThreeJsWebGLRenderer,
   setupLights,
 } from '../stages';
@@ -29,7 +29,7 @@ export async function dryRenderThreeModelFile(
   _props: Partial<D3ModelViewerProps>,
 ) {
   try {
-    const props = mergeD3ModelViewerProps(_props, defaultModelViewerProps);
+    const props = mergeD3ModelViewerProps({ currentProps: _props });
     const type = props.type || getModelType(props.fileName, props.src);
     const compressType =
       props.compressType || getModelCompressType(props.fileName, props.src);
@@ -57,15 +57,18 @@ export async function dryRenderThreeModelFile(
       : 600;
 
     const renderer = getThreeJsWebGLRenderer(
-      mergeD3ModelViewerProps(props, {
-        renderOptions: { backgroundColor: 'rgb(255,255,255)' },
+      mergeD3ModelViewerProps({
+        currentProps: {
+          renderOptions: { backgroundColor: 'rgb(255,255,255)' },
+        },
+        originProps: props,
       }),
       { height, width },
     );
     renderer.domElement.style.opacity = '0';
     document.body.appendChild(renderer.domElement);
 
-    const material = getMaterial(false, props.renderOptions.modelColor);
+    const material = cookMeshMaterial(false, props.renderOptions.modelColor);
     const { mesh, xDims, yDims, zDims } = adjustGeometry(
       geometry as THREE.BufferGeometry,
       material,

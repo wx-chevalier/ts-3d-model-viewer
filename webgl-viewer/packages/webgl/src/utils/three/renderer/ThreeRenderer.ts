@@ -1,6 +1,7 @@
-import { toFixedNumber } from '@m-fe/utils/dist/types';
+import { genId, sleep, toFixedNumber } from '@m-fe/utils';
 import TextSprite from '@seregpie/three.text-sprite';
-import { max } from 'lodash';
+import each from 'lodash/each';
+import max from 'lodash/max';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
@@ -19,7 +20,7 @@ import {
 import { calcTopology, ObjectSnapshotGenerator } from '../derivation';
 import {
   adjustGeometry,
-  getMaterial,
+  cookMeshMaterial,
   getThreeJsWebGLRenderer,
   setupLights,
 } from '../stages';
@@ -28,12 +29,14 @@ import { ThreeRendererContext } from './ThreeRendererContext';
 const fudge = 1.0;
 
 export class ThreeRenderer {
+  id = genId();
+
   animationId: number;
   context: ThreeRendererContext;
 
-  onContextChange: () => void;
+  onContextChange: (partialViewerState: Partial<D3ModelViewerState>) => void;
   getViewerState: () => D3ModelViewerState;
-  getDom: () => HTMLDivElement;
+  getDom: () => HTMLElement;
 
   constructor(
     // viewerProps 相对是常量
@@ -43,9 +46,11 @@ export class ThreeRenderer {
       getViewerState,
       onContextChange,
     }: {
-      getDom: () => HTMLDivElement;
+      getDom: () => HTMLElement;
       getViewerState: () => D3ModelViewerState;
-      onContextChange: () => void;
+      onContextChange: (
+        partialViewerState: Partial<D3ModelViewerState>,
+      ) => void;
     },
   ) {
     this.getDom = getDom;
@@ -53,9 +58,12 @@ export class ThreeRenderer {
     this.onContextChange = onContextChange;
   }
 
-  init() {
+  async init() {
     this.context = new ThreeRendererContext(this.viewerProps);
-    this.loadModel();
+
+    this.onContextChange({ hasModelFileLoaded: false });
+
+    await this.loadModel();
   }
 
   /** 清除实体 */
@@ -63,31 +71,36 @@ export class ThreeRenderer {
     try {
       cancelAnimationFrame(this.animationId);
 
-      if (this.group !== null) {
-        each(this.group.children, object => {
-          if (this.group) {
-            this.group.remove(object);
+      const context = this.context;
+
+      if (context.group !== null) {
+        each(context.group.children, object => {
+          if (context.group) {
+            context.group.remove(object);
           }
         });
       }
 
-      if (this.scene !== null) {
-        each(this.scene.children, object => {
-          if (this.scene) {
-            this.scene.remove(object);
+      if (context.scene !== null) {
+        each(context.scene.children, object => {
+          if (context.scene) {
+            context.scene.remove(object);
           }
         });
       }
 
-      this.scene = null;
-      this.group = null;
-      this.model = null;
-      this.modelWireframe = null;
-      this.boundingBox = null;
+      context.scene = null;
+      context.group = null;
+      context.model = null;
+      context.modelWireframe = null;
+      context.boundingBox = null;
 
-      this.renderer.dispose();
-      this.renderer.forceContextLoss();
-      this.$ref.current.remove();
+      context.renderer.dispose();
+      context.renderer.forceContextLoss();
+
+      if (this.getDom()) {
+        this.getDom().remove();
+      }
     } catch (_) {
       console.error(_);
     }
@@ -111,7 +124,7 @@ export class ThreeRenderer {
         this.context.modelFile = modelFile;
 
         // 判断是否有 onZip，有的话则进行压缩并且返回
-        requestAnimationFrame(async () => {
+        requestAnimationFrame(() => {
           this.handleCompress();
         });
 
@@ -134,7 +147,7 @@ export class ThreeRenderer {
         ));
       }
 
-      this.initGeometry(mesh.geometry as THREE.BufferGeometry);
+      await this.initGeometry(mesh.geometry as THREE.BufferGeometry);
 
       // 根据 props 配置当前显示的主题
       this.changeTheme(props.renderOptions.theme);
@@ -147,15 +160,25 @@ export class ThreeRenderer {
     }
   }
 
+  changeMaterial = (material: THREE.Material) => {
+    const context = this.context;
+
+    if (context.model) {
+      context.model.material = material;
+    }
+  };
+
   changeModelColor = (modelColor: string) => {
     this.context.model.material = new THREE.MeshPhongMaterial({
       color: modelColor,
       specular: 0x111111,
       shininess: 20,
     });
+
+    this.onContextChange({ modelColor });
   };
 
-  async changeTheme(theme: D3ModelViewerTheme) {
+  changeTheme(theme: D3ModelViewerTheme) {
     if (theme === this.context.theme) {
       return;
     }
@@ -164,13 +187,49 @@ export class ThreeRenderer {
 
     // 否则进行主题切换
     if (theme === 'fresh') {
+      this.removePlane();
+      this.context.renderer.setClearColor(
+        new THREE.Color('rgba(255, 255, 255)'),
+        1,
+      );
+      this.changeModelColor('rgb(24,98,246)');
     } else {
+      this.setupPlane();
+      const state = this.getViewerState();
+      this.context.renderer.setClearColor(
+        new THREE.Color(state.backgroundColor),
+        1,
+      );
+      this.changeModelColor(state.modelColor);
     }
 
-    this.onContextChange();
+    this.onContextChange({ theme });
   }
 
-  async removeBoundingBox() {
+  /** 移除着色图 */
+  removeMaterialedMesh() {
+    const context = this.context;
+
+    if (context.group) {
+      context.group.remove(this.context.model);
+    }
+
+    this.onContextChange({ withMaterialedMesh: false });
+  }
+
+  /** 添加着色图 */
+  setupMaterialedMesh() {
+    const context = this.context;
+
+    if (context.group) {
+      context.group.add(this.context.model);
+
+      this.onContextChange({ withMaterialedMesh: true });
+    }
+  }
+
+  /** 移除包围盒 */
+  removeBoundingBox() {
     const context = this.context;
 
     if (context.group) {
@@ -185,10 +244,10 @@ export class ThreeRenderer {
     context.ySprite = null;
     context.zSprite = null;
 
-    this.onContextChange();
+    this.onContextChange({ withBoundingBox: false });
   }
 
-  async setupBoundingBox() {
+  setupBoundingBox() {
     const context = this.context;
 
     if (context.model) {
@@ -218,41 +277,48 @@ export class ThreeRenderer {
 
       const { topology } = context;
 
-      const genSprite = (len: number) =>
-        new TextSprite({
+      const genSprite = (len: number) => {
+        const s = new TextSprite({
           fillStyle: 'rgb(255, 153, 0)',
           fontSize: 2.5,
           fontStyle: 'italic',
           text: `${toFixedNumber(len, 2)} mm`,
         });
 
-      context.xSprite = genSprite(topology.sizeX);
-      context.ySprite = genSprite(topology.sizeY);
-      context.zSprite = genSprite(topology.sizeZ);
+        return s;
+      };
 
-      context.xSprite.position.set(0, lineBoxMaxVertex.y, lineBoxMaxVertex.z);
-      context.ySprite.position.set(lineBoxMaxVertex.x, 0, lineBoxMaxVertex.z);
-      context.zSprite.position.set(lineBoxMaxVertex.x, lineBoxMaxVertex.y, 0);
+      try {
+        context.xSprite = genSprite(topology.sizeX);
+        context.ySprite = genSprite(topology.sizeY);
+        context.zSprite = genSprite(topology.sizeZ);
 
-      context.group.add(context.xSprite);
-      context.group.add(context.ySprite);
-      context.group.add(context.zSprite);
+        context.xSprite.position.set(0, lineBoxMaxVertex.y, lineBoxMaxVertex.z);
+        context.ySprite.position.set(lineBoxMaxVertex.x, 0, lineBoxMaxVertex.z);
+        context.zSprite.position.set(lineBoxMaxVertex.x, lineBoxMaxVertex.y, 0);
 
-      this.onContextChange();
+        context.group.add(context.xSprite);
+        context.group.add(context.ySprite);
+        context.group.add(context.zSprite);
+      } catch (_) {
+        console.error('>>>ThreeRenderer>>>genSprite>>>error: ', _);
+      }
+
+      this.onContextChange({ withBoundingBox: true });
     }
   }
 
-  async removeWireFrame() {
+  removeWireFrame() {
     const context = this.context;
     if (context.modelWireframe && context.group) {
       context.group.remove(context.modelWireframe);
       context.modelWireframe = null;
 
-      this.onContextChange();
+      this.onContextChange({ withWireframe: false });
     }
   }
 
-  async setupWireframe() {
+  setupWireframe() {
     const context = this.context;
 
     if (context.model) {
@@ -273,19 +339,21 @@ export class ThreeRenderer {
       context.modelWireframe = mesh;
       context.group.add(mesh);
 
-      this.onContextChange();
+      this.onContextChange({ withWireframe: true });
     }
   }
 
-  async removeAxisHelper() {
+  removeAxisHelper() {
     const { context } = this;
 
     if (context.axisHelper && context.group) {
       context.group.remove(context.axisHelper);
+
+      this.onContextChange({ withAxisHelper: false });
     }
   }
 
-  async setupAxisHelper() {
+  setupAxisHelper() {
     const { context } = this;
 
     this.removeAxisHelper();
@@ -315,19 +383,21 @@ export class ThreeRenderer {
 
         context.axisHelper = axisHelper;
         context.group.add(context.axisHelper);
+
+        this.onContextChange({ withAxisHelper: true });
       }
     }
   }
 
-  async removePlane() {
+  removePlane() {
     if (this.context.plane && this.context.group) {
       this.context.group.remove(this.context.plane);
       this.context.plane = null;
+      this.onContextChange({ withPlane: false });
     }
-    this.onContextChange();
   }
 
-  async setupPlane() {
+  setupPlane() {
     if (this.context.model) {
       if (this.context.plane && this.context.group) {
         this.context.group.remove(this.context.plane);
@@ -361,20 +431,63 @@ export class ThreeRenderer {
 
       this.context.plane = plane;
       this.context.group.add(this.context.plane);
-    }
 
-    this.onContextChange();
+      this.onContextChange({ withPlane: true });
+    }
+  }
+
+  moveUp() {
+    const { camera, topology } = this.context;
+    camera.translateY(-topology.sizeY / 10);
+  }
+
+  moveDown() {
+    const { camera, topology } = this.context;
+    camera.translateY(topology.sizeY / 10);
+  }
+
+  moveLeft() {
+    const { camera, topology } = this.context;
+    camera.translateX(-topology.sizeX / 10);
+  }
+
+  moveRight() {
+    const { camera, topology } = this.context;
+    camera.translateX(topology.sizeX / 10);
+  }
+
+  /** 重置相机 */
+  resetCamera() {
+    const context = this.context;
+
+    if (context.model) {
+      const geometry = context.model.geometry;
+
+      if (geometry) {
+        geometry.computeBoundingSphere();
+
+        const g = context.model.geometry.boundingSphere.radius;
+        const dist = g * 3;
+
+        // fudge factor so you can see the boundaries
+        context.camera.position.set(
+          this.viewerProps.renderOptions.cameraX,
+          this.viewerProps.renderOptions.cameraY,
+          this.viewerProps.renderOptions.cameraZ || dist * fudge,
+        );
+      }
+    }
   }
 
   /** 初始化几何体 */
-  private initGeometry(geometry: THREE.BufferGeometry) {
+  private async initGeometry(geometry: THREE.BufferGeometry) {
     this.setupScene();
-    this.setupRenderer();
+    await this.setupRenderer();
 
     const context = this.context;
     const viewerState = this.getViewerState();
 
-    const material = getMaterial(
+    const material = cookMeshMaterial(
       context.withClipping,
       this.getViewerState().modelColor,
     );
@@ -386,7 +499,7 @@ export class ThreeRenderer {
     context.zDims = zDims;
     context.model = mesh;
 
-    if (viewerState.withMaterial) {
+    if (viewerState.withMaterialedMesh) {
       context.group.add(context.model);
     }
 
@@ -398,14 +511,14 @@ export class ThreeRenderer {
       this.setupDecorators();
     }
 
-    requestAnimationFrame(time => {
+    console.log('>>>ThreeRenderer>>>initGeometry>>>load successfully');
+
+    requestAnimationFrame(async time => {
       this.animate(time);
 
-      context.hasModelFileLoaded = true;
+      await this.onLoad();
 
-      // 已加载完毕
-      context.hasModelFileLoaded = true;
-      this.onLoad();
+      this.onContextChange({ hasModelFileLoaded: true });
     });
   }
 
@@ -427,23 +540,31 @@ export class ThreeRenderer {
   }
 
   /** 初始化渲染器 */
-  private setupRenderer() {
+  private async setupRenderer() {
+    // 等待 $dom 有效，如果超时则抛出异常，最大等待 30s
+    for (let i = 0; i < 30; i++) {
+      await sleep(1000);
+      if (this.$dom) {
+        break;
+      }
+    }
+
     if (!this.$dom) {
-      return;
+      throw new Error('Invalid dom');
     }
 
     const height = this.$dom.clientHeight;
     const width = this.$dom.clientWidth;
 
     const renderer = getThreeJsWebGLRenderer(
-      mergeD3ModelViewerProps(
-        {
+      mergeD3ModelViewerProps({
+        currentProps: {
           renderOptions: {
             backgroundColor: this.getViewerState().backgroundColor,
           },
         },
-        this.viewerProps,
-      ),
+        originProps: this.viewerProps,
+      }),
 
       { height, width },
     );
@@ -486,28 +607,6 @@ export class ThreeRenderer {
 
     if (model) {
       this.resetCamera();
-    }
-  }
-
-  private resetCamera() {
-    const context = this.context;
-
-    if (context.model) {
-      const geometry = context.model.geometry;
-
-      if (geometry) {
-        geometry.computeBoundingSphere();
-
-        const g = context.model.geometry.boundingSphere.radius;
-        const dist = g * 3;
-
-        // fudge factor so you can see the boundaries
-        context.camera.position.set(
-          this.viewerProps.renderOptions.cameraX,
-          this.viewerProps.renderOptions.cameraY,
-          this.viewerProps.renderOptions.cameraZ || dist * fudge,
-        );
-      }
     }
   }
 
@@ -555,7 +654,6 @@ export class ThreeRenderer {
   }
 
   /** 加载完成事件 */
-
   onLoad = async () => {
     const {
       layoutOptions: { withAttrIcon, autoCapture },
@@ -572,7 +670,7 @@ export class ThreeRenderer {
     const { context } = this;
 
     // 计算基础信息
-    if ((onTopology || withAttrIcon) && context.model) {
+    if (context.model) {
       const topology = await calcTopology(context.model);
 
       context.topology = topology;

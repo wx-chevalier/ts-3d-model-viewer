@@ -10,8 +10,9 @@ import {
   D3ModelCompressType,
   D3ModelSrc,
   D3ModelType,
-  defaultModelViewerProps,
   D3ModelViewerProps,
+  defaultModelViewerProps,
+  mergeD3ModelViewerProps,
   ModelAttr,
 } from '../../types';
 import {
@@ -45,27 +46,31 @@ export class GoogleModelViewer extends React.Component<
   GoogleModelViewerProps,
   GoogleModelViewerState
 > {
-  static defaultProps = { ...defaultModelViewerProps };
+  get mixedProps(): D3ModelViewerProps {
+    return mergeD3ModelViewerProps({ currentProps: this.props });
+  }
 
   id = genId();
   $ref: any;
 
   state: GoogleModelViewerState = {
-    type: this.props.type || getModelType(this.props.fileName, this.props.src),
+    type:
+      this.mixedProps.type ||
+      getModelType(this.mixedProps.fileName, this.mixedProps.src),
     compressType:
-      this.props.compressType ||
-      getModelCompressType(this.props.fileName, this.props.src),
+      this.mixedProps.compressType ||
+      getModelCompressType(this.mixedProps.fileName, this.mixedProps.src),
     cameraX: 0,
     cameraY: 0,
     cameraZ: 0,
   };
 
   componentDidMount() {
-    this.loadModel(this.props);
+    this.loadModel(this.mixedProps);
   }
 
   componentWillReceiveProps(nextProps: GoogleModelViewerProps) {
-    if (nextProps.src !== this.props.src) {
+    if (nextProps.src !== this.mixedProps.src) {
       this.loadModel(nextProps);
     }
   }
@@ -103,7 +108,11 @@ export class GoogleModelViewer extends React.Component<
   }
 
   onLoad = async () => {
-    const { withAttr, onSnapshot, onTopology } = this.props;
+    const {
+      layoutOptions: { withAttrIcon },
+      onSnapshot,
+      onTopology,
+    } = this.mixedProps;
 
     if (this.$ref) {
       // 返回快照
@@ -120,7 +129,7 @@ export class GoogleModelViewer extends React.Component<
     }
 
     // 计算基础信息
-    if ((onTopology || withAttr) && this.state.mesh) {
+    if ((onTopology || withAttrIcon) && this.state.mesh) {
       const topology = await calcTopology(this.state.mesh);
 
       this.setState({ topology });
@@ -137,7 +146,7 @@ export class GoogleModelViewer extends React.Component<
   };
 
   handleCompress = async () => {
-    const { src, onCompress } = this.props;
+    const { src, onCompress } = this.mixedProps;
     const { modelFile } = this.state;
 
     if (modelFile && onCompress && src && this.state.compressType === 'none') {
@@ -152,18 +161,17 @@ export class GoogleModelViewer extends React.Component<
 
   render() {
     const {
-      withCameraControls,
-      autoplay,
-      autoRotate,
-      shadowIntensity,
-      backgroundColor,
-      width,
-      height,
+      layoutOptions: { withAttrIcon, withJoystick, height, width },
+      renderOptions: {
+        withCameraControls,
+        autoplay,
+        autoRotate,
+        shadowIntensity,
+        backgroundColor,
+      },
+      customOptions: { externalAttr },
       style,
-      withAttr,
-      externalAttr,
-      withJoystick,
-    } = this.props;
+    } = this.mixedProps;
 
     const { gltfSrc, topology, cameraX, cameraY, cameraZ } = this.state;
 
@@ -200,7 +208,7 @@ export class GoogleModelViewer extends React.Component<
           max-field-of-view="180deg"
           {...attrs}
         />
-        {withAttr && topology && (
+        {withAttrIcon && topology && (
           <div className="rmv-gmv-attr-modal">
             <div className="item">
               尺寸：{toFixedNumber(topology.sizeX)} *{' '}

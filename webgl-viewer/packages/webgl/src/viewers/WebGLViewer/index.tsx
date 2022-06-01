@@ -3,39 +3,30 @@
 import 'rc-tooltip/assets/bootstrap.css';
 import './index.css';
 
-import { ellipsis, genId, isLanIp, toFixedNumber } from '@m-fe/utils';
-import each from 'lodash/each';
-import max from 'lodash/max';
+import { ellipsis, genId, get, isLanIp } from '@m-fe/utils';
 import Tooltip from 'rc-tooltip';
 import React from 'react';
 import { SketchPicker } from 'react-color';
 import { ErrorBoundary } from 'react-error-boundary';
 import Loader from 'react-loader-spinner';
-import * as THREE from 'three';
 
 import {
   D3ModelViewerProps,
   D3ModelViewerState,
-  defaultModelViewerProps,
   getInitialStateFromProps,
   mergeD3ModelViewerProps,
 } from '../../types';
 import {
-  calcTopology,
-  deflate,
+  cookMeshMaterial,
   ErrorFallback,
   i18nFormat,
   isSupportThreejsLoader,
   ObjectSnapshotGenerator,
   setLocale,
+  ThreeRenderer,
 } from '../../utils';
-import { Holdable, Switch } from '../../widgets';
-import {
-  adjustGeometry,
-  getMaterial,
-  getThreeJsWebGLRenderer,
-  setupLights,
-} from '../ThreeViewer';
+import { Switch } from '../../widgets';
+import { Joystick } from '../../widgets/Joystick';
 
 declare global {
   const __DEV__: boolean;
@@ -43,89 +34,79 @@ declare global {
 
 interface IProps extends D3ModelViewerProps {}
 
-interface IState extends D3ModelViewerState {}
+interface IState extends D3ModelViewerState {
+  threeRenderer?: ThreeRenderer;
+}
 
 export class WebGLViewer extends React.Component<IProps, IState> {
   static displayName = 'WebGLViewer';
 
+  get mixedProps(): D3ModelViewerProps {
+    return mergeD3ModelViewerProps({ currentProps: this.props });
+  }
+
+  getDom = () => {
+    return get(
+      '',
+      () => this.$ref.current || document.getElementById('webgl-container'),
+    );
+  };
+
   id = genId();
 
   state: IState = {
-    ...getInitialStateFromProps(
-      mergeD3ModelViewerProps(this.props, defaultModelViewerProps),
-    ),
+    ...getInitialStateFromProps(this.mixedProps),
   };
 
   $ref = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
-    this.loadModel(this.props);
+    this.initRenderer();
   }
 
   componentWillReceiveProps(nextProps: IProps) {
     if (
-      nextProps.src !== this.props.src ||
-      nextProps.mesh !== this.props.mesh
+      nextProps.src !== this.mixedProps.src ||
+      nextProps.mesh !== this.mixedProps.mesh
     ) {
-      this.loadModel(nextProps);
+      this.initRenderer(nextProps);
     }
   }
 
   componentWillUnmount() {
-    // 卸载的时候强行回收资源
-    this.destroy();
+    if (this.state.threeRenderer) {
+      this.state.threeRenderer.destroy();
+    }
   }
 
   componentDidCatch(error: Error) {
     console.error('>>>WebGLViewer>>>error>>>', error);
   }
 
-  get $dom() {
-    return this.$ref.current || document.getElementById('webgl-container');
-  }
-
-  /** 响应着色图变化 */
-  onMaterialChange = (selected = true) => {
-    if (this.state.withMaterial === selected) {
-      return;
+  initRenderer(props = this.mixedProps) {
+    if (this.state.threeRenderer) {
+      this.state.threeRenderer.destroy();
     }
 
-    this.setState({
-      withMaterial: selected,
+    const threeRenderer = new ThreeRenderer(props, {
+      getDom: this.getDom,
+      getViewerState: () => this.state,
+      onContextChange: (partialViewerState: Partial<D3ModelViewerState>) => {
+        this.setState({ ...partialViewerState });
+      },
     });
 
-    if (this.group) {
-      if (selected) {
-        this.group.add(this.model);
-      } else {
-        this.group.remove(this.model);
-      }
-    }
-  };
+    threeRenderer.init();
 
-  enableFreshView = (params?: { modelColor?: string; clearColor?: string }) => {
-    const { modelColor, clearColor } = params || {};
-
-    this.onPlaneChange(false);
-
-    this.renderer.setClearColor(
-      new THREE.Color(clearColor || 'rgba(255, 255, 255)'),
-      1,
-    );
-
-    this.onModelColorChange(modelColor || 'rgb(24,98,246)');
-  };
-
-  disableFreshView() {
-    this.onPlaneChange(true);
-    this.renderer.setClearColor(new THREE.Color(this.state.backgroundColor), 1);
-    this.onModelColorChange(this.state.modelColor);
+    this.setState({ threeRenderer });
   }
 
   renderWebGL() {
-    const { width, height, style } = this.props;
-
-    const { loaded } = this.state;
+    const {
+      layoutOptions: { width, height },
+      style,
+    } = this.mixedProps;
+    const { hasModelFileLoaded } = this.state;
 
     return (
       <ErrorBoundary
@@ -141,7 +122,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
           ref={this.$ref}
           style={{ width, height, ...style }}
         >
-          {!loaded ? (
+          {!hasModelFileLoaded ? (
             <ErrorBoundary FallbackComponent={ErrorFallback}>
               <div
                 style={{
@@ -164,11 +145,21 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   }
 
   renderAttr() {
-    const { fileName, src, unit } = this.props;
+    const {
+      fileName,
+      src,
+      customOptions: { unit },
+    } = this.mixedProps;
+    const { threeRenderer } = this.state;
 
-    const { withAttr, topology } = this.state;
+    if (!threeRenderer) {
+      return <Loader type="Puff" color="#00BFFF" height={100} width={100} />;
+    }
 
-    return withAttr && topology ? (
+    const { isAttrPanelVisible } = this.state;
+    const { topology } = threeRenderer.context;
+
+    return isAttrPanelVisible && topology ? (
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <div className="rmv-gmv-attr-modal">
           <div className="rmv-gmv-attr-modal-row">
@@ -214,16 +205,17 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   }
 
   renderLoose() {
-    const { width, withJoystick } = this.props;
+    const {
+      layoutOptions: { width, withJoystick },
+    } = this.mixedProps;
 
     const {
-      withMaterial,
+      withMaterialedMesh,
       withWireframe,
       withBoundingBox,
       withColorPicker,
       withClipping,
       withLanguageSelector,
-      isFreshViewEnabled,
     } = this.state;
 
     return (
@@ -238,12 +230,12 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                 color={this.state.modelColor}
                 onChange={({ hex }) => {
                   this.setState({ modelColor: hex }, () => {
-                    if (this.model) {
-                      this.model.material = getMaterial(
+                    this.state.threeRenderer.changeMaterial(
+                      cookMeshMaterial(
                         this.state.withClipping,
                         this.state.modelColor,
-                      );
-                    }
+                      ),
+                    );
                   });
                 }}
               />
@@ -257,14 +249,18 @@ export class WebGLViewer extends React.Component<IProps, IState> {
           style={{ width: withLanguageSelector ? 150 : 100 }}
         >
           <div className="rmv-sv-toolbar-item">
-            <label htmlFor={`withMaterial-${this.id}`}>
+            <label htmlFor={`withMaterialedMesh-${this.id}`}>
               {i18nFormat('着色')}：
             </label>
             <Switch
-              id={`withMaterial-${this.id}`}
-              checked={withMaterial}
+              id={`withMaterialedMesh-${this.id}`}
+              checked={withMaterialedMesh}
               onChange={e => {
-                this.onMaterialChange(e.target.checked);
+                if (e.target.checked) {
+                  this.state.threeRenderer.setupMaterialedMesh();
+                } else {
+                  this.state.threeRenderer.removeMaterialedMesh();
+                }
               }}
             />
           </div>
@@ -276,7 +272,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               id={`withWireframe-${this.id}`}
               checked={withWireframe}
               onChange={e => {
-                this.onWireframeChange(e.target.checked);
+                if (e.target.checked) {
+                  this.state.threeRenderer.setupWireframe();
+                } else {
+                  this.state.threeRenderer.removeWireFrame();
+                }
               }}
             />
           </div>
@@ -288,7 +288,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               id={`withBoundingBox-${this.id}`}
               checked={withBoundingBox}
               onChange={e => {
-                this.onBoundingBoxChange(e.target.checked);
+                if (e.target.checked) {
+                  this.state.threeRenderer.setupBoundingBox();
+                } else {
+                  this.state.threeRenderer.removeBoundingBox();
+                }
               }}
             />
           </div>
@@ -313,9 +317,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               checked={withClipping}
               onChange={e => {
                 this.setState({ withClipping: e.target.checked }, () => {
-                  this.model.material = getMaterial(
-                    this.state.withClipping,
-                    this.state.modelColor,
+                  this.state.threeRenderer.changeMaterial(
+                    cookMeshMaterial(
+                      this.state.withClipping,
+                      this.state.modelColor,
+                    ),
                   );
                 });
               }}
@@ -341,19 +347,18 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             <label htmlFor={`isFreshViewEnabled-${this.id}`}>简约：</label>
             <Switch
               id={`isFreshViewEnabled-${this.id}`}
-              checked={isFreshViewEnabled}
-              onChange={e => {
-                this.setState({ isFreshViewEnabled: e.target.checked });
-
-                if (e.target.checked) {
-                  this.enableFreshView();
-                } else {
-                  this.disableFreshView();
-                }
+              checked={get(
+                this.state.threeRenderer,
+                r => r.context.theme === 'fresh',
+              )}
+              onChange={() => {
+                this.state.threeRenderer.changeTheme('fresh');
               }}
             />
           </div>
-          {withJoystick && this.renderJoySticker()}
+          {withJoystick && (
+            <Joystick threeRenderer={this.state.threeRenderer} />
+          )}
         </div>
 
         {this.renderAttr()}
@@ -365,28 +370,30 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
   render() {
     const {
-      width,
-      height,
+      type,
       style,
-      layoutType,
-      withJoystick,
-      showCameraIcon,
+      layoutOptions: {
+        width,
+        height,
+        layoutType,
+        withJoystick,
+        withCaptureIcon,
+      },
+
       onSnapshot,
-    } = this.props;
+    } = this.mixedProps;
 
     const {
-      withMaterial,
+      withMaterialedMesh,
       withWireframe,
       withBoundingBox,
-      type,
       withColorPicker,
       withClipping,
       withLanguageSelector,
-      isFreshViewEnabled,
     } = this.state;
 
     // 如果出现异常
-    if (!isSupportThreejsLoader(type) && !this.props.mesh) {
+    if (!isSupportThreejsLoader(type) && !this.mixedProps.mesh) {
       return (
         <div
           className="rmv-sv-container"
@@ -415,7 +422,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       );
     }
 
-    if (layoutType === 'loose') {
+    if (layoutType === 'pc') {
       // 宽松方式，即左右布局
       return this.renderLoose();
     }
@@ -434,7 +441,14 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             <SketchPicker
               color={this.state.modelColor}
               onChange={({ hex }) => {
-                this.onModelColorChange(hex);
+                this.setState({ modelColor: hex }, () => {
+                  this.state.threeRenderer.changeMaterial(
+                    cookMeshMaterial(
+                      this.state.withClipping,
+                      this.state.modelColor,
+                    ),
+                  );
+                });
               }}
             />
           </div>
@@ -444,13 +458,17 @@ export class WebGLViewer extends React.Component<IProps, IState> {
           <div className="rmv-sv-toolbar-left">
             <div className="rmv-sv-toolbar-item">
               <Switch
-                id={`withMaterial-${this.id}`}
-                checked={withMaterial}
+                id={`withMaterialedMesh-${this.id}`}
+                checked={withMaterialedMesh}
                 onChange={e => {
-                  this.onMaterialChange(e.target.checked);
+                  if (e.target.checked) {
+                    this.state.threeRenderer.setupMaterialedMesh();
+                  } else {
+                    this.state.threeRenderer.removeMaterialedMesh();
+                  }
                 }}
               />
-              <label htmlFor={`withMaterial-${this.id}`}>
+              <label htmlFor={`withMaterialedMesh-${this.id}`}>
                 {i18nFormat('着色')}
               </label>
             </div>
@@ -459,7 +477,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                 id={`withWireframe-${this.id}`}
                 checked={withWireframe}
                 onChange={e => {
-                  this.onWireframeChange(e.target.checked);
+                  if (e.target.checked) {
+                    this.state.threeRenderer.setupWireframe();
+                  } else {
+                    this.state.threeRenderer.removeWireFrame();
+                  }
                 }}
               />
               <label htmlFor={`withWireframe-${this.id}`}>
@@ -471,7 +493,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                 id={`withBoundingBox-${this.id}`}
                 checked={withBoundingBox}
                 onChange={e => {
-                  this.onBoundingBoxChange(e.target.checked);
+                  if (e.target.checked) {
+                    this.state.threeRenderer.setupBoundingBox();
+                  } else {
+                    this.state.threeRenderer.removeBoundingBox();
+                  }
                 }}
               />
               <label htmlFor={`withBoundingBox-${this.id}`}>
@@ -496,9 +522,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                 checked={withClipping}
                 onChange={e => {
                   this.setState({ withClipping: e.target.checked }, () => {
-                    this.model.material = getMaterial(
-                      this.state.withClipping,
-                      this.state.modelColor,
+                    this.state.threeRenderer.changeMaterial(
+                      cookMeshMaterial(
+                        this.state.withClipping,
+                        this.state.modelColor,
+                      ),
                     );
                   });
                 }}
@@ -527,22 +555,19 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               <label htmlFor={`isFreshViewEnabled-${this.id}`}>简约：</label>
               <Switch
                 id={`isFreshViewEnabled-${this.id}`}
-                checked={isFreshViewEnabled}
-                onChange={e => {
-                  this.setState({ isFreshViewEnabled: e.target.checked });
-
-                  if (e.target.checked) {
-                    this.enableFreshView();
-                  } else {
-                    this.disableFreshView();
-                  }
+                checked={get(
+                  this.state.threeRenderer,
+                  r => r.context.theme === 'fresh',
+                )}
+                onChange={() => {
+                  this.state.threeRenderer.changeTheme('fresh');
                 }}
               />
             </div>
           </div>
           <div className="rmv-sv-toolbar-right">
             {/** 是否显示截图 */}
-            {onSnapshot && showCameraIcon && (
+            {onSnapshot && withCaptureIcon && (
               <Tooltip placement="left" overlay={i18nFormat('点击生成截图')}>
                 <svg
                   viewBox="0 0 1024 1024"
@@ -553,11 +578,12 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                   height="20px"
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
+                    const context = this.state.threeRenderer.context;
                     try {
                       new ObjectSnapshotGenerator(
-                        this.model,
-                        this.camera,
-                        this.renderer,
+                        context.model,
+                        context.camera,
+                        context.renderer,
                         (dataUrl: string) => {
                           onSnapshot(dataUrl);
                         },
@@ -583,7 +609,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
           </div>
         </div>
 
-        {withJoystick && this.renderJoySticker()}
+        {withJoystick && <Joystick threeRenderer={this.state.threeRenderer} />}
 
         {this.renderAttr()}
 

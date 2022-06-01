@@ -2,7 +2,11 @@ import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import Loader from 'react-loader-spinner';
 
-import { D3ModelType, D3ModelViewerProps } from '../../types';
+import {
+  D3ModelType,
+  D3ModelViewerProps,
+  mergeD3ModelViewerProps,
+} from '../../types';
 import { ErrorFallback } from '../../utils/core/error';
 import {
   getFileObjFromModelSrc,
@@ -13,7 +17,7 @@ import { isSupportThreejsLoader } from '../../utils/io/importer/mesh-loader';
 import { WebGLViewer } from '../WebGLViewer';
 import { OccEdge, OccFace, ShapesCombiner } from './ShapesCombiner';
 
-interface IProps extends Partial<D3ModelViewerProps> {
+interface IProps extends D3ModelViewerProps {
   onReadCadFileTextError?: () => void;
   onRef?: (ref: React.RefObject<WebGLViewer>) => void;
 }
@@ -40,8 +44,15 @@ export class OccWebGLViewer extends React.Component<IProps, IState> {
 
   state: IState = {};
 
+  get mixedProps(): D3ModelViewerProps {
+    return mergeD3ModelViewerProps({ currentProps: this.props });
+  }
+
   componentDidMount(): void {
-    console.log('>>>OccWebGLViewer>>>componentDidMount>>>props:', this.props);
+    console.log(
+      '>>>OccWebGLViewer>>>componentDidMount>>>props:',
+      this.mixedProps,
+    );
 
     // 注册到全局上下文中
     // Begins loading the CAD Kernel Web Worker
@@ -74,7 +85,7 @@ export class OccWebGLViewer extends React.Component<IProps, IState> {
 
       window.messageHandlers['startupCallback'] = () => {
         this.setState({ isWorkerReady: true });
-        this.triggerModelConvert(this.props);
+        this.triggerModelConvert(this.mixedProps);
       };
 
       window.cadWorker.onmessage = function (e) {
@@ -96,7 +107,7 @@ export class OccWebGLViewer extends React.Component<IProps, IState> {
   }
 
   componentWillReceiveProps(nextProps: IProps) {
-    if (nextProps.src !== this.props.src) {
+    if (nextProps.src !== this.mixedProps.src) {
       this.triggerModelConvert(nextProps);
     }
   }
@@ -116,7 +127,10 @@ export class OccWebGLViewer extends React.Component<IProps, IState> {
 
       const reader = new FileReader();
       reader.onerror = ((_: FileReader, ev: any) => {
-        console.error(ev);
+        console.error(
+          '>>>OccWebGLViewer>>>triggerModelConvert>>>reader>>>error:',
+          ev,
+        );
         if (this.props.onReadCadFileTextError) {
           this.props.onReadCadFileTextError();
         }
@@ -144,17 +158,17 @@ export class OccWebGLViewer extends React.Component<IProps, IState> {
 
   render() {
     const type = `${
-      this.props.type || getModelType(this.props.fileName, undefined)
+      this.mixedProps.type || getModelType(this.mixedProps.fileName, undefined)
     }`.toLowerCase() as D3ModelType;
 
     if (isSupportThreejsLoader(type)) {
-      return <WebGLViewer {...this.props} ref={this.viewerRef} />;
+      return <WebGLViewer {...this.mixedProps} ref={this.viewerRef} />;
     }
 
     if (this.state.mesh && this.state.isWorkerReady) {
       return (
         <WebGLViewer
-          {...this.props}
+          {...this.mixedProps}
           ref={this.viewerRef}
           mesh={this.state.mesh}
         />

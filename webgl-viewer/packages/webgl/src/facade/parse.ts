@@ -2,9 +2,17 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import { sleep } from '@m-fe/utils';
 
-import { D3ModelViewerProps, ModelAttr } from '../types';
-import { calcTopology, deflate, ObjectSnapshotGenerator } from '../utils';
-import { render } from '../viewers';
+import {
+  D3ModelViewerProps,
+  mergeD3ModelViewerProps,
+  ModelAttr,
+} from '../types';
+import {
+  calcTopology,
+  deflate,
+  dryRenderThreeModelFile,
+  ObjectSnapshotGenerator,
+} from '../utils';
 import { calcWallThicknessByViolence } from './thickness';
 
 /** 解析模型并且进行一系列计算 */
@@ -32,11 +40,25 @@ export async function parseD3Model(
 
   return new Promise(async (resolve, reject) => {
     try {
-      const { mesh, camera, renderer, modelFile, onDestroy } = await render({
-        ..._props,
-        withPlane: false,
-        modelColor: 'rgb(34, 98, 246)',
-      });
+      const {
+        mesh,
+        camera,
+        renderer,
+        modelFile,
+        onDestroy,
+      } = await dryRenderThreeModelFile(
+        mergeD3ModelViewerProps({
+          currentProps: _props,
+          originProps: mergeD3ModelViewerProps({
+            currentProps: {
+              renderOptions: {
+                withPlane: false,
+                modelColor: 'rgb(34, 98, 246)',
+              },
+            },
+          }),
+        }),
+      );
 
       /** 回调归结函数 */
       const onFinish = () => {

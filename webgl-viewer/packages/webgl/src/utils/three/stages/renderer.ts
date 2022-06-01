@@ -10,7 +10,7 @@ export function getThreeJsWebGLRenderer(
   _props: Partial<D3ModelViewerProps>,
   { height, width }: { height: number; width: number },
 ): THREE.WebGLRenderer {
-  const props = mergeD3ModelViewerProps(_props, defaultModelViewerProps);
+  const props = mergeD3ModelViewerProps({ currentProps: _props });
 
   const renderer = new THREE.WebGLRenderer({
     // 增加下面两个属性，可以抗锯齿

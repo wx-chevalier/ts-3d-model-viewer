@@ -20,7 +20,7 @@ importers:
       '@m-fe/utils': 0.6.5
       '@react-three/drei': ^7.12.3
       '@react-three/fiber': ^7.0.7
-      '@seregpie/three.text-sprite': ^2.0.0
+      '@seregpie/three.text-sprite': 3.2.0
       '@storybook/addon-actions': ^5.3.14
       '@storybook/addon-info': ^5.3.14
       '@storybook/addon-links': ^5.3.14
@@ -59,7 +59,7 @@ importers:
       '@m-fe/utils': 0.6.5
       '@react-three/drei': 7.12.3_bo6izk6p6ifu6rgct3bafbn4gy
       '@react-three/fiber': 7.0.7_three@0.132.2
-      '@seregpie/three.text-sprite': 2.0.0_three@0.132.2
+      '@seregpie/three.text-sprite': 3.2.0_three@0.132.2
       cropperjs: 1.5.12
       jszip: 3.7.1
       lodash: 4.17.21
@@ -4163,10 +4163,27 @@ packages:
       three: 0.132.2
     dev: false
 
+  /@seregpie/three.text-sprite/3.2.0_three@0.132.2:
+    resolution: {integrity: sha512-ozQq7JFKGCltCvT3DG5SC77WnSJfZhYpSabhp+I1iZ9tTMxiPJqyEscmcMC+Rdxy1eYCBmZKGKBBcMLLrd5GuA==}
+    peerDependencies:
+      three: '>=0.113'
+    dependencies:
+      '@seregpie/three.text-texture': 3.2.1_three@0.132.2
+      three: 0.132.2
+    dev: false
+
   /@seregpie/three.text-texture/2.0.1_three@0.132.2:
     resolution: {integrity: sha512-9uO/mP5PyGyl1LqrkObe9OOAwL/jp9rKjdphWf5gUH8LHDJuNy5GQCjr+nKqJG2lGID8gMNNnub1CSALl4BZHw==}
     peerDependencies:
       three: '>=0.86'
+    dependencies:
+      three: 0.132.2
+    dev: false
+
+  /@seregpie/three.text-texture/3.2.1_three@0.132.2:
+    resolution: {integrity: sha512-+rBfu63PolUyg6WB56SxYIIGGw7BMiFMeoj6AcxGooGs1apnudu024EMY/6dr1KnpIa9lNIwSgJETeaclgT/BQ==}
+    peerDependencies:
+      three: '>=0.113'
     dependencies:
       three: 0.132.2
     dev: false

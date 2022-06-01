@@ -61,26 +61,27 @@ export interface D3ModelViewerRenderOptions {
   backgroundColor?: string | number;
   shadowIntensity?: number;
 
-  // 是否展示 Mesh
+  /** 是否展示属性面板 */
+  isAttrPanelVisible?: boolean;
+  /** 是否展示 Mesh */
   withMesh?: boolean;
-  // 是否展示线框图
+  /** 是否展示线框图 */
   withWireframe?: boolean;
-  // 是否展示底平面
+  /** 是否展示底平面 */
   withPlane?: boolean;
-  // 是否展示标尺线
+  /** 是否展示标尺线 */
   withBoundingBox?: boolean;
-  // 是否展示球体
+  /** 是否展示球体 */
   withSphere?: boolean;
-  // 是否展示坐标系
-  withAxis?: boolean;
-  // 是否渲染
-  withMaterial?: boolean;
+  /** 是否包含渲染图 */
+  withMaterialedMesh?: boolean;
   // 是否剖切
   withClipping?: boolean;
   // 是否英文
   withLanguageSelector?: boolean;
   /** 是否显示三维 x-y-z 指示线 */
   withAxisHelper?: boolean;
+  /** 包含摄像头控制器 */
   withCameraControls?: boolean;
 
   autoplay?: boolean;
@@ -119,8 +120,8 @@ export const defaultModelViewerProps: Partial<D3ModelViewerProps> = {
     externalAttr: {},
   },
   layoutOptions: {
-    width: 300,
-    height: 200,
+    width: 600,
+    height: 400,
     withAttrIcon: true,
     withJoystick: true,
     withCaptureIcon: true,
@@ -136,7 +137,7 @@ export const defaultModelViewerProps: Partial<D3ModelViewerProps> = {
     withCameraControls: true,
     withPlane: true,
     withAxisHelper: true,
-    withMaterial: true,
+    withMaterialedMesh: true,
 
     autoplay: true,
     shadowIntensity: 0,
@@ -148,10 +149,13 @@ export const defaultModelViewerProps: Partial<D3ModelViewerProps> = {
 };
 
 /** 合并 Props */
-export const mergeD3ModelViewerProps = (
-  currentProps: Partial<D3ModelViewerProps>,
-  originProps: Partial<D3ModelViewerProps> = defaultModelViewerProps,
-) => {
+export const mergeD3ModelViewerProps = ({
+  currentProps,
+  originProps = defaultModelViewerProps,
+}: {
+  currentProps: Partial<D3ModelViewerProps>;
+  originProps?: Partial<D3ModelViewerProps>;
+}) => {
   const finalProps = {
     ...(originProps || {}),
     ...(currentProps || {}),
@@ -180,5 +184,5 @@ export const mergeD3ModelViewerProps = (
     );
   }
 
-  return finalProps;
+  return finalProps as D3ModelViewerProps;
 };

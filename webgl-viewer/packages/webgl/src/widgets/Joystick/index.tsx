@@ -2,8 +2,9 @@ import './index.css';
 
 import cn from 'classnames';
 import React from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
-import { ThreeRenderer } from '../../';
+import { ErrorFallback, Holdable, ThreeRenderer } from '../../';
 
 export interface JoystickProps {
   className?: string;
@@ -12,24 +13,20 @@ export interface JoystickProps {
   threeRenderer: ThreeRenderer;
 }
 
-export const Joystick = ({
-  className,
-  style,
-  threeRenderer,
-}: JoystickProps) => {
+export const Joystick = ({ threeRenderer }: JoystickProps) => {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <div className="rmv-sv-joystick">
         <div
           className="rmv-sv-joystick-center"
           onClick={() => {
-            this._resetCamera();
+            threeRenderer.resetCamera();
           }}
         />
         <Holdable
           finite={false}
           onPress={() => {
-            this.camera && this.camera.translateY(-topology.sizeY / 10);
+            threeRenderer.moveUp();
           }}
         >
           <div
@@ -42,7 +39,7 @@ export const Joystick = ({
         <Holdable
           finite={false}
           onPress={() => {
-            this.camera && this.camera.translateY(topology.sizeY / 10);
+            threeRenderer.moveDown();
           }}
         >
           <div
@@ -55,7 +52,7 @@ export const Joystick = ({
         <Holdable
           finite={false}
           onPress={() => {
-            this.camera && this.camera.translateX(-topology.sizeX / 10);
+            threeRenderer.moveLeft();
           }}
         >
           <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-left">
@@ -65,7 +62,7 @@ export const Joystick = ({
         <Holdable
           finite={false}
           onPress={() => {
-            this.camera && this.camera.translateX(topology.sizeX / 10);
+            threeRenderer.moveRight();
           }}
         >
           <div className="rmv-gmv-attr-joystick-arrow rmv-gmv-attr-joystick-arrow-right">
