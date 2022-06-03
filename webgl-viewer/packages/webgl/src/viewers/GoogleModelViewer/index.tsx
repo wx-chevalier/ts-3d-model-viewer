@@ -107,11 +107,7 @@ export class GoogleModelViewer extends React.Component<
   }
 
   onLoad = async () => {
-    const {
-      layoutOptions: { withAttrIcon },
-      onSnapshot,
-      onTopology,
-    } = this.mixedProps;
+    const { layoutOptions, onSnapshot, onTopology } = this.mixedProps;
 
     if (this.$ref) {
       // 返回快照
@@ -128,7 +124,7 @@ export class GoogleModelViewer extends React.Component<
     }
 
     // 计算基础信息
-    if ((onTopology || withAttrIcon) && this.state.mesh) {
+    if (onTopology && this.state.mesh) {
       const topology = await calcTopology(this.state.mesh);
 
       this.setState({ topology });
@@ -160,7 +156,7 @@ export class GoogleModelViewer extends React.Component<
 
   render() {
     const {
-      layoutOptions: { withAttrIcon, withJoystick, height, width },
+      layoutOptions: { height, width },
       renderOptions: {
         withCameraControls,
         autoplay,
@@ -207,7 +203,7 @@ export class GoogleModelViewer extends React.Component<
           max-field-of-view="180deg"
           {...attrs}
         />
-        {withAttrIcon && topology && (
+        {topology && (
           <div className="rmv-gmv-attr-modal">
             <div className="item">
               尺寸：{toFixedNumber(topology.sizeX)} *{' '}
@@ -230,7 +226,7 @@ export class GoogleModelViewer extends React.Component<
             ))}
           </div>
         )}
-        {withJoystick && (
+        {
           <>
             <Holdable
               finite={false}
@@ -289,7 +285,7 @@ export class GoogleModelViewer extends React.Component<
               </div>
             </Holdable>
           </>
-        )}
+        }
       </div>
     );
   }

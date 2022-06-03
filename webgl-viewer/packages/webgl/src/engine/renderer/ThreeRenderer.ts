@@ -681,7 +681,7 @@ export class ThreeRenderer {
   /** 加载完成事件 */
   onLoad = async () => {
     const {
-      layoutOptions: { withAttrIcon, autoCapture },
+      renderOptions: { autoCapture },
       onTopology,
       onLoad,
       onSnapshot,

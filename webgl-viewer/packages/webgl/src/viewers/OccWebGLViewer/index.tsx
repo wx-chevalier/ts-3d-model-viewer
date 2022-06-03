@@ -19,7 +19,7 @@ import { OccEdge, OccFace, ShapesCombiner } from './ShapesCombiner';
 
 interface IProps extends D3ModelViewerProps {
   onReadCadFileTextError?: () => void;
-  onRef?: (ref: React.RefObject<WebGLViewer>) => void;
+  onRef?: (ref: React.RefObject<typeof WebGLViewer>) => void;
 }
 
 interface IState {
@@ -40,7 +40,7 @@ declare global {
 export class OccWebGLViewer extends React.Component<IProps, IState> {
   static displayName = 'OccWebGLViewer';
 
-  viewerRef = React.createRef<WebGLViewer>();
+  viewerRef = React.createRef<typeof WebGLViewer>();
 
   state: IState = {};
 

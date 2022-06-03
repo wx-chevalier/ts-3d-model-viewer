@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-require-imports */
-import 'rc-tooltip/assets/bootstrap.css';
+
 import './index.css';
 
 import { ellipsis, genId, get, isLanIp } from '@m-fe/utils';
@@ -9,6 +9,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Loader from 'react-loader-spinner';
 
 import { ThreeRenderer } from '../../engine';
+import { ViewerStateStore, withViewerStateStore } from '../../stores';
 import {
   D3ModelViewerProps,
   D3ModelViewerState,
@@ -16,19 +17,22 @@ import {
   mergeD3ModelViewerProps,
 } from '../../types';
 import { ErrorFallback, i18nFormat, isSupportThreejsLoader } from '../../utils';
-import { Divider, Joystick, ViewerToolbar } from '../../widgets';
+import { Joystick, ViewerToolbar } from '../../widgets';
 
-interface IProps extends D3ModelViewerProps {}
-
-interface IState extends D3ModelViewerState {
-  threeRenderer?: ThreeRenderer;
+interface IProps extends D3ModelViewerProps {
+  viewerStateStore: ViewerStateStore;
 }
 
-export class ThreeViewer extends React.Component<IProps, IState> {
+interface IState {}
+
+export class ThreeViewerComp extends React.Component<IProps, IState> {
   static displayName = 'ThreeViewer';
 
-  get mixedProps(): D3ModelViewerProps {
-    return mergeD3ModelViewerProps({ currentProps: this.props });
+  get mixedProps(): IProps {
+    return {
+      ...mergeD3ModelViewerProps({ currentProps: this.props }),
+      viewerStateStore: this.props.viewerStateStore,
+    };
   }
 
   getDom = () => {
@@ -39,7 +43,7 @@ export class ThreeViewer extends React.Component<IProps, IState> {
   };
 
   get threeRenderer() {
-    return this.state.threeRenderer;
+    return this.props.viewerStateStore.threeRenderer;
   }
 
   id = genId();
@@ -64,8 +68,8 @@ export class ThreeViewer extends React.Component<IProps, IState> {
   }
 
   componentWillUnmount() {
-    if (this.state.threeRenderer) {
-      this.state.threeRenderer.destroy();
+    if (this.threeRenderer) {
+      this.threeRenderer.destroy();
     }
 
     if (this.getDom()) {
@@ -73,34 +77,39 @@ export class ThreeViewer extends React.Component<IProps, IState> {
     }
   }
 
-  componentDidCatch(error: Error) {
-    console.error('>>>ThreeViewer>>>error>>>', error);
-  }
-
   initRenderer(props = this.mixedProps) {
-    if (this.state.threeRenderer) {
-      this.state.threeRenderer.destroy();
+    if (this.threeRenderer) {
+      this.threeRenderer.destroy();
     }
 
     const threeRenderer = new ThreeRenderer(props, {
       getDom: this.getDom,
       getViewerState: () => this.state,
       onContextChange: (partialViewerState: Partial<D3ModelViewerState>) => {
-        this.setState({ ...partialViewerState });
+        if (typeof props.viewerStateStore.setPartialState === 'function') {
+          props.viewerStateStore.setPartialState({ ...partialViewerState });
+        } else {
+          console.log(
+            props.viewerStateStore,
+            props.viewerStateStore.setPartialState,
+            partialViewerState,
+          );
+        }
       },
     });
 
     threeRenderer.init();
 
-    this.setState({ threeRenderer });
+    props.viewerStateStore.setPartialState({ threeRenderer });
   }
 
   renderWebGL() {
     const {
       layoutOptions: { width, height },
       style,
+      viewerStateStore,
     } = this.mixedProps;
-    const { hasModelFileLoaded } = this.state;
+    const { hasModelFileLoaded } = viewerStateStore;
 
     return (
       <ErrorBoundary
@@ -150,14 +159,14 @@ export class ThreeViewer extends React.Component<IProps, IState> {
       fileName,
       src,
       customOptions: { unit },
+      viewerStateStore,
     } = this.mixedProps;
-    const { threeRenderer } = this.state;
+    const { threeRenderer, isAttrPanelVisible } = viewerStateStore;
 
     if (!threeRenderer) {
       return <Loader type="Puff" color="#00BFFF" height={100} width={100} />;
     }
 
-    const { isAttrPanelVisible } = this.state;
     const { topology } = threeRenderer.context;
 
     return isAttrPanelVisible && topology ? (
@@ -209,26 +218,12 @@ export class ThreeViewer extends React.Component<IProps, IState> {
     const {
       type,
       style,
-      layoutOptions: {
-        width,
-        height,
-        layoutType,
-        withJoystick,
-        withCaptureIcon,
-      },
+      layoutOptions: { width, height, widgets },
 
-      onSnapshot,
+      viewerStateStore,
     } = this.mixedProps;
 
-    const {
-      withMaterialedMesh,
-      withWireframe,
-      withBoundingBox,
-      withColorPicker,
-      withClipping,
-      withLanguageSelector,
-      threeRenderer,
-    } = this.state;
+    const { threeRenderer } = viewerStateStore;
 
     // 如果出现异常
     if (!isSupportThreejsLoader(type) && !this.mixedProps.mesh) {
@@ -268,8 +263,12 @@ export class ThreeViewer extends React.Component<IProps, IState> {
       >
         <ViewerToolbar threeRenderer={threeRenderer} />
         {this.renderWebGL()}
-        {withJoystick && <Joystick threeRenderer={this.state.threeRenderer} />}
+        {widgets.includes('joystick') && (
+          <Joystick threeRenderer={this.threeRenderer} />
+        )}
       </div>
     );
   }
 }
+
+export const ThreeViewer = withViewerStateStore(ThreeViewerComp);

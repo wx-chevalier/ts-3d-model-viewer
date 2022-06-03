@@ -1,6 +1,6 @@
 import * as U from '@m-fe/utils';
 
-import { getLocale, getModelCompressType, getModelType } from '../utils';
+import { getModelCompressType, getModelType } from '../utils';
 import { ModelAttr } from './ModelAttr';
 
 export type D3ModelSrc = File | string;
@@ -39,22 +39,21 @@ export interface D3ModelViewerCustomOptions {
   unit?: string;
 }
 
+export const D3ModelViewerWidgets = [
+  'languageSelector',
+  'attrPanel',
+  'captureImage',
+  'joystick',
+  'colorPicker',
+] as const;
+export type D3ModelViewerWidgetType = typeof D3ModelViewerWidgets[number];
+
 export interface D3ModelViewerLayoutOptions {
   layoutType?: D3ModelViewerLayoutType;
   width?: number | string;
   height?: number | string;
 
-  // 是否展示语言切换
-  withLanguageSelector?: boolean;
-  // 是否展示信息
-  withAttrIcon?: boolean;
-  /** 是否展示截图 */
-  withCaptureIcon?: boolean;
-  /** 是否自动截图 */
-  autoCapture?: boolean;
-  // 是否展示颜色拾取器
-  withColorPicker?: boolean;
-  withJoystick?: boolean;
+  widgets?: D3ModelViewerWidgetType[];
 }
 
 export interface D3ModelViewerRenderOptions {
@@ -63,8 +62,6 @@ export interface D3ModelViewerRenderOptions {
   backgroundColor?: string | number;
   shadowIntensity?: number;
 
-  /** 是否展示属性面板 */
-  isAttrPanelVisible?: boolean;
   /** 是否展示 Mesh */
   withMesh?: boolean;
   /** 是否展示线框图 */
@@ -77,10 +74,8 @@ export interface D3ModelViewerRenderOptions {
   withSphere?: boolean;
   /** 是否包含渲染图 */
   withMaterialedMesh?: boolean;
-  // 是否剖切
+  /** 是否剖切 */
   withClipping?: boolean;
-  // 是否英文
-  withLanguageSelector?: boolean;
   /** 是否显示三维 x-y-z 指示线 */
   withAxisHelper?: boolean;
   /** 包含摄像头控制器 */
@@ -88,6 +83,9 @@ export interface D3ModelViewerRenderOptions {
 
   autoplay?: boolean;
   autoRotate?: boolean;
+  /** 是否自动截图 */
+  autoCapture?: boolean;
+
   cameraX?: number;
   cameraY?: number;
   cameraZ?: number;
@@ -125,11 +123,8 @@ export const defaultModelViewerProps: Partial<D3ModelViewerProps> = {
   layoutOptions: {
     width: 600,
     height: 400,
-    withAttrIcon: true,
-    withJoystick: true,
-    withCaptureIcon: true,
     layoutType: window.innerWidth > 600 ? 'pc' : 'mobile',
-    withLanguageSelector: getLocale() === 'en',
+    widgets: (D3ModelViewerWidgets as unknown) as D3ModelViewerWidgetType[],
   },
   renderOptions: {
     theme: 'default',
@@ -145,6 +140,8 @@ export const defaultModelViewerProps: Partial<D3ModelViewerProps> = {
     autoplay: true,
     shadowIntensity: 0,
     autoRotate: false,
+    autoCapture: false,
+
     cameraX: 0,
     cameraY: 0,
     cameraZ: 0,

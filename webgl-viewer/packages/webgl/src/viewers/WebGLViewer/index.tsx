@@ -15,6 +15,7 @@ import {
   ObjectSnapshotGenerator,
   ThreeRenderer,
 } from '../../engine';
+import { ViewerStateStore, withViewerStateStore } from '../../stores';
 import {
   D3ModelViewerProps,
   D3ModelViewerState,
@@ -23,6 +24,7 @@ import {
 } from '../../types';
 import {
   ErrorFallback,
+  getLocale,
   i18nFormat,
   isSupportThreejsLoader,
   setLocale,
@@ -33,17 +35,20 @@ declare global {
   const __DEV__: boolean;
 }
 
-interface IProps extends D3ModelViewerProps {}
-
-interface IState extends D3ModelViewerState {
-  threeRenderer?: ThreeRenderer;
+interface IProps extends D3ModelViewerProps {
+  viewerStateStore: ViewerStateStore;
 }
 
-export class WebGLViewer extends React.Component<IProps, IState> {
+interface IState {}
+
+export class WebGLViewerComp extends React.Component<IProps, IState> {
   static displayName = 'WebGLViewer';
 
-  get mixedProps(): D3ModelViewerProps {
-    return mergeD3ModelViewerProps({ currentProps: this.props });
+  get mixedProps(): IProps {
+    return {
+      ...mergeD3ModelViewerProps({ currentProps: this.props }),
+      viewerStateStore: this.props.viewerStateStore,
+    };
   }
 
   getDom = () => {
@@ -54,7 +59,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   };
 
   get threeRenderer() {
-    return this.state.threeRenderer;
+    return this.props.viewerStateStore.threeRenderer;
   }
 
   id = genId();
@@ -79,8 +84,8 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   }
 
   componentWillUnmount() {
-    if (this.state.threeRenderer) {
-      this.state.threeRenderer.destroy();
+    if (this.threeRenderer) {
+      this.threeRenderer.destroy();
     }
 
     if (this.getDom()) {
@@ -93,29 +98,30 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   }
 
   initRenderer(props = this.mixedProps) {
-    if (this.state.threeRenderer) {
-      this.state.threeRenderer.destroy();
+    if (this.threeRenderer) {
+      this.threeRenderer.destroy();
     }
 
     const threeRenderer = new ThreeRenderer(props, {
       getDom: this.getDom,
-      getViewerState: () => this.state,
+      getViewerState: () => props.viewerStateStore,
       onContextChange: (partialViewerState: Partial<D3ModelViewerState>) => {
-        this.setState({ ...partialViewerState });
+        props.viewerStateStore.setPartialState({ ...partialViewerState });
       },
     });
 
     threeRenderer.init();
 
-    this.setState({ threeRenderer });
+    this.props.viewerStateStore.setPartialState({ threeRenderer });
   }
 
   renderWebGL() {
     const {
       layoutOptions: { width, height },
       style,
+      viewerStateStore,
     } = this.mixedProps;
-    const { hasModelFileLoaded } = this.state;
+    const { hasModelFileLoaded } = viewerStateStore;
 
     return (
       <ErrorBoundary
@@ -158,14 +164,15 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       fileName,
       src,
       customOptions: { unit },
+      viewerStateStore,
     } = this.mixedProps;
-    const { threeRenderer } = this.state;
+    const { threeRenderer } = viewerStateStore;
 
     if (!threeRenderer) {
       return <Loader type="Puff" color="#00BFFF" height={100} width={100} />;
     }
 
-    const { isAttrPanelVisible } = this.state;
+    const { isAttrPanelVisible } = viewerStateStore;
     const { topology } = threeRenderer.context;
 
     return isAttrPanelVisible && topology ? (
@@ -215,37 +222,37 @@ export class WebGLViewer extends React.Component<IProps, IState> {
 
   renderLoose() {
     const {
-      layoutOptions: { width, withJoystick },
+      layoutOptions: { width, widgets },
+      viewerStateStore,
     } = this.mixedProps;
 
     const {
+      modelColor,
+      isColorPickerVisible,
+
       withMaterialedMesh,
       withWireframe,
       withBoundingBox,
-      withColorPicker,
       withClipping,
-      withLanguageSelector,
-    } = this.state;
+    } = viewerStateStore;
 
     return (
       <div
         className="rmv-sv-container rmv-sv-loose-container"
         style={{ width }}
       >
-        {withColorPicker ? (
+        {isColorPickerVisible ? (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <div className="rmv-sv-color-picker">
               <SketchPicker
-                color={this.state.modelColor}
+                color={modelColor}
                 onChange={({ hex }) => {
-                  this.setState({ modelColor: hex }, () => {
-                    this.state.threeRenderer.changeMaterial(
-                      cookMeshMaterial(
-                        this.state.withClipping,
-                        this.state.modelColor,
-                      ),
-                    );
+                  this.props.viewerStateStore.setPartialState({
+                    modelColor: hex,
                   });
+                  this.threeRenderer.changeMaterial(
+                    cookMeshMaterial(withClipping, modelColor),
+                  );
                 }}
               />
             </div>
@@ -255,7 +262,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
         )}
         <div
           className="rmv-sv-toolbar"
-          style={{ width: withLanguageSelector ? 150 : 100 }}
+          style={{ width: widgets.includes('languageSelector') ? 150 : 100 }}
         >
           <div className="rmv-sv-toolbar-item">
             <label htmlFor={`withMaterialedMesh-${this.id}`}>
@@ -266,9 +273,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               checked={withMaterialedMesh}
               onChange={e => {
                 if (e.target.checked) {
-                  this.state.threeRenderer.setupMaterialedMesh();
+                  this.threeRenderer.setupMaterialedMesh();
                 } else {
-                  this.state.threeRenderer.removeMaterialedMesh();
+                  this.threeRenderer.removeMaterialedMesh();
                 }
               }}
             />
@@ -282,9 +289,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               checked={withWireframe}
               onChange={e => {
                 if (e.target.checked) {
-                  this.state.threeRenderer.setupWireframe();
+                  this.threeRenderer.setupWireframe();
                 } else {
-                  this.state.threeRenderer.removeWireFrame();
+                  this.threeRenderer.removeWireFrame();
                 }
               }}
             />
@@ -298,9 +305,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               checked={withBoundingBox}
               onChange={e => {
                 if (e.target.checked) {
-                  this.state.threeRenderer.setupBoundingBox();
+                  this.threeRenderer.setupBoundingBox();
                 } else {
-                  this.state.threeRenderer.removeBoundingBox();
+                  this.threeRenderer.removeBoundingBox();
                 }
               }}
             />
@@ -311,9 +318,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             </label>
             <Switch
               id={`withColorPicker-${this.id}`}
-              checked={withColorPicker}
+              checked={isColorPickerVisible}
               onChange={e => {
-                this.setState({ withColorPicker: e.target.checked });
+                this.props.viewerStateStore.setPartialState({
+                  isColorPickerVisible: e.target.checked,
+                });
               }}
             />
           </div>
@@ -325,14 +334,12 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               id={`withClipping-${this.id}`}
               checked={withClipping}
               onChange={e => {
-                this.setState({ withClipping: e.target.checked }, () => {
-                  this.state.threeRenderer.changeMaterial(
-                    cookMeshMaterial(
-                      this.state.withClipping,
-                      this.state.modelColor,
-                    ),
-                  );
+                this.props.viewerStateStore.setPartialState({
+                  withClipping: e.target.checked,
                 });
+                this.threeRenderer.changeMaterial(
+                  cookMeshMaterial(withClipping, modelColor),
+                );
               }}
             />
           </div>
@@ -340,15 +347,13 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             <label htmlFor={`withLanguageSelector-${this.id}`}>中/EN：</label>
             <Switch
               id={`withLanguageSelector-${this.id}`}
-              checked={withLanguageSelector}
+              checked={getLocale() === 'en'}
               onChange={e => {
                 if (e.target.checked) {
                   setLocale('en');
                 } else {
                   setLocale('zh');
                 }
-
-                this.setState({ withLanguageSelector: e.target.checked });
               }}
             />
           </div>
@@ -357,16 +362,16 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             <Switch
               id={`isFreshViewEnabled-${this.id}`}
               checked={get(
-                this.state.threeRenderer,
+                this.threeRenderer,
                 r => r.context.theme === 'fresh',
               )}
               onChange={() => {
-                this.state.threeRenderer.changeTheme('fresh');
+                this.threeRenderer.changeTheme('fresh');
               }}
             />
           </div>
-          {withJoystick && (
-            <Joystick threeRenderer={this.state.threeRenderer} />
+          {widgets.includes('joystick') && (
+            <Joystick threeRenderer={this.threeRenderer} />
           )}
         </div>
 
@@ -381,14 +386,8 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     const {
       type,
       style,
-      layoutOptions: {
-        width,
-        height,
-        layoutType,
-        withJoystick,
-        withCaptureIcon,
-      },
-
+      layoutOptions: { width, height, layoutType, widgets },
+      viewerStateStore,
       onSnapshot,
     } = this.mixedProps;
 
@@ -396,10 +395,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
       withMaterialedMesh,
       withWireframe,
       withBoundingBox,
-      withColorPicker,
       withClipping,
-      withLanguageSelector,
-    } = this.state;
+
+      modelColor,
+      isColorPickerVisible,
+    } = viewerStateStore;
 
     // 如果出现异常
     if (!isSupportThreejsLoader(type) && !this.mixedProps.mesh) {
@@ -442,22 +442,20 @@ export class WebGLViewer extends React.Component<IProps, IState> {
         className="rmv-sv-container rmv-sv-compact-container"
         style={{ width }}
       >
-        {withColorPicker && (
+        {isColorPickerVisible && (
           <div
             className="rmv-sv-color-picker"
             style={{ bottom: -8, background: 'none', top: 'unset' }}
           >
             <SketchPicker
-              color={this.state.modelColor}
+              color={modelColor}
               onChange={({ hex }) => {
-                this.setState({ modelColor: hex }, () => {
-                  this.state.threeRenderer.changeMaterial(
-                    cookMeshMaterial(
-                      this.state.withClipping,
-                      this.state.modelColor,
-                    ),
-                  );
+                this.props.viewerStateStore.setPartialState({
+                  modelColor: hex,
                 });
+                this.threeRenderer.changeMaterial(
+                  cookMeshMaterial(withClipping, modelColor),
+                );
               }}
             />
           </div>
@@ -471,9 +469,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                 checked={withMaterialedMesh}
                 onChange={e => {
                   if (e.target.checked) {
-                    this.state.threeRenderer.setupMaterialedMesh();
+                    this.threeRenderer.setupMaterialedMesh();
                   } else {
-                    this.state.threeRenderer.removeMaterialedMesh();
+                    this.threeRenderer.removeMaterialedMesh();
                   }
                 }}
               />
@@ -487,9 +485,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                 checked={withWireframe}
                 onChange={e => {
                   if (e.target.checked) {
-                    this.state.threeRenderer.setupWireframe();
+                    this.threeRenderer.setupWireframe();
                   } else {
-                    this.state.threeRenderer.removeWireFrame();
+                    this.threeRenderer.removeWireFrame();
                   }
                 }}
               />
@@ -503,9 +501,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                 checked={withBoundingBox}
                 onChange={e => {
                   if (e.target.checked) {
-                    this.state.threeRenderer.setupBoundingBox();
+                    this.threeRenderer.setupBoundingBox();
                   } else {
-                    this.state.threeRenderer.removeBoundingBox();
+                    this.threeRenderer.removeBoundingBox();
                   }
                 }}
               />
@@ -516,9 +514,11 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             <div className="rmv-sv-toolbar-item">
               <Switch
                 id={`withColorPicker-${this.id}`}
-                checked={withColorPicker}
+                checked={isColorPickerVisible}
                 onChange={e => {
-                  this.setState({ withColorPicker: e.target.checked });
+                  this.props.viewerStateStore.setPartialState({
+                    isColorPickerVisible: e.target.checked,
+                  });
                 }}
               />
               <label htmlFor={`withColorPicker-${this.id}`}>
@@ -530,14 +530,13 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                 id={`withClipping-${this.id}`}
                 checked={withClipping}
                 onChange={e => {
-                  this.setState({ withClipping: e.target.checked }, () => {
-                    this.state.threeRenderer.changeMaterial(
-                      cookMeshMaterial(
-                        this.state.withClipping,
-                        this.state.modelColor,
-                      ),
-                    );
+                  this.props.viewerStateStore.setPartialState({
+                    withClipping: e.target.checked,
                   });
+
+                  this.threeRenderer.changeMaterial(
+                    cookMeshMaterial(withClipping, modelColor),
+                  );
                 }}
               />
               <label htmlFor={`withClipping-${this.id}`}>
@@ -547,15 +546,13 @@ export class WebGLViewer extends React.Component<IProps, IState> {
             <div className="rmv-sv-toolbar-item">
               <Switch
                 id={`withLanguageSelector-${this.id}`}
-                checked={withLanguageSelector}
+                checked={getLocale() === 'en'}
                 onChange={e => {
                   if (e.target.checked) {
                     setLocale('en');
                   } else {
                     setLocale('zh');
                   }
-
-                  this.setState({ withLanguageSelector: e.target.checked });
                 }}
               />
               <label htmlFor={`withLanguageSelector-${this.id}`}>中/EN</label>
@@ -565,18 +562,18 @@ export class WebGLViewer extends React.Component<IProps, IState> {
               <Switch
                 id={`isFreshViewEnabled-${this.id}`}
                 checked={get(
-                  this.state.threeRenderer,
+                  this.threeRenderer,
                   r => r.context.theme === 'fresh',
                 )}
                 onChange={() => {
-                  this.state.threeRenderer.changeTheme('fresh');
+                  this.threeRenderer.changeTheme('fresh');
                 }}
               />
             </div>
           </div>
           <div className="rmv-sv-toolbar-right">
             {/** 是否显示截图 */}
-            {onSnapshot && withCaptureIcon && (
+            {onSnapshot && widgets.includes('captureImage') && (
               <Tooltip placement="left" overlay={i18nFormat('点击生成截图')}>
                 <svg
                   viewBox="0 0 1024 1024"
@@ -587,7 +584,7 @@ export class WebGLViewer extends React.Component<IProps, IState> {
                   height="20px"
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
-                    const context = this.state.threeRenderer.context;
+                    const context = this.threeRenderer.context;
                     try {
                       new ObjectSnapshotGenerator(
                         context.model,
@@ -618,7 +615,9 @@ export class WebGLViewer extends React.Component<IProps, IState> {
           </div>
         </div>
 
-        {withJoystick && <Joystick threeRenderer={this.state.threeRenderer} />}
+        {widgets.includes('joystick') && (
+          <Joystick threeRenderer={this.threeRenderer} />
+        )}
 
         {this.renderAttr()}
 
@@ -627,3 +626,5 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     );
   }
 }
+
+export const WebGLViewer = withViewerStateStore(WebGLViewerComp);

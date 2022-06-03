@@ -9,7 +9,14 @@ export interface D3ModelViewerState
   extends Partial<D3ModelViewerCustomOptions>,
     Partial<D3ModelViewerLayoutOptions>,
     Partial<D3ModelViewerRenderOptions> {
+  /** 模型文件是否加载完毕 */
   hasModelFileLoaded?: boolean;
+
+  /** 是否展示属性面板 */
+  isAttrPanelVisible?: boolean;
+
+  /** 颜色选择器 */
+  isColorPickerVisible?: boolean;
 }
 
 export const getInitialStateFromProps = (
