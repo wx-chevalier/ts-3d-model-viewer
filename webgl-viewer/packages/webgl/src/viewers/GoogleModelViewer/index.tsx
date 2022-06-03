@@ -6,7 +6,7 @@ import * as React from 'react';
 import Loader from 'react-loader-spinner';
 import * as THREE from 'three';
 
-import { calcTopology } from '../../three';
+import { calcTopology } from '../../engine';
 import {
   D3ModelCompressType,
   D3ModelSrc,

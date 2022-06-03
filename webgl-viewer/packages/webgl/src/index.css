@@ -22,3 +22,22 @@
     pointer-events: none;
     background-color: #FFF0 !important;
 }
+
+.rmv-drawer-panel {
+  position: absolute;
+  width: 300px;
+  height: calc(100% - 40px);
+  background: white;
+  right: 1px;
+  top: 39px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+}
+
+.rmv-drawer-panel-header{
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px;
+}

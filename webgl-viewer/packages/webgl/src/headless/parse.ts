@@ -6,7 +6,7 @@ import {
   calcTopology,
   dryRenderThreeModelFile,
   ObjectSnapshotGenerator,
-} from '../three';
+} from '../engine';
 import {
   D3ModelViewerProps,
   mergeD3ModelViewerProps,

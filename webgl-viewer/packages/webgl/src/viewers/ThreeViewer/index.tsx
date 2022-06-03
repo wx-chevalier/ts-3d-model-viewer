@@ -3,13 +3,12 @@
 import 'rc-tooltip/assets/bootstrap.css';
 import './index.css';
 
-import { CloseOutlined } from '@ant-design/icons';
 import { ellipsis, genId, get, isLanIp } from '@m-fe/utils';
 import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import Loader from 'react-loader-spinner';
 
-import { ThreeRenderer } from '../../three';
+import { ThreeRenderer } from '../../engine';
 import {
   D3ModelViewerProps,
   D3ModelViewerState,
@@ -17,7 +16,7 @@ import {
   mergeD3ModelViewerProps,
 } from '../../types';
 import { ErrorFallback, i18nFormat, isSupportThreejsLoader } from '../../utils';
-import { Joystick, ViewerToolbar } from '../../widgets';
+import { Divider, Joystick, ViewerToolbar } from '../../widgets';
 
 interface IProps extends D3ModelViewerProps {}
 
@@ -68,6 +67,10 @@ export class ThreeViewer extends React.Component<IProps, IState> {
     if (this.state.threeRenderer) {
       this.state.threeRenderer.destroy();
     }
+
+    if (this.getDom()) {
+      this.getDom().remove();
+    }
   }
 
   componentDidCatch(error: Error) {
@@ -102,7 +105,7 @@ export class ThreeViewer extends React.Component<IProps, IState> {
     return (
       <ErrorBoundary
         FallbackComponent={props => (
-          <div style={{ height: 150 }}>
+          <div style={{ width }}>
             <ErrorFallback {...props} />
           </div>
         )}
@@ -111,7 +114,14 @@ export class ThreeViewer extends React.Component<IProps, IState> {
           id="webgl-container"
           className="rmv-sv-webgl"
           ref={this.$ref}
-          style={{ width, height, ...style }}
+          style={{
+            width,
+            height:
+              typeof height === 'number'
+                ? height - 40
+                : `calc(${height || '100%'} - 40px)`,
+            ...style,
+          }}
         >
           {!hasModelFileLoaded ? (
             <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -210,8 +220,6 @@ export class ThreeViewer extends React.Component<IProps, IState> {
       onSnapshot,
     } = this.mixedProps;
 
-    console.log(withJoystick);
-
     const {
       withMaterialedMesh,
       withWireframe,
@@ -219,6 +227,7 @@ export class ThreeViewer extends React.Component<IProps, IState> {
       withColorPicker,
       withClipping,
       withLanguageSelector,
+      threeRenderer,
     } = this.state;
 
     // 如果出现异常
@@ -253,16 +262,13 @@ export class ThreeViewer extends React.Component<IProps, IState> {
 
     // 非宽松方式，即上下布局
     return (
-      <div className="rmv-three-viewer-container" style={{ width }}>
-        <ViewerToolbar />
+      <div
+        className="rmv-three-viewer-container"
+        style={{ width, height: height }}
+      >
+        <ViewerToolbar threeRenderer={threeRenderer} />
         {this.renderWebGL()}
         {withJoystick && <Joystick threeRenderer={this.state.threeRenderer} />}
-        {/* <div className="three-viewer-drawer-panel">
-          <div className="three-viewer-drawer-panel-header">
-            <span>1</span>
-            <CloseOutlined />
-          </div>
-        </div> */}
       </div>
     );
   }

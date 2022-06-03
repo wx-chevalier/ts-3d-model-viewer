@@ -12,8 +12,8 @@ import {
   getFileObjFromModelSrc,
   getModelCompressType,
   getModelType,
-} from '../../utils/io/importer/file-loader';
-import { isSupportThreejsLoader } from '../../utils/io/importer/mesh-loader';
+} from '../../utils/io/loader/file-loader';
+import { isSupportThreejsLoader } from '../../utils/io/loader/mesh-loader';
 import { WebGLViewer } from '../WebGLViewer';
 import { OccEdge, OccFace, ShapesCombiner } from './ShapesCombiner';
 

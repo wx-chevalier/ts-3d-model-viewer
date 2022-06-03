@@ -59,7 +59,17 @@ export class ThreeRenderer {
     this.onContextChange = onContextChange;
   }
 
-  async init() {
+  // 这里允许重新加载新的 props
+  async init(props: Partial<D3ModelViewerProps> = {}) {
+    if (this.context) {
+      this.destroy();
+    }
+
+    this.viewerProps = mergeD3ModelViewerProps({
+      currentProps: props,
+      originProps: this.viewerProps,
+    });
+
     this.context = new ThreeRendererContext(this.viewerProps);
 
     this.onContextChange({ hasModelFileLoaded: false });
@@ -100,7 +110,9 @@ export class ThreeRenderer {
       context.renderer.forceContextLoss();
 
       if (this.getDom()) {
-        this.getDom().remove();
+        // 移除原有的节点
+        this.getDom().removeChild(context.renderer.domElement);
+        this.getDom().removeChild(context.controlsGizmo.domElement);
       }
     } catch (_) {
       console.error(_);
@@ -590,13 +602,16 @@ export class ThreeRenderer {
       this.context.orbitControls.addEventListener('change', this.renderScene);
 
       // Add the Obit Controls Gizmo
-      const controlsGizmo = new OrbitControlsGizmo(this.context.orbitControls, {
-        size: 100,
-        padding: 8,
-      });
+      this.context.controlsGizmo = new OrbitControlsGizmo(
+        this.context.orbitControls,
+        {
+          size: 100,
+          padding: 4,
+        },
+      );
 
       // Add the Gizmo domElement to the dom
-      this.$dom.appendChild(controlsGizmo.domElement);
+      this.$dom.appendChild(this.context.controlsGizmo.domElement);
     }
   }
 

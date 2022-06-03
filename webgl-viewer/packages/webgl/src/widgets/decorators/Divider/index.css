@@ -1,0 +1,16 @@
+.rmv-divider {
+  display: flex;
+  clear: both;
+  width: 100%;
+  min-width: 100%;
+  margin: 8px 0;
+  box-sizing: border-box;
+  padding: 0;
+  color: #000000d9;
+  font-size: 14px;
+  font-variant: tabular-nums;
+  line-height: 1.5715;
+  list-style: none;
+  font-feature-settings: "tnum";
+  border-top: 1px solid rgba(0, 0, 0, .06);
+}

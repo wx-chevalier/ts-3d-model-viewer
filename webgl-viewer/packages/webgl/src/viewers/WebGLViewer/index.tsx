@@ -14,7 +14,7 @@ import {
   cookMeshMaterial,
   ObjectSnapshotGenerator,
   ThreeRenderer,
-} from '../../three';
+} from '../../engine';
 import {
   D3ModelViewerProps,
   D3ModelViewerState,
@@ -81,6 +81,10 @@ export class WebGLViewer extends React.Component<IProps, IState> {
   componentWillUnmount() {
     if (this.state.threeRenderer) {
       this.state.threeRenderer.destroy();
+    }
+
+    if (this.getDom()) {
+      this.getDom().remove();
     }
   }
 

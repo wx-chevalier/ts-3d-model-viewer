@@ -1,4 +1,4 @@
-import { arrayBufferToFile, blobToFile, newUri } from '@m-fe/utils';
+import { arrayBufferToFile, blobToFile } from '@m-fe/utils';
 
 import {
   D3ModelCompressType,
@@ -7,7 +7,6 @@ import {
   D3ModelTypes,
   D3ModelViewerProps,
 } from '../../../types';
-import { D3ModelViewerState } from '../../../types';
 import { inflate, unzip } from '../compressor';
 
 /** 根据模型名称推导出可能的类型 */
@@ -16,7 +15,7 @@ export function getModelType(fileName: string, model: D3ModelSrc): D3ModelType {
     (model instanceof File ? model.name : model) || fileName || '';
 
   for (const d3ModelType of D3ModelTypes) {
-    // 统一设置为小写
+    // 统一设置为小写，这里不使用 endsWith 是因为结尾可能为 zlib
     if (`${name}`.toLocaleLowerCase().indexOf('.' + d3ModelType) > -1) {
       return d3ModelType;
     }
@@ -47,12 +46,8 @@ export function getModelCompressType(
 /** 将模型统一转化为文件对象 */
 export async function getFileObjFromModelSrc(
   props: Partial<D3ModelViewerProps>,
-  state?: Partial<D3ModelViewerState>,
 ): Promise<File> {
-  const fileName: string =
-    props.fileName || typeof props.src === 'string'
-      ? newUri(props.src as string)
-      : '';
+  const fileName: string = props.fileName;
 
   // 判断是否为 ZIP 文件
   if (props.compressType !== 'none') {

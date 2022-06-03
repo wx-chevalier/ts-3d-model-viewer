@@ -1,10 +1,11 @@
 import './index.css';
 
-import cn from 'classnames';
 import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import { ErrorFallback, Holdable, ThreeRenderer } from '../../';
+import { ThreeRenderer } from '../../engine';
+import { ErrorFallback } from '../../utils';
+import { Holdable } from '../decorators/Holdable';
 
 export interface JoystickProps {
   className?: string;
