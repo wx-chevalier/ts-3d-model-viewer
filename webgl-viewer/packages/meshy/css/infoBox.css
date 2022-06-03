@@ -1,0 +1,72 @@
+#infoBox {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 255px;
+  margin-left: 15px;
+  background-color: #000;
+  overflow-y: auto;
+  max-height: calc(100% - 120px);
+
+  color: #eee;
+  font: 11px Lucida Grande, sans-serif;
+  text-shadow: 0 -1px 0 #111;
+}
+
+#infoBox::-webkit-scrollbar {
+  width: 5px;
+  background: #1a1a1a;
+}
+
+#infoBox::-webkit-scrollbar-corner {
+  height: 0;
+  display: none;
+}
+
+#infoBox::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: #676767;
+}
+
+.listContainer {
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  margin: 2px 0;
+  padding: 0 6px;
+}
+
+.listTitle {
+  padding: 8px 0;
+  border-bottom: solid 1px #222;
+  font-weight: bold;
+}
+
+.listUL {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.listLI {
+  width: 100%;
+  min-height: 21px;
+  overflow: hidden;
+  padding-top: 5px;
+}
+
+.listLITitle {
+  width: 40%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.listLIValue {
+  width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}

@@ -1,0 +1,28 @@
+.rmv-three-viewer-container {
+  position: relative;
+}
+
+.rmv-three-viewer-container .rmv-sv-joystick {
+  position: absolute;
+  width: 100px;
+  bottom: 5%;
+  right: 5%;
+}
+
+.three-viewer-drawer-panel {
+  position: absolute;
+  width: 300px;
+  height: calc(100% - 40px);
+  background: white;
+  right: 1px;
+  top: 39px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.three-viewer-drawer-panel-header{
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px;
+}

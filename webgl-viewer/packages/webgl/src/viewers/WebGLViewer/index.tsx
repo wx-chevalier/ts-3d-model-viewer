@@ -52,6 +52,10 @@ export class WebGLViewer extends React.Component<IProps, IState> {
     );
   };
 
+  get threeRenderer() {
+    return this.state.threeRenderer;
+  }
+
   id = genId();
 
   state: IState = {

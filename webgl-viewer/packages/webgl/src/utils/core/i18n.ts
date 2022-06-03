@@ -32,7 +32,6 @@ export function setLocale(_i: string) {
 
 export function getLocale() {
   if (!locale) {
-    // en/en, zh/zh
     return (
       get(null, () => localStorage.getItem('3d_model_viewer_lang')) ||
       getDefaultLocale()
@@ -42,6 +41,7 @@ export function getLocale() {
 }
 
 const zhMessages = {};
+
 const enMessages = {
   着色: 'Color',
   线框: 'Wireframe',
@@ -61,22 +61,10 @@ const enMessages = {
   简约: 'Simplicity',
 };
 
-// 这里的 id 就是中文键名
 export function i18nFormat(id: string) {
   if (getLocale() === 'zh') {
     return zhMessages[id] || id;
   }
 
   return enMessages[id] || id;
-}
-
-/** Mock i18n 相关操作，详情参考 */
-export function formatMessage({
-  id,
-  defaultMessage,
-}: {
-  id: string;
-  defaultMessage?: string;
-}) {
-  return defaultMessage || id;
 }

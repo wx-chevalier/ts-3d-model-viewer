@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Meshy</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/infoBox.css">
+    <link href="https://fonts.googleapis.com/css?family=Crete+Round|Oxygen" rel="stylesheet">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  </head>
+
+  <body>
+    <div id="titlebox">
+      <span>meshy</span>
+      <div id="titleChevron" class="down"></div>
+    </div>
+    <div id="intro" class="inactive">
+      <p>
+        This is Meshy.
+      </p>
+
+      <h3>
+        Motivation:
+      </h3>
+
+      <p>
+        On more than one occasion, I've found myself in need of a simple (and free and accessible) tool for performing measurements, calculations, simple transformations, and other post-processing on digital meshes; the standard use case is 3D printing, e.g., jewelry. Existing tools are predominantly desktop-based, hence this project.
+      </p>
+
+      <h3>
+        How-to:
+      </h3>
+
+      <p>
+        <a href="https://github.com/0x00019913/meshy" target="_blank">A full user guide to Meshy in the repo.</a>
+      </p>
+
+      <h3>
+        Testing:
+      </h3>
+
+      <p>
+        <a href="https://github.com/0x00019913/meshy/tree/gh-pages/meshes" target="_blank">Some of my testing meshes.</a>
+      </p>
+
+      <h3>
+        Dependencies:
+      </h3>
+
+      <ul>
+
+        <li>
+          <a href="https://threejs.org/">three.js</a>
+        </li>
+
+        <li>
+          a slightly enhanced version of <a href="https://github.com/dataarts/dat.gui">dat.gui</a> (added functions for adding title text to controllers and folders, added a function to set display precision, and set the CSS to cut off overflowing text with an ellipsis)
+        </li>
+
+        <li>
+          Adam Hooper's <a href="https://github.com/adamhooper/js-priority-queue">js-priority-queue</a>
+        </li>
+
+        <li>
+          Vadim Graboys's <a href="https://github.com/vadimg/js_bintrees">js-bintrees</a>, specifically red-black trees
+        </li>
+
+      </ul>
+
+      <p>
+        dat.gui is distributed under Apache 2.0. The others are distributed under the MIT license. Meshy and all of its modules written by me are available under the MIT license.
+      </p>
+
+      <h3>
+        Bugs:
+      </h3>
+
+      <p>
+        Probably. :( See the console (F12 key in Chrome and Firefox) for specifics of an error. Please email any relevant information to 0x00019913@gmail.com or drop an issue <a href="https://github.com/0x00019913/meshy" target="_blank">in the repo</a> if interested in further development. Thanks much in advance. :D
+      </p>
+
+      <p>
+        Thanks for using!
+      </p>
+
+      <p>
+        <3, 0x00019913
+      </p>
+    </div>
+
+    <div id="container"></div>
+
+    <script src="js/Detector.js"></script>
+    <script type="text/javascript" src='js/dat.gui.min.js'></script>
+    <script src="js/three.min.js"></script>
+    <script src="js/gizmo.js"></script>
+    <script src="js/OBJLoader.js"></script>
+    <script src="js/STLLoader.js"></script>
+    <script src="js/QuickHull.js"></script>
+    <script src="js/fileLoader.js"></script>
+    <script src="js/pipeGeometry.js"></script>
+    <script src="js/chevronGeometry.js"></script>
+    <script src="js/priority-queue.min.js"></script>
+    <script src="js/rbtree.min.js"></script>
+    <script src="js/gpu.js"></script>
+    <script src="js/debug.js"></script>
+    <script src="js/units.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/calculate.js"></script>
+    <script src="js/exporter.js"></script>
+
+    <script src="js/mcg/mcg.js"></script>
+    <script src="js/mcg/context.js"></script>
+    <script src="js/mcg/vector.js"></script>
+    <script src="js/mcg/math.js"></script>
+    <script src="js/mcg/segment.js"></script>
+    <script src="js/mcg/polygon.js"></script>
+    <script src="js/mcg/adjacencyMap.js"></script>
+    <script src="js/mcg/geometrySet.js"></script>
+    <script src="js/mcg/segmentSet.js"></script>
+    <script src="js/mcg/polygonSet.js"></script>
+    <script src="js/mcg/infill.js"></script>
+    <script src="js/mcg/sweepEvent.js"></script>
+    <script src="js/mcg/sweepOperations.js"></script>
+    <script src="js/mcg/sweep.js"></script>
+    <script src="js/mcg/boolean.js"></script>
+
+    <script src="js/printout.js"></script>
+    <script src="js/HDS.js"></script>
+    <script src="js/octree.js"></script>
+    <script src="js/gcodeExporter.js"></script>
+    <script src="js/slicer.js"></script>
+    <script src="js/supportGenerator.js"></script>
+    <script src="js/repair.js"></script>
+    <script src="js/model.js"></script>
+    <script src="js/controls.js"></script>
+    <script src="js/infoBox.js"></script>
+    <script src="js/axisWidget.js"></script>
+    <script src="js/transform.js"></script>
+    <script src="js/markers.js"></script>
+    <script src="js/pointer.js"></script>
+    <script src="js/measurement.js"></script>
+    <script src="js/meshy.js"></script>
+    <script src="js/main.js"></script>
+
+  </body>
+</html>

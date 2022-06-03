@@ -1,0 +1,202 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+
+    plasticity-pane-axis,
+    plasticity-pane {
+        @apply flex-1 min-w-0;
+    }
+
+    plasticity-pane-axis.horizontal {
+        @apply flex w-full h-full;
+    }
+
+    plasticity-pane-axis.vertical {
+        @apply flex flex-col h-full;
+    }
+
+    plasticity-pane {
+        @apply relative overflow-y-auto bg-transparent rounded-lg min-h-20;
+    }
+
+    plasticity-pane-axis.horizontal plasticity-pane-resize-handle {
+        @apply w-2 h-full cursor-col-resize;
+    }
+
+    plasticity-pane-axis.vertical plasticity-pane-resize-handle {
+        @apply w-full h-2 cursor-row-resize;
+    }
+
+    plasticity-viewport {
+        @apply overflow-clip bg-viewport;
+    }
+
+    plasticity-viewport,
+    plasticity-outliner,
+    plasticity-undo-history {
+        @apply block w-full h-full;
+    }
+
+    .axis-helper {
+        @apply pointer-events-none text-xs absolute z-50 max-w-xs px-2 py-1 text-center border-[0.5px] rounded text-neutral-50 bg-neutral-500 border-neutral-400 shadow-black/20 shadow-md;
+    }
+
+    .tooltip {
+        all: unset;
+        @apply absolute z-50 text-xs opacity-0;
+    }
+
+    .tooltip.in {
+        @apply opacity-95;
+    }
+
+    .tooltip .tooltip-inner {
+        @apply max-w-xs px-2 py-1 text-center border-[0.5px] rounded text-neutral-50 bg-neutral-500 border-neutral-400 shadow-black/20 shadow-md;
+    }
+
+    .tooltip.top {
+        @apply py-2 -mr-0.5;
+    }
+
+    .tooltip.right {
+        @apply px-2 ml-0.5;
+    }
+
+    .tooltip.bottom {
+        @apply py-2 mt-0.5;
+    }
+
+    .tooltip.left {
+        @apply px-2 -ml-0.5;
+    }
+
+    .select-box.contains {
+        @apply border border-accent-600 bg-accent-500 opacity-20;
+    }
+
+    .select-box.intersects {
+        @apply border border-dashed border-supporting-600 bg-supporting-400 opacity-30;
+    }
+
+    plasticity-button-group {
+        @apply relative;
+    }
+
+    plasticity-button-group::before {
+        content: "";
+        @apply absolute bottom-0 left-0 w-full h-1 rotate-45 -translate-x-4 bg-neutral-500;
+    }
+
+    plasticity-dialog>div {
+        @apply box-content border-2 border-transparent;
+    }
+
+    plasticity-dialog.failure>div {
+        @apply border-2 border-red-700 border-dashed;
+    }
+
+    plasticity-dialog plasticity-icon.alert {
+        @apply hidden;
+    }
+
+    plasticity-dialog.failure plasticity-icon.alert {
+        @apply block;
+    }
+
+    plasticity-dialog ol {
+        @apply flex flex-col py-2 m-3 my-1 space-y-1.5 text-xs border-b border-neutral-900;
+    }
+
+    plasticity-dialog ul,
+    .plasticity-menu ul {
+        @apply flex flex-col mx-3 my-2 space-y-1;
+    }
+
+    plasticity-dialog ul>li,
+    .plasticity-menu ul>li {
+        @apply flex items-center p-1 space-x-1;
+    }
+
+    plasticity-dialog ul>li>label,
+    .plasticity-menu ul>li>label {
+        @apply block w-1/4 px-1 text-xs text-neutral-200;
+    }
+
+    plasticity-dialog ul>li>label+.fields,
+    .plasticity-menu ul>li>label+.fields {
+        @apply flex w-3/4 space-x-2;
+    }
+
+    plasticity-dialog ul>li>.fields>*,
+    .plasticity-menu ul>li>.fields>* {
+        @apply grow;
+    }
+
+    plasticity-dialog ul>li>.fields>plasticity-number-scrubber,
+    .plasticity-menu ul>li>.fields>plasticity-number-scrubber {
+        @apply flex items-center space-x-1 cursor-pointer min-w-[5em];
+    }
+
+    plasticity-dialog ul>li>.fields>input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 0;
+    }
+
+    plasticity-dialog ul>li>.fields>input[type="radio"],
+    plasticity-dialog ul>li>.fields>input[type="checkbox"],
+    .plasticity-menu ul>li>.fields>input[type="radio"],
+    .plasticity-menu ul>li>.fields>input[type="checkbox"] {
+        @apply absolute hidden;
+    }
+
+    plasticity-dialog ul>li>.fields>input[type="radio"]+label,
+    plasticity-dialog ul>li>.fields>input[type="checkbox"]+label,
+    .plasticity-menu ul>li>.fields>input[type="radio"]+label,
+    .plasticity-menu ul>li>.fields>input[type="checkbox"]+label {
+        @apply block w-full px-3 py-1 text-xs text-center rounded cursor-pointer bg-neutral-500 text-neutral-100;
+    }
+
+    plasticity-dialog ul>li>.fields>input[type="radio"]:checked+label,
+    plasticity-dialog ul>li>.fields>input[type="checkbox"]:checked+label,
+    .plasticity-menu ul>li>.fields>input[type="radio"]:checked+label,
+    .plasticity-menu ul>li>.fields>input[type="checkbox"]:checked+label {
+        @apply bg-accent-600 text-accent-100;
+    }
+
+    plasticity-dialog plasticity-prompt.executing {
+        @apply bg-neutral-800;
+    }
+
+    plasticity-dialog plasticity-prompt.finished {
+        @apply bg-neutral-800;
+    }
+
+    .plasticity-menu {
+        @apply absolute z-50 p-10 -mt-4 bg-transparent;
+    }
+}
+
+.drag {
+    -webkit-app-region: drag;
+}
+
+.no-drag {
+    -webkit-app-region: no-drag;
+}
+
+* {
+    outline: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    user-select: none;
+}
+
+plasticity-command > div.active {
+    @apply bg-accent-500 !important 
+}

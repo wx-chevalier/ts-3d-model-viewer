@@ -1,0 +1,49 @@
+.rmv-viewer-toolbar {
+  position: inherit;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgb(38, 45, 64);
+}
+
+.rmv-viewer-toolbar-dropdown .rc-menu>li {
+  line-height: 30px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.rmv-viewer-toolbar-item {
+  position: inherit;
+  margin: 0 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.rmv-viewer-toolbar-item-icon {
+  position: inherit;
+  color: white;
+}
+
+.rmv-viewer-toolbar-item-label {
+  font-size: 14px;
+  margin-left: 4px;
+  color: white;
+}
+
+.rmv-viewer-toolbar-left {
+  display: flex;
+}
+
+.rmv-viewer-toolbar-middle {
+  display: flex;
+}
+
+.rmv-viewer-toolbar-right {
+  display: flex;
+}
+

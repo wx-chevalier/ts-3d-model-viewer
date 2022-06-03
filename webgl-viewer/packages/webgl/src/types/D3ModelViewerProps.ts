@@ -1,3 +1,5 @@
+import * as U from '@m-fe/utils';
+
 import { getLocale, getModelCompressType, getModelType } from '../utils';
 import { ModelAttr } from './ModelAttr';
 
@@ -100,11 +102,12 @@ export interface D3ModelViewerProps {
   type: D3ModelType;
   compressType: D3ModelCompressType;
 
+  className?: string;
   style?: Record<string, string | number>;
 
-  customOptions: D3ModelViewerCustomOptions;
-  layoutOptions: D3ModelViewerLayoutOptions;
-  renderOptions: D3ModelViewerRenderOptions;
+  customOptions?: D3ModelViewerCustomOptions;
+  layoutOptions?: D3ModelViewerLayoutOptions;
+  renderOptions?: D3ModelViewerRenderOptions;
 
   onTopology?: (modelAttr: ModelAttr) => void;
   onSnapshot?: (blobOrDataUrl: Blob | string) => void;
@@ -173,8 +176,17 @@ export const mergeD3ModelViewerProps = ({
     },
   };
 
+  if (!finalProps.fileName && typeof finalProps.src === 'string') {
+    finalProps.fileName = U.getFileNameFromUrl(finalProps.src);
+  }
+
   if (!finalProps.type) {
     finalProps.type = getModelType(finalProps.fileName, finalProps.src);
+  }
+
+  // 判断结尾是否有 zlib，如果有，则先设置为 zlib
+  if ((finalProps.fileName || '').endsWith('zlib')) {
+    finalProps.compressType = 'zlib';
   }
 
   if (!finalProps.compressType) {

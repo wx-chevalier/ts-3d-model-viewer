@@ -5,13 +5,6 @@
   width: 100%;
 }
 
-.rmv-sv-compact-container .rmv-sv-joystick {
-  position: absolute;
-  width: 100px;
-  bottom: 15%;
-  right: 0;
-}
-
 .rmv-sv-joystick .rmv-sv-joystick-center {
   width: 22px;
   height: 22px;

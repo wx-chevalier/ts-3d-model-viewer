@@ -4,30 +4,35 @@ import * as S from '@m-fe/utils';
 import * as React from 'react';
 
 import {
+  deflate,
   ImageClipViewer,
   ObjectSnapshotGenerator,
   parseD3Model,
+  ThreeViewer,
   WebGLViewer,
+  zipped,
 } from '../../src';
-import { deflate, zipped } from '../../src/utils';
+
 export function WebGLViewerExample() {
   const viewerRef = React.useRef<WebGLViewer>();
   const [imgUrl, setImgUrl] = React.useState('');
 
   const generateSnapshot = async () => {
     const m = viewerRef.current;
-    m.enableFreshView();
+    const threeRenderer = m.threeRenderer;
+
+    threeRenderer.changeTheme('fresh');
 
     await S.sleep(3 * 1000);
 
     if (m) {
       new ObjectSnapshotGenerator(
-        m.model,
-        m.camera,
-        m.renderer,
+        threeRenderer.context.model,
+        threeRenderer.context.camera,
+        threeRenderer.context.renderer,
         async (dataUrl: string) => {
           setImgUrl(dataUrl);
-          m.disableFreshView();
+          threeRenderer.changeTheme('default');
         },
       );
     }
@@ -38,8 +43,10 @@ export function WebGLViewerExample() {
 
     await S.sleep(3 * 1000);
 
+    const threeRenderer = m.threeRenderer;
+
     if (m) {
-      const modelFile = m.state.modelFile;
+      const modelFile = threeRenderer.context.modelFile;
       let modelArray: Uint8Array;
       let filetype: string;
       let filename: string;
@@ -79,8 +86,10 @@ export function WebGLViewerExample() {
           src="https://oss-huitong-foshan-pri.oss-cn-shenzhen.aliyuncs.com/TENANT-109/model/202110/d3381eb6-08c1-4f06-9456-36edfaad6d5f/Spider_ascii.stl"
           fileName="Spider_ascii.stl"
           compressType="zlib"
-          width={1000}
-          height={500}
+          layoutOptions={{
+            width: 1000,
+            height: 500,
+          }}
           ref={$ref => {
             viewerRef.current = $ref;
           }}

@@ -1,0 +1,139 @@
+body, html {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+p, #intro li {
+  font-family: 'Oxygen', sans-serif;
+  font-size: 13px;
+  color: #dddddd;
+}
+
+h3 {
+  font-family: 'Oxygen', sans-serif;
+  font-size: 15px;
+  color: #eeeeee;
+}
+
+a {
+  color: #11B0D0;
+  text-decoration: none;
+}
+
+#uploadbox {
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  text-align: center;
+}
+
+#uploadbox label {
+  position: relative;
+  left: -50%;
+}
+
+#file {
+  position: absolute;
+  visibility: hidden;
+}
+
+#titlebox {
+  z-index: 10;
+  width: 90px;
+  padding: 0;
+  margin-left: -45px;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+#titlebox span {
+  width: 80px;
+  font-family: 'Crete Round', sans-serif;
+  font-size: 20px;
+  color: #dddddd;
+  padding: 5px 5px 0 5px;
+  line-height: 100%;
+  display: block;
+  text-align: center;
+}
+
+#titleChevron {
+  height: 24px;
+  width: 24px;
+  margin-left: 33px;
+  display: block;
+  transition: background-image 200ms ease;
+  -webkit-transition: background-image 200ms ease;
+}
+.down {
+  background-image: url("../img/chevron_down.png");
+}
+.up {
+  background-image: url("../img/chevron_up.png");
+}
+
+#intro {
+  z-index: 5;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -350px;
+  background-color: rgba(0, 0, 0, .4);
+  padding: 30px 30px;
+  width: 640px;
+  height: 100%;
+  overflow-y: auto;
+  line-height: 150%;
+  transition: visibility 200ms, opacity 200ms ease, margin-top 200ms ease;
+  -webkit-transition: visibility 200ms, opacity 200ms ease, margin-top 200ms ease;
+}
+
+#intro.active {
+  visibility: visible;
+  margin-top: 0;
+  opacity: 1;
+}
+
+#intro.inactive {
+  visibility: hidden;
+  margin-top: -50px;
+  opacity: 0;
+}
+
+#container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  background-color: #222;
+  text-align: center;
+  font-family: 'Crete Round', sans-serif;
+  color: #ddd;
+  cursor: default;
+  user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+#printout {
+  cursor: default;
+  user-select: none;
+  z-index: 15;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}

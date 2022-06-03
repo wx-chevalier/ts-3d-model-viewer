@@ -1,0 +1,14 @@
+// "plugin:@typescript-eslint/recommended",
+// "plugin:@typescript-eslint/eslint-recommended"
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "extends": [],
+  "rules": {
+    // "no-floating-promises": 2
+  },
+  "parser": "@typescript-eslint/parser"
+}
