@@ -9,23 +9,15 @@ import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import Loader from 'react-loader-spinner';
 
+import { ThreeRenderer } from '../../three';
 import {
   D3ModelViewerProps,
   D3ModelViewerState,
   getInitialStateFromProps,
   mergeD3ModelViewerProps,
 } from '../../types';
-import {
-  cookMeshMaterial,
-  ErrorFallback,
-  i18nFormat,
-  isSupportThreejsLoader,
-  setLocale,
-  ThreeRenderer,
-} from '../../utils';
-import { Switch } from '../../widgets';
-import { Joystick } from '../../widgets/Joystick';
-import { ViewerToolbar } from '../../widgets/ViewerToolbar';
+import { ErrorFallback, i18nFormat, isSupportThreejsLoader } from '../../utils';
+import { Joystick, ViewerToolbar } from '../../widgets';
 
 interface IProps extends D3ModelViewerProps {}
 
@@ -265,12 +257,12 @@ export class ThreeViewer extends React.Component<IProps, IState> {
         <ViewerToolbar />
         {this.renderWebGL()}
         {withJoystick && <Joystick threeRenderer={this.state.threeRenderer} />}
-        <div className="three-viewer-drawer-panel">
+        {/* <div className="three-viewer-drawer-panel">
           <div className="three-viewer-drawer-panel-header">
             <span>1</span>
             <CloseOutlined />
           </div>
-        </div>
+        </div> */}
       </div>
     );
   }

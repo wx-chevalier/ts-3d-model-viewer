@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
-import { ModelAttr } from '../../../types';
-import { SimpleVector3 } from '../../geometry';
+import { ModelAttr } from '../../types';
+import { SimpleVector3 } from '../../utils';
 
 export function calcD3Size(box: THREE.Box3) {
   return {

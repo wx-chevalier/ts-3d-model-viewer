@@ -3,20 +3,21 @@ import TextSprite from '@seregpie/three.text-sprite';
 import each from 'lodash/each';
 import max from 'lodash/max';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import {
   D3ModelViewerProps,
   D3ModelViewerState,
   D3ModelViewerTheme,
   mergeD3ModelViewerProps,
-} from '../../../types';
+} from '../../types';
 import {
   deflate,
   getFileObjFromModelSrc,
   isSupportThreejsLoader,
   loadMeshWithRetry,
-} from '../../io';
+} from '../../utils';
+import { OrbitControls } from '../controls/OrbitControls';
+import { OrbitControlsGizmo } from '../controls/OrbitControlsGizmo';
 import { calcTopology, ObjectSnapshotGenerator } from '../derivation';
 import {
   adjustGeometry,
@@ -587,6 +588,15 @@ export class ThreeRenderer {
       this.context.orbitControls.enableZoom = true;
       this.context.orbitControls.enablePan = true;
       this.context.orbitControls.addEventListener('change', this.renderScene);
+
+      // Add the Obit Controls Gizmo
+      const controlsGizmo = new OrbitControlsGizmo(this.context.orbitControls, {
+        size: 100,
+        padding: 8,
+      });
+
+      // Add the Gizmo domElement to the dom
+      this.$dom.appendChild(controlsGizmo.domElement);
     }
   }
 

@@ -4,8 +4,8 @@
 
 .obit-controls-gizmo {
     position: absolute;
-    top: 2em;
-    right: 2em;
+    bottom: calc(5% + 100px);
+    right: 5%;
     z-index: 1000;
     background-color: #FFF0;
     border-radius: 100%;

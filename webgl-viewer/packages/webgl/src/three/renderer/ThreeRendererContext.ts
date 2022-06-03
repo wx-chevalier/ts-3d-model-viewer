@@ -1,10 +1,6 @@
 import * as THREE from 'three';
 
-import {
-  D3ModelViewerProps,
-  D3ModelViewerTheme,
-  ModelAttr,
-} from '../../../types';
+import { D3ModelViewerProps, D3ModelViewerTheme, ModelAttr } from '../../types';
 
 export class ThreeRendererContext {
   modelFile?: File;

@@ -4,17 +4,13 @@ import isNumber from 'lodash/isNumber';
 import max from 'lodash/max';
 import * as THREE from 'three';
 
-import {
-  D3ModelViewerProps,
-  defaultModelViewerProps,
-  mergeD3ModelViewerProps,
-} from '../../../types';
+import { D3ModelViewerProps, mergeD3ModelViewerProps } from '../../types';
 import {
   getFileObjFromModelSrc,
   getModelCompressType,
   getModelType,
   loadMesh,
-} from '../..';
+} from '../../utils';
 import {
   adjustGeometry,
   cookMeshMaterial,

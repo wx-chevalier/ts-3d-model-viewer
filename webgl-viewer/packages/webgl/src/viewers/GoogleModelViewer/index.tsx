@@ -6,17 +6,16 @@ import * as React from 'react';
 import Loader from 'react-loader-spinner';
 import * as THREE from 'three';
 
+import { calcTopology } from '../../three';
 import {
   D3ModelCompressType,
   D3ModelSrc,
   D3ModelType,
   D3ModelViewerProps,
-  defaultModelViewerProps,
   mergeD3ModelViewerProps,
   ModelAttr,
 } from '../../types';
 import {
-  calcTopology,
   getFileObjFromModelSrc,
   getModelCompressType,
   getModelType,

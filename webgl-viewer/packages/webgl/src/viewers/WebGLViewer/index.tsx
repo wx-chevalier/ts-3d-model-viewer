@@ -11,22 +11,23 @@ import { ErrorBoundary } from 'react-error-boundary';
 import Loader from 'react-loader-spinner';
 
 import {
+  cookMeshMaterial,
+  ObjectSnapshotGenerator,
+  ThreeRenderer,
+} from '../../three';
+import {
   D3ModelViewerProps,
   D3ModelViewerState,
   getInitialStateFromProps,
   mergeD3ModelViewerProps,
 } from '../../types';
 import {
-  cookMeshMaterial,
   ErrorFallback,
   i18nFormat,
   isSupportThreejsLoader,
-  ObjectSnapshotGenerator,
   setLocale,
-  ThreeRenderer,
 } from '../../utils';
-import { Switch } from '../../widgets';
-import { Joystick } from '../../widgets/Joystick';
+import { Joystick, Switch } from '../../widgets';
 
 declare global {
   const __DEV__: boolean;

@@ -1,10 +1,6 @@
 import * as THREE from 'three';
 
-import {
-  D3ModelViewerProps,
-  defaultModelViewerProps,
-  mergeD3ModelViewerProps,
-} from '../../../types';
+import { D3ModelViewerProps, mergeD3ModelViewerProps } from '../../types';
 
 export function getThreeJsWebGLRenderer(
   _props: Partial<D3ModelViewerProps>,

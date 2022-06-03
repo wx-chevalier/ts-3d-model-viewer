@@ -3,16 +3,16 @@
 import { sleep } from '@m-fe/utils';
 
 import {
+  calcTopology,
+  dryRenderThreeModelFile,
+  ObjectSnapshotGenerator,
+} from '../three';
+import {
   D3ModelViewerProps,
   mergeD3ModelViewerProps,
   ModelAttr,
 } from '../types';
-import {
-  calcTopology,
-  deflate,
-  dryRenderThreeModelFile,
-  ObjectSnapshotGenerator,
-} from '../utils';
+import { deflate } from '../utils';
 import { calcWallThicknessByViolence } from './thickness';
 
 /** 解析模型并且进行一系列计算 */
