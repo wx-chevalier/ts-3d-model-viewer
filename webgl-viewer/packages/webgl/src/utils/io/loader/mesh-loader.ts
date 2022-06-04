@@ -6,7 +6,12 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
-import { D3ModelSrc, D3ModelType } from '../../../types/D3ModelViewerProps';
+import {
+  D3ModelSrc,
+  D3ModelType,
+  D3ModelViewerProps,
+} from '../../../types/D3ModelViewerProps';
+import { OcctLoader } from './OcctLoader';
 
 /** 是否支持浏览器端解析 */
 export const isSupportThreejsLoader = (type: D3ModelType) =>
@@ -16,6 +21,13 @@ export const isSupportThreejsLoader = (type: D3ModelType) =>
   type === 'ply' ||
   type === 'stl' ||
   type === 'obj';
+
+export const isSupportOcctLoader = (type: D3ModelType) =>
+  type === 'stp' ||
+  type === 'step' ||
+  type === 'iges' ||
+  type === 'igs' ||
+  type === 'x_t';
 
 function createURL(json: any) {
   const str = JSON.stringify(json);
@@ -30,20 +42,22 @@ export async function loadMeshWithRetry(
   {
     originSrc,
     toGltf = true,
+    props,
   }: {
     originSrc?: string;
     toGltf?: boolean;
+    props?: D3ModelViewerProps;
   } = {},
 ): Promise<{ gltf?: string; mesh?: THREE.Mesh; srcUrl: string }> {
   try {
-    const resp = await loadMesh(src, type, { toGltf });
+    const resp = await loadMesh(src, type, { toGltf, props });
 
     return resp;
   } catch (_) {
     console.error('>>>mesh_loader>>>loadMeshWithRetry>>>error:', _);
     if (originSrc && typeof originSrc === 'string') {
       // 尝试重新加载
-      return loadMesh(originSrc, type, { toGltf });
+      return loadMesh(originSrc, type, { toGltf, props });
     } else {
       throw _;
     }
@@ -54,13 +68,24 @@ export async function loadMeshWithRetry(
 export async function loadMesh(
   src: D3ModelSrc,
   type: D3ModelType,
-  { toGltf = true }: { toGltf?: boolean } = {},
+  {
+    toGltf = true,
+    props,
+  }: { toGltf?: boolean; props?: D3ModelViewerProps } = {},
 ): Promise<{ gltf?: string; mesh?: THREE.Mesh; srcUrl: string }> {
   const material = new THREE.MeshStandardMaterial();
-  return await new Promise((resolve, reject) => {
+
+  return await new Promise(async (resolve, reject) => {
     const srcUrl = src instanceof File ? URL.createObjectURL(src) : src;
 
     try {
+      if (isSupportOcctLoader(type) && src instanceof File) {
+        const occtLoader = OcctLoader.getInstance();
+        const mesh = await occtLoader.load(src, props);
+
+        resolve({ mesh, srcUrl });
+      }
+
       if (type === 'glb' || type === 'gltf' || type === 'gitf') {
         const loader = new GLTFLoader();
 

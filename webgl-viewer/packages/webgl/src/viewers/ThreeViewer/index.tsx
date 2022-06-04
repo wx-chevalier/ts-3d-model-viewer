@@ -19,7 +19,12 @@ import {
   getInitialStateFromProps,
   mergeD3ModelViewerProps,
 } from '../../types';
-import { ErrorFallback, i18nFormat, isSupportThreejsLoader } from '../../utils';
+import {
+  ErrorFallback,
+  i18nFormat,
+  isSupportOcctLoader,
+  isSupportThreejsLoader,
+} from '../../utils';
 import { Joystick, ViewerToolbar } from '../../widgets';
 import { ModelAttrPanel } from '../../widgets/panels/ModelAttrPanel';
 import { RenderOptionsPanel } from '../../widgets/panels/RenderOptionsPanel';
@@ -140,33 +145,34 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
         >
           {!hasModelFileLoaded ? (
             <ErrorBoundary FallbackComponent={ErrorFallback}>
-              {get(threeRenderer, () => threeRenderer.viewerProps.src) ? (
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Loader
-                    type="Puff"
-                    color="#00BFFF"
-                    height={100}
-                    width={100}
-                  />
-                </div>
-              ) : (
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
+              <div
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                {get(threeRenderer, () => threeRenderer.viewerProps.src) ? (
+                  <>
+                    <Loader
+                      type="Puff"
+                      color="#00BFFF"
+                      height={100}
+                      width={100}
+                    />
+
+                    {isSupportOcctLoader(
+                      get(threeRenderer, () => threeRenderer.viewerProps.type),
+                    ) && (
+                      <div style={{ marginTop: 8 }}>
+                        {i18nFormat('CAD 文件需要加载额外解析器，请耐心等候')}
+                      </div>
+                    )}
+                  </>
+                ) : (
                   <Empty
                     description={
                       <div>
@@ -192,9 +198,9 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
                               threeRenderer.init({
                                 src:
                                   'https://ufc-assets.oss-cn-shanghai.aliyuncs.com/%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%9E%8B/formats/STEP/abstract_pca.step',
-                                fileName: 'Spider_ascii.stl',
+                                fileName: 'abstract_pca.step',
                                 type: undefined,
-                                compressType: undefined,
+                                compressType: 'none',
                               });
                             }}
                           >
@@ -204,8 +210,8 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
                       </div>
                     }
                   />
-                </div>
-              )}
+                )}
+              </div>
             </ErrorBoundary>
           ) : (
             <></>

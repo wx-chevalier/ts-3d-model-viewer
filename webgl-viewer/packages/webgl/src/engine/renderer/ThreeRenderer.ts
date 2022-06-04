@@ -13,6 +13,7 @@ import {
 import {
   deflate,
   getFileObjFromModelSrc,
+  isSupportOcctLoader,
   isSupportThreejsLoader,
   loadMeshWithRetry,
 } from '../../utils';
@@ -147,8 +148,11 @@ export class ThreeRenderer {
 
         // 判断是否可以进行预览，不可以预览则仅设置
         if (
-          !isSupportThreejsLoader(props.type) ||
-          !props.renderOptions.withMesh
+          !(
+            isSupportThreejsLoader(props.type) ||
+            isSupportOcctLoader(props.type) ||
+            props.renderOptions.withMesh
+          )
         ) {
           return;
         }
@@ -160,6 +164,7 @@ export class ThreeRenderer {
           {
             toGltf: false,
             originSrc: props.src as string,
+            props,
           },
         ));
       }

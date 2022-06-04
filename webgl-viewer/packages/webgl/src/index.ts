@@ -8,6 +8,7 @@ import 'antd/lib/descriptions/style';
 import 'antd/lib/empty/style';
 import 'antd/lib/button/style';
 import 'antd/lib/space/style';
+import 'antd/lib/message/style';
 
 export * from './engine';
 export * from './headless';

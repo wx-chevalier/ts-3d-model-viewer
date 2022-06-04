@@ -180,9 +180,9 @@ export const mergeD3ModelViewerProps = ({
     finalProps.fileName = U.getFileNameFromUrl(finalProps.src);
   }
 
-  if (!finalProps.type) {
-    finalProps.type = getModelType(finalProps.fileName, finalProps.src);
-  }
+  finalProps.type = `${
+    finalProps.type || getModelType(finalProps.fileName, undefined)
+  }`.toLowerCase() as D3ModelType;
 
   // 判断结尾是否有 zlib，如果有，则先设置为 zlib
   if ((finalProps.fileName || '').endsWith('zlib')) {
