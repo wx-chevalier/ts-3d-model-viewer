@@ -3,24 +3,24 @@
 }
 
 .obit-controls-gizmo {
-    position: absolute;
-    bottom: calc(5% + 100px);
-    right: 5%;
-    z-index: 1000;
-    background-color: #FFF0;
-    border-radius: 100%;
-    transition: background-color .15s  linear;
-    cursor: pointer;
+  position: absolute;
+  bottom: calc(5% + 100px);
+  right: 5%;
+  z-index: 1000;
+  background-color: #FFF0;
+  border-radius: 100%;
+  transition: background-color .15s linear;
+  cursor: pointer;
 }
 
 .obit-controls-gizmo.dragging,
 .obit-controls-gizmo:hover {
-    background-color: #FFF3;
+  background-color: #FFF3;
 }
 
 .obit-controls-gizmo.inactive {
-    pointer-events: none;
-    background-color: #FFF0 !important;
+  pointer-events: none;
+  background-color: #FFF0 !important;
 }
 
 .rmv-drawer-panel {
@@ -32,12 +32,30 @@
   top: 39px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   z-index: 9999;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.rmv-drawer-panel-header{
+.rmv-drawer-panel-header {
   height: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 8px;
+}
+
+.rmv-drawer-panel-body {
+  padding: 0 8px;
+}
+
+.rmv-drawer-panel-body .ant-descriptions-item-container .ant-descriptions-item-content {
+  align-items: center;
+}
+
+.ant-descriptions-row>td {
+  padding-bottom: 8px !important;
+}
+
+.ant-descriptions-header {
+  margin-bottom: 10px !important;
 }

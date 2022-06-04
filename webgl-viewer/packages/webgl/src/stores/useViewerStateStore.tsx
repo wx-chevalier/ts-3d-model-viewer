@@ -16,7 +16,9 @@ export const useViewerStateStore = create<ViewerStateStore>(set => ({
     set(state => ({ ...state, ...partialState })),
 }));
 
-export const withViewerStateStore = (BaseComponent: any) => (props: any) => {
+export const withViewerStateStore = <T,>(
+  BaseComponent: React.ComponentType<T>,
+) => (props: T) => {
   const store = useViewerStateStore();
 
   return <BaseComponent {...props} viewerStateStore={store} />;

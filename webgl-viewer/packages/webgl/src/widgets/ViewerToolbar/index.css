@@ -8,6 +8,10 @@
   background-color: rgb(38, 45, 64);
 }
 
+.rmv-viewer-toolbar>div {
+  height: 100%;
+}
+
 .rmv-viewer-toolbar-dropdown .rc-menu>li {
   line-height: 30px;
   padding: 0 8px;
@@ -18,21 +22,38 @@
 
 .rmv-viewer-toolbar-item {
   position: inherit;
-  margin: 0 8px;
+  padding: 0 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
 }
 
-.rmv-viewer-toolbar-item-icon {
+.rmv-viewer-toolbar-item--disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.rmv-viewer-toolbar-item--selected {
+  background-color: white;
+}
+
+.rmv-viewer-toolbar-item-icon svg {
   position: inherit;
-  color: white;
+  fill: white;
+}
+
+.rmv-viewer-toolbar-item--selected .rmv-viewer-toolbar-item-icon svg {
+  fill: black;
 }
 
 .rmv-viewer-toolbar-item-label {
   font-size: 14px;
   margin-left: 4px;
   color: white;
+}
+
+.rmv-viewer-toolbar-item--selected .rmv-viewer-toolbar-item-label {
+  color: black;
 }
 
 .rmv-viewer-toolbar-left {
@@ -46,4 +67,3 @@
 .rmv-viewer-toolbar-right {
   display: flex;
 }
-

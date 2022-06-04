@@ -36,7 +36,7 @@ declare global {
 }
 
 interface IProps extends D3ModelViewerProps {
-  viewerStateStore: ViewerStateStore;
+  viewerStateStore?: ViewerStateStore;
 }
 
 interface IState {}
@@ -71,6 +71,10 @@ export class WebGLViewerComp extends React.Component<IProps, IState> {
   $ref = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
+    this.props.viewerStateStore.setPartialState(
+      getInitialStateFromProps(this.mixedProps),
+    );
+
     this.initRenderer();
   }
 
@@ -104,9 +108,9 @@ export class WebGLViewerComp extends React.Component<IProps, IState> {
 
     const threeRenderer = new ThreeRenderer(props, {
       getDom: this.getDom,
-      getViewerState: () => props.viewerStateStore,
+      getViewerState: () => this.props.viewerStateStore,
       onContextChange: (partialViewerState: Partial<D3ModelViewerState>) => {
-        props.viewerStateStore.setPartialState({ ...partialViewerState });
+        this.props.viewerStateStore.setPartialState({ ...partialViewerState });
       },
     });
 
@@ -587,7 +591,7 @@ export class WebGLViewerComp extends React.Component<IProps, IState> {
                     const context = this.threeRenderer.context;
                     try {
                       new ObjectSnapshotGenerator(
-                        context.model,
+                        context.mesh,
                         context.camera,
                         context.renderer,
                         (dataUrl: string) => {
@@ -627,4 +631,4 @@ export class WebGLViewerComp extends React.Component<IProps, IState> {
   }
 }
 
-export const WebGLViewer = withViewerStateStore(WebGLViewerComp);
+export const WebGLViewer = withViewerStateStore<IProps>(WebGLViewerComp);

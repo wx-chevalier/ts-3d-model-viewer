@@ -1,5 +1,6 @@
 import * as U from '@m-fe/utils';
 
+import { ThreeRenderer } from '../engine';
 import { getModelCompressType, getModelType } from '../utils';
 import { ModelAttr } from './ModelAttr';
 
@@ -91,15 +92,17 @@ export interface D3ModelViewerRenderOptions {
   cameraZ?: number;
 }
 
-// 公共的组件应该实现的 Props
-export interface D3ModelViewerProps {
+export interface D3ModelViewerSourceProps {
   /** 传入的源文件类型 */
-  src: D3ModelSrc;
+  src?: D3ModelSrc;
   mesh?: THREE.Mesh;
   fileName?: string;
   type: D3ModelType;
   compressType: D3ModelCompressType;
+}
 
+// 公共的组件应该实现的 Props
+export interface D3ModelViewerProps extends D3ModelViewerSourceProps {
   className?: string;
   style?: Record<string, string | number>;
 
@@ -110,7 +113,7 @@ export interface D3ModelViewerProps {
   onTopology?: (modelAttr: ModelAttr) => void;
   onSnapshot?: (blobOrDataUrl: Blob | string) => void;
   onCompress?: (compressedArrayBuffer: ArrayBuffer) => void;
-  onLoad?: () => void;
+  onLoad?: (renderer: ThreeRenderer) => void;
   onError?: (err: Error) => void;
 }
 

@@ -74,7 +74,9 @@ export class ThreeRenderer {
 
     this.onContextChange({ hasModelFileLoaded: false });
 
-    await this.loadModel();
+    if (props.src) {
+      await this.loadModel();
+    }
   }
 
   /** 清除实体 */
@@ -84,7 +86,7 @@ export class ThreeRenderer {
 
       const context = this.context;
 
-      if (context.group !== null) {
+      if (!!context.group && !!context.group.children) {
         each(context.group.children, object => {
           if (context.group) {
             context.group.remove(object);
@@ -92,7 +94,7 @@ export class ThreeRenderer {
         });
       }
 
-      if (context.scene !== null) {
+      if (!!context.scene) {
         each(context.scene.children, object => {
           if (context.scene) {
             context.scene.remove(object);
@@ -102,17 +104,19 @@ export class ThreeRenderer {
 
       context.scene = null;
       context.group = null;
-      context.model = null;
-      context.modelWireframe = null;
+      context.mesh = null;
+      context.wireframeMesh = null;
       context.boundingBox = null;
 
-      context.renderer.dispose();
-      context.renderer.forceContextLoss();
+      if (context.renderer) {
+        context.renderer.dispose();
+        context.renderer.forceContextLoss();
 
-      if (this.getDom()) {
-        // 移除原有的节点
-        this.getDom().removeChild(context.renderer.domElement);
-        this.getDom().removeChild(context.controlsGizmo.domElement);
+        if (this.getDom()) {
+          // 移除原有的节点
+          this.getDom().removeChild(context.renderer.domElement);
+          this.getDom().removeChild(context.controlsGizmo.domElement);
+        }
       }
     } catch (_) {
       console.error(_);
@@ -176,19 +180,24 @@ export class ThreeRenderer {
   changeMaterial = (material: THREE.Material) => {
     const context = this.context;
 
-    if (context.model) {
-      context.model.material = material;
+    if (context.mesh) {
+      context.mesh.material = material;
     }
   };
 
   changeModelColor = (modelColor: string) => {
-    this.context.model.material = new THREE.MeshPhongMaterial({
+    this.context.mesh.material = new THREE.MeshPhongMaterial({
       color: modelColor,
       specular: 0x111111,
       shininess: 20,
     });
 
     this.onContextChange({ modelColor });
+  };
+
+  changeBackgroundColor = (backgroundColor: string) => {
+    this.context.renderer.setClearColor(new THREE.Color(backgroundColor), 1);
+    this.onContextChange({ backgroundColor });
   };
 
   changeTheme(theme: D3ModelViewerTheme) {
@@ -224,7 +233,7 @@ export class ThreeRenderer {
     const context = this.context;
 
     if (context.group) {
-      context.group.remove(this.context.model);
+      context.group.remove(this.context.mesh);
     }
 
     this.onContextChange({ withMaterialedMesh: false });
@@ -235,7 +244,7 @@ export class ThreeRenderer {
     const context = this.context;
 
     if (context.group) {
-      context.group.add(this.context.model);
+      context.group.add(this.context.mesh);
 
       this.onContextChange({ withMaterialedMesh: true });
     }
@@ -263,12 +272,12 @@ export class ThreeRenderer {
   setupBoundingBox() {
     const context = this.context;
 
-    if (context.model) {
-      if (context.boundingBox && context.group) {
+    if (context.mesh) {
+      if (context.group) {
         context.group.remove(context.boundingBox);
       }
 
-      const wireframe = new THREE.WireframeGeometry(context.model.geometry);
+      const wireframe = new THREE.WireframeGeometry(context.mesh.geometry);
       const line = new THREE.LineSegments(wireframe);
 
       (line.material as THREE.Material).depthTest = false;
@@ -323,9 +332,9 @@ export class ThreeRenderer {
 
   removeWireFrame() {
     const context = this.context;
-    if (context.modelWireframe && context.group) {
-      context.group.remove(context.modelWireframe);
-      context.modelWireframe = null;
+    if (context.group) {
+      context.group.remove(context.wireframeMesh);
+      context.wireframeMesh = null;
 
       this.onContextChange({ withWireframe: false });
     }
@@ -334,9 +343,9 @@ export class ThreeRenderer {
   setupWireframe() {
     const context = this.context;
 
-    if (context.model) {
-      if (context.modelWireframe && context.group) {
-        context.group.remove(context.modelWireframe);
+    if (context.mesh) {
+      if (context.group) {
+        context.group.remove(context.wireframeMesh);
       }
 
       const material = new THREE.MeshPhongMaterial({
@@ -346,10 +355,10 @@ export class ThreeRenderer {
         wireframe: true,
       });
 
-      const mesh = context.model.clone();
+      const mesh = context.mesh.clone();
       mesh.material = material;
 
-      context.modelWireframe = mesh;
+      context.wireframeMesh = mesh;
       context.group.add(mesh);
 
       this.onContextChange({ withWireframe: true });
@@ -371,10 +380,10 @@ export class ThreeRenderer {
 
     this.removeAxisHelper();
 
-    if (context.model) {
+    if (context.mesh) {
       // Get max dimention and add 50% overlap for plane
       // with a gutter of 10
-      const geometry = context.model.geometry;
+      const geometry = context.mesh.geometry;
 
       if (geometry) {
         geometry.computeBoundingBox();
@@ -411,14 +420,14 @@ export class ThreeRenderer {
   }
 
   setupPlane() {
-    if (this.context.model) {
+    if (this.context.mesh) {
       if (this.context.plane && this.context.group) {
         this.context.group.remove(this.context.plane);
       }
 
       // Getmax dimention and add 10% overlap for plane
       // with a gutter of 10
-      const geometry = this.context.model.geometry;
+      const geometry = this.context.mesh.geometry;
 
       if (geometry) {
         geometry.computeBoundingBox();
@@ -473,13 +482,13 @@ export class ThreeRenderer {
   resetCamera() {
     const context = this.context;
 
-    if (context.model) {
-      const geometry = context.model.geometry;
+    if (context.mesh) {
+      const geometry = context.mesh.geometry;
 
       if (geometry) {
         geometry.computeBoundingSphere();
 
-        const g = context.model.geometry.boundingSphere.radius;
+        const g = context.mesh.geometry.boundingSphere.radius;
         const dist = g * 3;
 
         // fudge factor so you can see the boundaries
@@ -510,16 +519,16 @@ export class ThreeRenderer {
     context.xDims = xDims;
     context.yDims = yDims;
     context.zDims = zDims;
-    context.model = mesh;
+    context.mesh = mesh;
 
     if (viewerState.withMaterialedMesh) {
-      context.group.add(context.model);
+      context.group.add(context.mesh);
     }
 
     context.scene.updateMatrixWorld();
 
-    if (context.model) {
-      setupLights(context.model, context.scene);
+    if (context.mesh) {
+      setupLights(context.mesh, context.scene);
       this.setupControls();
       this.setupDecorators();
     }
@@ -624,13 +633,13 @@ export class ThreeRenderer {
     const width = this.$dom.clientWidth;
     const camera = new THREE.PerspectiveCamera(45, width / height, 1, 99999);
 
-    const { model } = this.context;
+    const { mesh } = this.context;
 
     this.context.camera = camera;
 
     camera.add(new THREE.PointLight(0xcccccc, 2));
 
-    if (model) {
+    if (mesh) {
       this.resetCamera();
     }
   }
@@ -689,14 +698,14 @@ export class ThreeRenderer {
 
     if (onLoad) {
       // 调用外部事件
-      onLoad();
+      onLoad(this);
     }
 
     const { context } = this;
 
     // 计算基础信息
-    if (context.model) {
-      const topology = await calcTopology(context.model);
+    if (context.mesh) {
+      const topology = await calcTopology(context.mesh);
 
       context.topology = topology;
 
@@ -708,7 +717,7 @@ export class ThreeRenderer {
     // 自动截图
     if (autoCapture && onSnapshot) {
       new ObjectSnapshotGenerator(
-        context.model,
+        context.mesh,
         context.camera,
         context.renderer,
         (dataUrl: string) => {

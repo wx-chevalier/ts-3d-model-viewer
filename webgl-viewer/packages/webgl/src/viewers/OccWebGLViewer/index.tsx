@@ -162,17 +162,11 @@ export class OccWebGLViewer extends React.Component<IProps, IState> {
     }`.toLowerCase() as D3ModelType;
 
     if (isSupportThreejsLoader(type)) {
-      return <WebGLViewer {...this.mixedProps} ref={this.viewerRef} />;
+      return <WebGLViewer {...this.mixedProps} />;
     }
 
     if (this.state.mesh && this.state.isWorkerReady) {
-      return (
-        <WebGLViewer
-          {...this.mixedProps}
-          ref={this.viewerRef}
-          mesh={this.state.mesh}
-        />
-      );
+      return <WebGLViewer {...this.mixedProps} mesh={this.state.mesh} />;
     } else {
       return (
         <ErrorBoundary FallbackComponent={ErrorFallback}>

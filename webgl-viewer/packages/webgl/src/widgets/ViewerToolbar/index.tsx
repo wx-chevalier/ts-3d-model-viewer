@@ -2,9 +2,11 @@ import './index.css';
 
 import {
   CameraOutlined,
+  ExportOutlined,
   FolderOpenOutlined,
   InfoCircleOutlined,
   SettingOutlined,
+  ToolOutlined,
 } from '@ant-design/icons';
 import cn from 'classnames';
 import Dropdown from 'rc-dropdown';
@@ -13,6 +15,7 @@ import Tooltip from 'rc-tooltip';
 import React from 'react';
 
 import { ThreeRenderer } from '../../engine';
+import { useViewerStateStore } from '../../stores';
 import { i18nFormat } from '../../utils';
 import { PaleteeSvg } from '../svgs/PaletteSvg';
 import { TreeSvg } from '../svgs/TreeSvg';
@@ -30,13 +33,27 @@ export const ViewerToolbar = ({
   style,
   threeRenderer,
 }: ViewerToolbarProps) => {
+  const viewerStateStore = useViewerStateStore();
+
   const renderItem = (
     icon: React.ReactElement,
     label: React.ReactElement | string,
-    onClick: () => void = () => {},
+    { key, onClick = () => {} }: { key?: string; onClick?: () => void } = {},
   ) => {
+    const disabled =
+      label === i18nFormat('打开')
+        ? false
+        : !viewerStateStore.hasModelFileLoaded;
+
     return (
-      <div className="rmv-viewer-toolbar-item" onClick={onClick}>
+      <div
+        className={cn({
+          'rmv-viewer-toolbar-item': true,
+          'rmv-viewer-toolbar-item--disabled': disabled,
+          'rmv-viewer-toolbar-item--selected': !!viewerStateStore[key],
+        })}
+        onClick={disabled ? () => {} : onClick}
+      >
         <span className="rmv-viewer-toolbar-item-icon">{icon}</span>
         <span className="rmv-viewer-toolbar-item-label">{label}</span>
       </div>
@@ -58,7 +75,9 @@ export const ViewerToolbar = ({
               <MenuItem key="file">
                 <FileImporter threeRenderer={threeRenderer} />
               </MenuItem>
-              <MenuItem key="url">{i18nFormat('打开网络地址')}</MenuItem>
+              <MenuItem key="url" disabled={true}>
+                {i18nFormat('打开网络地址')}
+              </MenuItem>
               <MenuItem key="zip-dir" disabled={true}>
                 {i18nFormat('打开 ZIP 压缩文件夹')}
               </MenuItem>
@@ -70,7 +89,9 @@ export const ViewerToolbar = ({
         </Dropdown>
         <Dropdown
           overlayClassName="rmv-viewer-toolbar-dropdown"
-          trigger={['click', 'hover']}
+          trigger={
+            !viewerStateStore.hasModelFileLoaded ? [] : ['click', 'hover']
+          }
           overlay={
             <Menu>
               <MenuItem key="stl" disabled={true}>
@@ -91,7 +112,7 @@ export const ViewerToolbar = ({
           }
           animation="slide-up"
         >
-          {renderItem(<FolderOpenOutlined />, i18nFormat('导出'))}
+          {renderItem(<ExportOutlined />, i18nFormat('导出'))}
         </Dropdown>
       </div>
       <div className="rmv-viewer-toolbar-middle">
@@ -100,6 +121,14 @@ export const ViewerToolbar = ({
           <Tooltip overlay={i18nFormat('配置渲染选项')} placement="bottom">
             <span>{i18nFormat('渲染')}</span>
           </Tooltip>,
+          {
+            key: 'isRenderOptionsPanelVisible',
+            onClick: () => {
+              viewerStateStore.setPartialState({
+                isRenderOptionsPanelVisible: !viewerStateStore.isRenderOptionsPanelVisible,
+              });
+            },
+          },
         )}
         {renderItem(
           <CameraOutlined />,
@@ -109,7 +138,9 @@ export const ViewerToolbar = ({
         )}
         <Dropdown
           overlayClassName="rmv-viewer-toolbar-dropdown"
-          trigger={['click', 'hover']}
+          trigger={
+            !viewerStateStore.hasModelFileLoaded ? [] : ['click', 'hover']
+          }
           overlay={
             <Menu>
               <MenuItem key="measure" disabled={true}>
@@ -128,16 +159,23 @@ export const ViewerToolbar = ({
           }
           animation="slide-up"
         >
-          {renderItem(<FolderOpenOutlined />, i18nFormat('工具'))}
+          {renderItem(<ToolOutlined />, i18nFormat('工具'))}
         </Dropdown>
       </div>
       <div className="rmv-viewer-toolbar-right">
         {renderItem(
           <InfoCircleOutlined />,
           <Tooltip overlay={i18nFormat('查看模型属性')} placement="bottom">
-            <span>{i18nFormat('查看')}</span>
+            <span>{i18nFormat('属性')}</span>
           </Tooltip>,
-          () => {},
+          {
+            key: 'isAttrPanelVisible',
+            onClick: () => {
+              viewerStateStore.setPartialState({
+                isAttrPanelVisible: !viewerStateStore.isAttrPanelVisible,
+              });
+            },
+          },
         )}
         {renderItem(
           <TreeSvg />,
@@ -150,6 +188,14 @@ export const ViewerToolbar = ({
           <Tooltip overlay={i18nFormat('设置个性化偏好')} placement="bottom">
             <span>{i18nFormat('设置')}</span>
           </Tooltip>,
+          {
+            key: 'isSettingsPanelVisible',
+            onClick: () => {
+              viewerStateStore.setPartialState({
+                isSettingsPanelVisible: !viewerStateStore.isSettingsPanelVisible,
+              });
+            },
+          },
         )}
       </div>
     </div>

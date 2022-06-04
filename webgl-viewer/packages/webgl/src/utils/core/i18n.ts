@@ -11,6 +11,7 @@ export function getDefaultLocale() {
   if (i === 'zh' || (i.startsWith && i.startsWith('zh'))) {
     i = 'zh';
   }
+
   return i;
 }
 

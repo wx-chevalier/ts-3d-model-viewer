@@ -15,7 +15,13 @@ export interface D3ModelViewerState
   /** 是否展示属性面板 */
   isAttrPanelVisible?: boolean;
 
-  /** 颜色选择器 */
+  /** 是否展示设置面板 */
+  isSettingsPanelVisible?: boolean;
+
+  /** 是否展示渲染参数 */
+  isRenderOptionsPanelVisible?: boolean;
+
+  /** 颜色选择器，兼容 WebGLViewer 的情况 */
   isColorPickerVisible?: boolean;
 }
 

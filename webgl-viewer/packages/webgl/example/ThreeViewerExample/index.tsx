@@ -8,25 +8,25 @@ import {
   ImageClipViewer,
   ObjectSnapshotGenerator,
   parseD3Model,
+  ThreeRenderer,
   ThreeViewer,
   zipped,
 } from '../../src';
 
 export function ThreeViewerExample() {
-  const viewerRef = React.useRef<ThreeViewer>();
+  const viewerRef = React.useRef<ThreeRenderer>();
   const [imgUrl, setImgUrl] = React.useState('');
 
   const generateSnapshot = async () => {
-    const m = viewerRef.current;
-    const threeRenderer = m.threeRenderer;
+    const threeRenderer = viewerRef.current;
 
     threeRenderer.changeTheme('fresh');
 
     await S.sleep(3 * 1000);
 
-    if (m) {
+    if (threeRenderer) {
       new ObjectSnapshotGenerator(
-        threeRenderer.context.model,
+        threeRenderer.context.mesh,
         threeRenderer.context.camera,
         threeRenderer.context.renderer,
         async (dataUrl: string) => {
@@ -38,13 +38,11 @@ export function ThreeViewerExample() {
   };
 
   const saveModelFileAs = async (type: string) => {
-    const m = viewerRef.current;
+    const threeRenderer = viewerRef.current;
 
     await S.sleep(3 * 1000);
 
-    const threeRenderer = m.threeRenderer;
-
-    if (m) {
+    if (threeRenderer) {
       const modelFile = threeRenderer.context.modelFile;
       let modelArray: Uint8Array;
       let filetype: string;
@@ -82,15 +80,15 @@ export function ThreeViewerExample() {
         <ThreeViewer
           key="2"
           type="stl"
-          src="https://oss-huitong-foshan-pri.oss-cn-shenzhen.aliyuncs.com/TENANT-109/model/202110/d3381eb6-08c1-4f06-9456-36edfaad6d5f/Spider_ascii.stl"
+          // src="https://oss-huitong-foshan-pri.oss-cn-shenzhen.aliyuncs.com/TENANT-109/model/202110/d3381eb6-08c1-4f06-9456-36edfaad6d5f/Spider_ascii.stl"
           fileName="Spider_ascii.stl"
           compressType="zlib"
           layoutOptions={{
             width: 1000,
             height: 500,
           }}
-          ref={$ref => {
-            viewerRef.current = $ref;
+          onLoad={r => {
+            viewerRef.current = r;
           }}
         />
         <button onClick={generateSnapshot}>点击截图</button>

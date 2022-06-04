@@ -8,26 +8,25 @@ import {
   ImageClipViewer,
   ObjectSnapshotGenerator,
   parseD3Model,
-  ThreeViewer,
+  ThreeRenderer,
   WebGLViewer,
   zipped,
 } from '../../src';
 
 export function WebGLViewerExample() {
-  const viewerRef = React.useRef<WebGLViewer>();
+  const rendererRef = React.useRef<ThreeRenderer>();
   const [imgUrl, setImgUrl] = React.useState('');
 
   const generateSnapshot = async () => {
-    const m = viewerRef.current;
-    const threeRenderer = m.threeRenderer;
+    const threeRenderer = rendererRef.current;
 
     threeRenderer.changeTheme('fresh');
 
     await S.sleep(3 * 1000);
 
-    if (m) {
+    if (threeRenderer) {
       new ObjectSnapshotGenerator(
-        threeRenderer.context.model,
+        threeRenderer.context.mesh,
         threeRenderer.context.camera,
         threeRenderer.context.renderer,
         async (dataUrl: string) => {
@@ -39,13 +38,11 @@ export function WebGLViewerExample() {
   };
 
   const saveModelFileAs = async (type: string) => {
-    const m = viewerRef.current;
+    const threeRenderer = rendererRef.current;
 
     await S.sleep(3 * 1000);
 
-    const threeRenderer = m.threeRenderer;
-
-    if (m) {
+    if (threeRenderer) {
       const modelFile = threeRenderer.context.modelFile;
       let modelArray: Uint8Array;
       let filetype: string;
@@ -90,8 +87,8 @@ export function WebGLViewerExample() {
             width: 1000,
             height: 500,
           }}
-          ref={$ref => {
-            viewerRef.current = $ref;
+          onLoad={renderer => {
+            rendererRef.current = renderer;
           }}
         />
         <button onClick={generateSnapshot}>点击截图</button>

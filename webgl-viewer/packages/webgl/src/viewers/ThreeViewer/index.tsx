@@ -4,6 +4,9 @@
 import './index.css';
 
 import { ellipsis, genId, get, isLanIp } from '@m-fe/utils';
+import Button from 'antd/lib/button';
+import Empty from 'antd/lib/empty';
+import Space from 'antd/lib/space';
 import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import Loader from 'react-loader-spinner';
@@ -18,9 +21,12 @@ import {
 } from '../../types';
 import { ErrorFallback, i18nFormat, isSupportThreejsLoader } from '../../utils';
 import { Joystick, ViewerToolbar } from '../../widgets';
+import { ModelAttrPanel } from '../../widgets/panels/ModelAttrPanel';
+import { RenderOptionsPanel } from '../../widgets/panels/RenderOptionsPanel';
+import { SettingsPanel } from '../../widgets/panels/SettingsPanel';
 
 interface IProps extends D3ModelViewerProps {
-  viewerStateStore: ViewerStateStore;
+  viewerStateStore?: ViewerStateStore;
 }
 
 interface IState {}
@@ -48,13 +54,13 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
 
   id = genId();
 
-  state: IState = {
-    ...getInitialStateFromProps(this.mixedProps),
-  };
-
   $ref = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
+    this.props.viewerStateStore.setPartialState(
+      getInitialStateFromProps(this.mixedProps),
+    );
+
     this.initRenderer();
   }
 
@@ -84,7 +90,7 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
 
     const threeRenderer = new ThreeRenderer(props, {
       getDom: this.getDom,
-      getViewerState: () => this.state,
+      getViewerState: () => this.props.viewerStateStore,
       onContextChange: (partialViewerState: Partial<D3ModelViewerState>) => {
         if (typeof props.viewerStateStore.setPartialState === 'function') {
           props.viewerStateStore.setPartialState({ ...partialViewerState });
@@ -109,7 +115,7 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
       style,
       viewerStateStore,
     } = this.mixedProps;
-    const { hasModelFileLoaded } = viewerStateStore;
+    const { hasModelFileLoaded, threeRenderer } = viewerStateStore;
 
     return (
       <ErrorBoundary
@@ -134,17 +140,72 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
         >
           {!hasModelFileLoaded ? (
             <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Loader type="Puff" color="#00BFFF" height={100} width={100} />
-              </div>
+              {get(threeRenderer, () => threeRenderer.viewerProps.src) ? (
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Loader
+                    type="Puff"
+                    color="#00BFFF"
+                    height={100}
+                    width={100}
+                  />
+                </div>
+              ) : (
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Empty
+                    description={
+                      <div>
+                        <div>{i18nFormat('暂无数据，可使用演示文件')}</div>
+                        <Space size={0}>
+                          <Button
+                            type="link"
+                            onClick={() => {
+                              threeRenderer.init({
+                                src:
+                                  'https://oss-huitong-foshan-pri.oss-cn-shenzhen.aliyuncs.com/TENANT-109/model/202110/d3381eb6-08c1-4f06-9456-36edfaad6d5f/Spider_ascii.stl',
+                                fileName: 'Spider_ascii.stl',
+                                type: undefined,
+                                compressType: 'zlib',
+                              });
+                            }}
+                          >
+                            {i18nFormat('STL 文件')}
+                          </Button>
+                          <Button
+                            type="link"
+                            onClick={() => {
+                              threeRenderer.init({
+                                src:
+                                  'https://ufc-assets.oss-cn-shanghai.aliyuncs.com/%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%9E%8B/formats/STEP/abstract_pca.step',
+                                fileName: 'Spider_ascii.stl',
+                                type: undefined,
+                                compressType: undefined,
+                              });
+                            }}
+                          >
+                            {i18nFormat('STEP 文件')}
+                          </Button>
+                        </Space>
+                      </div>
+                    }
+                  />
+                </div>
+              )}
             </ErrorBoundary>
           ) : (
             <></>
@@ -266,9 +327,12 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
         {widgets.includes('joystick') && (
           <Joystick threeRenderer={this.threeRenderer} />
         )}
+        {viewerStateStore.isAttrPanelVisible && <ModelAttrPanel />}
+        {viewerStateStore.isSettingsPanelVisible && <SettingsPanel />}
+        {viewerStateStore.isRenderOptionsPanelVisible && <RenderOptionsPanel />}
       </div>
     );
   }
 }
 
-export const ThreeViewer = withViewerStateStore(ThreeViewerComp);
+export const ThreeViewer = withViewerStateStore<IProps>(ThreeViewerComp);

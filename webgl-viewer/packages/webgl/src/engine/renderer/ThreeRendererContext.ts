@@ -5,8 +5,8 @@ import { OrbitControlsGizmo } from '../controls/OrbitControlsGizmo';
 
 export class ThreeRendererContext {
   modelFile?: File;
-  model?: THREE.Mesh;
-  modelWireframe?: THREE.Mesh;
+  mesh?: THREE.Mesh;
+  wireframeMesh?: THREE.Mesh;
 
   theme?: D3ModelViewerTheme = 'default';
   topology?: ModelAttr;
