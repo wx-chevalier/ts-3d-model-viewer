@@ -27,6 +27,7 @@ import {
   isSupportThreejsLoader,
 } from '../../utils';
 import { Joystick, SnapshotClipViewer, ViewerToolbar } from '../../widgets';
+import { BoxSpin } from '../../widgets/decorators/BoxSpin';
 import { ModelAttrPanel } from '../../widgets/panels/ModelAttrPanel';
 import { RenderOptionsPanel } from '../../widgets/panels/RenderOptionsPanel';
 import { SettingsPanel } from '../../widgets/panels/SettingsPanel';
@@ -168,17 +169,12 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
               >
                 {get(threeRenderer, () => threeRenderer.viewerProps.src) ? (
                   <>
-                    <Loader
-                      type="Puff"
-                      color="#00BFFF"
-                      height={100}
-                      width={100}
-                    />
+                    <BoxSpin />
 
                     {isSupportOcctLoader(
                       get(threeRenderer, () => threeRenderer.viewerProps.type),
                     ) ? (
-                      <div style={{ marginTop: 8 }}>
+                      <div style={{ transform: 'translateY(32px)' }}>
                         {loaderEvent
                           ? `${i18nFormat('CAD 解析中')}: ${loaderEvent}`
                           : i18nFormat(
@@ -186,7 +182,7 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
                             )}
                       </div>
                     ) : (
-                      <div style={{ marginTop: 8 }}>{loaderEvent}</div>
+                      <div style={{ marginTop: 24 }}>{loaderEvent}</div>
                     )}
                   </>
                 ) : (

@@ -90,6 +90,7 @@ export function ThreeViewerExample() {
             viewerRef.current = r;
           }}
         />
+
         <button onClick={generateSnapshot}>点击截图</button>
         <button
           onClick={async () => {
