@@ -3,7 +3,7 @@
 
 import './index.css';
 
-import { ellipsis, genId, get, isLanIp } from '@m-fe/utils';
+import { ellipsis, genId, get, isLanIp, parseJson } from '@m-fe/utils';
 import Button from 'antd/lib/button';
 import Divider from 'antd/lib/divider';
 import Empty from 'antd/lib/empty';
@@ -63,9 +63,19 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
   $ref = React.createRef<HTMLDivElement>();
 
   componentDidMount() {
-    this.props.viewerStateStore.setPartialState(
-      getInitialStateFromProps(this.mixedProps),
+    const persistedRendererOptionsStr = localStorage.getItem(
+      'rmv-renderer-options',
     );
+
+    const persistedRendererOptions = persistedRendererOptionsStr
+      ? parseJson(persistedRendererOptionsStr, {})
+      : {};
+
+    // 这里需要获取保存起来的状态值
+    this.props.viewerStateStore.setPartialState({
+      ...getInitialStateFromProps(this.mixedProps),
+      ...persistedRendererOptions,
+    });
 
     this.initRenderer();
   }
@@ -183,7 +193,11 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
                   <Empty
                     description={
                       <div>
-                        <div>{i18nFormat('暂无数据，可使用下列演示文件')}</div>
+                        <div>
+                          {i18nFormat(
+                            '请点击左上角打开文件，或使用下列演示文件',
+                          )}
+                        </div>
                         <Space
                           size={0}
                           split={

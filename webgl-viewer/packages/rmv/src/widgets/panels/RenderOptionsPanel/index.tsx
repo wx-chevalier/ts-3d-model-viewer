@@ -1,9 +1,14 @@
 import { CloseOutlined, SaveOutlined } from '@ant-design/icons';
+import * as U from '@m-fe/utils';
+import Button from 'antd/lib/button';
 import Descriptions from 'antd/lib/descriptions';
+import message from 'antd/lib/message';
 import Space from 'antd/lib/space';
+import { useInterval } from 'packages/webgl/src/types';
 import Tooltip from 'rc-tooltip';
 import React from 'react';
 import { SketchPicker } from 'react-color';
+import * as THREE from 'three';
 
 import { cookMeshMaterial } from '../../../engine';
 import { useViewerStateStore } from '../../../stores';
@@ -17,12 +22,23 @@ export interface RenderOptionsPanelProps {
   children?: React.ReactNode;
 }
 
-export const RenderOptionsPanel = ({
-  className,
-  style,
-  children,
-}: RenderOptionsPanelProps) => {
+export const RenderOptionsPanel = ({}: RenderOptionsPanelProps) => {
+  const [showModelColorPicker, setShowModelColorPicker] = React.useState(false);
+  const [showBgColorPicker, setShowBgColorPicker] = React.useState(false);
+  const [camPos, setCamPos] = React.useState(new THREE.Vector3());
+
   const viewerStateStore = useViewerStateStore();
+
+  useInterval(() => {
+    const camPos = U.get(
+      viewerStateStore,
+      v => v.threeRenderer.context.camPos,
+    ) as THREE.Vector3;
+
+    if (camPos) {
+      setCamPos(new THREE.Vector3(camPos.x, camPos.y, camPos.z));
+    }
+  }, 1000);
 
   const {
     threeRenderer,
@@ -41,8 +57,6 @@ export const RenderOptionsPanel = ({
     return <></>;
   }
 
-  const { topology } = threeRenderer.context;
-
   return (
     <div className="rmv-drawer-panel">
       <div className="rmv-drawer-panel-header">
@@ -51,9 +65,23 @@ export const RenderOptionsPanel = ({
           <Tooltip overlay={i18nFormat('保存为默认配置')} placement="left">
             <SaveOutlined
               onClick={() => {
-                viewerStateStore.setPartialState({
-                  isRenderOptionsPanelVisible: false,
-                });
+                localStorage.setItem(
+                  'rmv-renderer-options',
+                  JSON.stringify({
+                    camPos: { x: camPos.x, y: camPos.y, z: camPos.z },
+                    modelColor,
+                    backgroundColor,
+
+                    withMaterialedMesh,
+                    withWireframe,
+                    withBoundingBox,
+                    withClipping,
+                    withPlane,
+                    withAxisHelper,
+                  }),
+                );
+
+                message.success(i18nFormat('保存成功'));
               }}
             />
           </Tooltip>
@@ -140,7 +168,15 @@ export const RenderOptionsPanel = ({
             />
           </Descriptions.Item>
         </Descriptions>
-        <Descriptions title={i18nFormat('剖切')} column={1}>
+        <Descriptions title={i18nFormat('位置')} column={1}>
+          {camPos && (
+            <Descriptions.Item label={i18nFormat('视角')}>
+              {`${U.toFixedNumber(camPos.x, 4)},${U.toFixedNumber(
+                camPos.y,
+                4,
+              )},${U.toFixedNumber(camPos.z, 4)}`}
+            </Descriptions.Item>
+          )}
           <Descriptions.Item label={i18nFormat('X 轴剖切')}>
             <Switch
               id={`withClipping-${threeRenderer.id}`}
@@ -158,28 +194,56 @@ export const RenderOptionsPanel = ({
             />
           </Descriptions.Item>
         </Descriptions>
-        <Descriptions title={i18nFormat('颜色')} column={1}>
-          <Descriptions.Item label={i18nFormat('模型')}>
-            <SketchPicker
-              color={modelColor}
-              onChange={({ hex }) => {
-                viewerStateStore.setPartialState({
-                  modelColor: hex,
-                });
+        <Descriptions title={i18nFormat('效果')} column={1}>
+          <Descriptions.Item label={i18nFormat('模型色')}>
+            {showModelColorPicker ? (
+              <SketchPicker
+                color={modelColor}
+                onChange={({ hex }) => {
+                  viewerStateStore.setPartialState({
+                    modelColor: hex,
+                  });
 
-                threeRenderer.changeMaterial(
-                  cookMeshMaterial(withClipping, hex),
-                );
-              }}
-            />
+                  threeRenderer.changeMaterial(
+                    cookMeshMaterial(withClipping, hex),
+                  );
+                }}
+              />
+            ) : (
+              <span>
+                {viewerStateStore.modelColor}
+                <Button
+                  type="link"
+                  onClick={() => {
+                    setShowModelColorPicker(true);
+                  }}
+                >
+                  {i18nFormat('切换')}
+                </Button>
+              </span>
+            )}
           </Descriptions.Item>
-          <Descriptions.Item label={i18nFormat('背景')}>
-            <SketchPicker
-              color={backgroundColor as string}
-              onChange={({ hex }) => {
-                threeRenderer.changeBackgroundColor(hex);
-              }}
-            />
+          <Descriptions.Item label={i18nFormat('背景色')}>
+            {showBgColorPicker ? (
+              <SketchPicker
+                color={backgroundColor as string}
+                onChange={({ hex }) => {
+                  threeRenderer.changeBackgroundColor(hex);
+                }}
+              />
+            ) : (
+              <span>
+                {viewerStateStore.backgroundColor}
+                <Button
+                  type="link"
+                  onClick={() => {
+                    setShowBgColorPicker(true);
+                  }}
+                >
+                  {i18nFormat('切换')}
+                </Button>
+              </span>
+            )}
           </Descriptions.Item>
         </Descriptions>
       </div>

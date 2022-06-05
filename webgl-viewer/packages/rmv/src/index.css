@@ -65,3 +65,7 @@
 .rmv-drawer-panel-body .ant-descriptions-title{
   font-size: 14px;
 }
+
+.rmv-drawer-panel-body .ant-descriptions-item-label {
+  align-items: center !important;
+}

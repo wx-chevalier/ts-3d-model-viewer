@@ -9,6 +9,9 @@ export interface D3ModelViewerState
   extends Partial<D3ModelViewerCustomOptions>,
     Partial<D3ModelViewerLayoutOptions>,
     Partial<D3ModelViewerRenderOptions> {
+  /** 摄像头位置 */
+  camPos?: { x: number; y: number; z: number };
+
   /** 模型文件是否加载完毕 */
   hasModelFileLoaded?: boolean;
 

@@ -217,7 +217,7 @@ export class ThreeRenderer {
 
     this.changeTheme('fresh');
 
-    await U.sleep(3000);
+    await U.sleep(1000);
 
     return new Promise(async resolve => {
       new ObjectSnapshotGenerator(
@@ -539,6 +539,7 @@ export class ThreeRenderer {
   /** 重置相机 */
   resetCamera() {
     const context = this.context;
+    const viewerState = this.getViewerState();
 
     if (context.mesh) {
       const geometry = context.mesh.geometry;
@@ -551,9 +552,13 @@ export class ThreeRenderer {
 
         // fudge factor so you can see the boundaries
         context.camera.position.set(
-          this.viewerProps.renderOptions.cameraX,
-          this.viewerProps.renderOptions.cameraY,
-          this.viewerProps.renderOptions.cameraZ || dist * fudge,
+          U.get(viewerState, viewerState => viewerState.camPos.x) ||
+            this.viewerProps.renderOptions.cameraX,
+          U.get(viewerState, viewerState => viewerState.camPos.y) ||
+            this.viewerProps.renderOptions.cameraY,
+          U.get(viewerState, viewerState => viewerState.camPos.z) ||
+            this.viewerProps.renderOptions.cameraZ ||
+            dist * fudge,
         );
       }
     }
@@ -650,19 +655,18 @@ export class ThreeRenderer {
       const pointLight = new THREE.PointLight(0xffffff, 0.5);
       scene.add(pointLight);
 
-      this.context.orbitControls = new OrbitControls(
-        this.context.camera,
-        this.$dom,
-        {
-          onUpdate: (camPos: Vector3) => {
-            pointLight.position.copy(camPos);
-          },
+      const orbitControls = new OrbitControls(this.context.camera, this.$dom, {
+        onUpdate: (camPos: Vector3) => {
+          this.context.camPos = camPos;
+          pointLight.position.copy(camPos);
         },
-      );
-      this.context.orbitControls.enableKeys = false;
-      this.context.orbitControls.enableZoom = true;
-      this.context.orbitControls.enablePan = true;
-      this.context.orbitControls.addEventListener('change', this.renderScene);
+      });
+      orbitControls.enableKeys = false;
+      orbitControls.enableZoom = true;
+      orbitControls.enablePan = true;
+      orbitControls.addEventListener('change', this.renderScene);
+
+      this.context.orbitControls = orbitControls;
 
       // Add the Obit Controls Gizmo
       this.context.controlsGizmo = new OrbitControlsGizmo(
@@ -686,6 +690,8 @@ export class ThreeRenderer {
     const height = this.$dom.clientHeight;
     const width = this.$dom.clientWidth;
     const camera = new THREE.PerspectiveCamera(45, width / height, 1, 99999);
+
+    // 判断是否有初始值
 
     const { mesh } = this.context;
 

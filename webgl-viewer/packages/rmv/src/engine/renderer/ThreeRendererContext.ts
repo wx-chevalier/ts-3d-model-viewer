@@ -30,5 +30,7 @@ export class ThreeRendererContext {
   yDims: number;
   zDims: number;
 
+  camPos: THREE.Vector3;
+
   constructor(public viewerProps: D3ModelViewerProps) {}
 }
