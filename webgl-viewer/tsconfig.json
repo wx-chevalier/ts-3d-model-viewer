@@ -4,7 +4,8 @@
     "baseUrl": ".",
     "strictFunctionTypes": false,
     "strictNullChecks": false,
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
+    "target": "ES2017"
   },
   "include": ["**/*.ts", "**/*.tsx"]
 }
