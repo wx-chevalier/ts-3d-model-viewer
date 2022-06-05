@@ -1,10 +1,17 @@
 // Makes a cylinder with a hole in the middle.
 // The code is largely the same as that of THREE.CylinderBufferGeometry.
 
-var PipeBufferGeometry = (function() {
-
-  function PipeBufferGeometry(outerRadius, innerRadius, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength) {
-
+var PipeBufferGeometry = (function () {
+  function PipeBufferGeometry(
+    outerRadius,
+    innerRadius,
+    height,
+    radialSegments,
+    heightSegments,
+    openEnded,
+    thetaStart,
+    thetaLength,
+  ) {
     THREE.BufferGeometry.call(this);
 
     this.type = 'PipeBufferGeometry';
@@ -17,7 +24,7 @@ var PipeBufferGeometry = (function() {
       heightSegments: heightSegments,
       openEnded: openEnded,
       thetaStart: thetaStart,
-      thetaLength: thetaLength
+      thetaLength: thetaLength,
     };
 
     var scope = this;
@@ -51,7 +58,10 @@ var PipeBufferGeometry = (function() {
     }
 
     this.setIndex(indices);
-    this.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+    this.addAttribute(
+      'position',
+      new THREE.Float32BufferAttribute(vertices, 3),
+    );
     this.addAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
     this.addAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
 
@@ -97,15 +107,14 @@ var PipeBufferGeometry = (function() {
       for (x = 0; x < radialSegments; x++) {
         for (y = 0; y < heightSegments; y++) {
           var a = indexArray[y][x];
-          var b = indexArray[y+1][x];
-          var c = indexArray[y+1][x+1];
-          var d = indexArray[y][x+1];
+          var b = indexArray[y + 1][x];
+          var c = indexArray[y + 1][x + 1];
+          var d = indexArray[y][x + 1];
 
           if (outer) {
             indices.push(a, b, d);
             indices.push(b, c, d);
-          }
-          else {
+          } else {
             indices.push(a, d, b);
             indices.push(b, d, c);
           }
@@ -158,12 +167,11 @@ var PipeBufferGeometry = (function() {
         var idx = idxStart + x * 2;
 
         if (top) {
-          indices.push(idx, idx+3, idx+1);
-          indices.push(idx, idx+2, idx+3);
-        }
-        else {
-          indices.push(idx, idx+1, idx+3);
-          indices.push(idx, idx+3, idx+2);
+          indices.push(idx, idx + 3, idx + 1);
+          indices.push(idx, idx + 2, idx + 3);
+        } else {
+          indices.push(idx, idx + 1, idx + 3);
+          indices.push(idx, idx + 3, idx + 2);
         }
 
         groupCount += 6;
@@ -179,5 +187,4 @@ var PipeBufferGeometry = (function() {
   PipeBufferGeometry.prototype.constructor = PipeBufferGeometry;
 
   return PipeBufferGeometry;
-
 })();

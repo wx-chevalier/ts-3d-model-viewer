@@ -6,7 +6,7 @@
 //
 // params:
 //  faces, vertices: the geometry of the mesh for which we'll generate supports
-var SupportGenerator = (function() {
+var SupportGenerator = (function () {
   function SupportGenerator(mesh, octree) {
     this.mesh = mesh;
     this.faces = mesh.geometry.faces;
@@ -17,8 +17,12 @@ var SupportGenerator = (function() {
   }
 
   SupportGenerator.RadiusFunctions = {
-    constant: function(r, w, k) { return r; },
-    sqrt: function(r, w, k) { return r + k * Math.sqrt(w); }
+    constant: function (r, w, k) {
+      return r;
+    },
+    sqrt: function (r, w, k) {
+      return r + k * Math.sqrt(w);
+    },
   };
 
   // params:
@@ -35,7 +39,7 @@ var SupportGenerator = (function() {
   //  axis: up axis
   //  min, max: min and max bounds of the mesh
   //  epsilon: optional
-  SupportGenerator.prototype.generate = function(params) {
+  SupportGenerator.prototype.generate = function (params) {
     params = params || {};
 
     var angleDegrees = params.angle || 45;
@@ -46,7 +50,7 @@ var SupportGenerator = (function() {
     var taperFactor = params.taperFactor || 0.5;
     var radiusFn = params.radiusFn || SupportGenerator.RadiusFunctions.sqrt;
     var radiusFnK = params.radiusFnK || 0.01;
-    var axis = params.axis || "z";
+    var axis = params.axis || 'z';
     var epsilon = params.epsilon || 1e-5;
 
     var octree = this.octree;
@@ -65,7 +69,7 @@ var SupportGenerator = (function() {
     var av = cycleAxis(ah);
 
     // angle in radians
-    var angle = (90 - angleDegrees) * Math.PI / 180;
+    var angle = ((90 - angleDegrees) * Math.PI) / 180;
     var minHeight = 0;
     var resolution = resolution;
     var minSupportLength = 3 * radius;
@@ -95,10 +99,10 @@ var SupportGenerator = (function() {
       taperFactor: taperFactor,
       endOffsetFactor: 0.5,
       radiusFn: radiusFn,
-      radiusFnK: radiusFnK
+      radiusFnK: radiusFnK,
     };
 
-    for (var s=0; s<supportTrees.length; s++) {
+    for (var s = 0; s < supportTrees.length; s++) {
       var tree = supportTrees[s];
       //tree.debug();
       tree.writeToGeometry(treeWriteParams);
@@ -116,7 +120,6 @@ var SupportGenerator = (function() {
 
       var minFaceMax = minHeight + layerHeight / 2;
       var supportFaces = [];
-
 
       for (var f = 0, l = fs.length; f < l; f++) {
         var face = fs[f];
@@ -159,11 +162,17 @@ var SupportGenerator = (function() {
         var normal = face.normal.clone().transformDirection(matrixWorld);
 
         // this face's lower bounds in rasterization space
-        var hmin = rhmin + Math.floor((facebb.min[ah] - rhmin) / resolution) * resolution;
-        var vmin = rvmin + Math.floor((facebb.min[av] - rvmin) / resolution) * resolution;
+        var hmin =
+          rhmin +
+          Math.floor((facebb.min[ah] - rhmin) / resolution) * resolution;
+        var vmin =
+          rvmin +
+          Math.floor((facebb.min[av] - rvmin) / resolution) * resolution;
         // this face's upper bounds in rasterization space
-        var hmax = rhmin + Math.ceil((facebb.max[ah] - rhmin) / resolution) * resolution;
-        var vmax = rvmin + Math.ceil((facebb.max[av] - rvmin) / resolution) * resolution;
+        var hmax =
+          rhmin + Math.ceil((facebb.max[ah] - rhmin) / resolution) * resolution;
+        var vmax =
+          rvmin + Math.ceil((facebb.max[av] - rvmin) / resolution) * resolution;
 
         // iterate over all possible points
         for (var ph = hmin; ph < hmax; ph += resolution) {
@@ -176,7 +185,7 @@ var SupportGenerator = (function() {
             if (pointInsideTriangle(pt, b, a, c, axis, epsilon)) {
               points.push({
                 v: projectToPlaneOnAxis(pt, a, normal, axis),
-                normal: normal
+                normal: normal,
               });
             }
           }
@@ -199,9 +208,11 @@ var SupportGenerator = (function() {
       var faceNormal = new THREE.Vector3();
 
       // orders a priority queue from highest to lowest coordinate on axis
-      var pqComparator = function (a, b) { return nodes[b].v[axis] - nodes[a].v[axis]; }
+      var pqComparator = function (a, b) {
+        return nodes[b].v[axis] - nodes[a].v[axis];
+      };
       var pq = new PriorityQueue({
-        comparator: pqComparator
+        comparator: pqComparator,
       });
       var activeIndices = new Set();
 
@@ -229,9 +240,11 @@ var SupportGenerator = (function() {
         // if a ray cast along the normal hits too close, goes below mesh
         // min, or can be more directly extended less than a strut length
         // straight down, just leave the original node
-        if ((raycastNormal && raycastNormal.distance < minSupportLength) ||
-            (nv[axis] < minHeight) ||
-            (v[axis] - minHeight < minSupportLength)) {
+        if (
+          (raycastNormal && raycastNormal.distance < minSupportLength) ||
+          nv[axis] < minHeight ||
+          v[axis] - minHeight < minSupportLength
+        ) {
           activeIndices.add(idx);
           pq.queue(idx);
         }
@@ -265,10 +278,14 @@ var SupportGenerator = (function() {
           var ixn = coneConeIntersection(p.v, q.v, angle, axis);
 
           // if valid intersection and it's inside the mesh boundary
-          if (ixn && (ixn[axis] - minHeight > radius)) {
+          if (ixn && ixn[axis] - minHeight > radius) {
             var pidist = p.v.distanceTo(ixn);
             var qidist = q.v.distanceTo(ixn);
-            if (pidist < intersectionDist && pidist > radius && qidist > radius) {
+            if (
+              pidist < intersectionDist &&
+              pidist > radius &&
+              qidist > radius
+            ) {
               intersectionDist = pidist;
               intersection = ixn;
               qiFinal = qi;
@@ -291,8 +308,7 @@ var SupportGenerator = (function() {
           pointDown.copy(raycastDown.point);
           pointDown[axis] = Math.max(pointDown[axis], minHeight);
           distanceDown = Math.min(raycastDown.distance, p.v[axis] - minHeight);
-        }
-        else {
+        } else {
           pointDown.copy(p.v);
           pointDown[axis] = minHeight;
           distanceDown = p.v[axis] - minHeight;
@@ -317,10 +333,15 @@ var SupportGenerator = (function() {
             // itself, so join there
             if (raycastP.distance < distanceDown) {
               // get face normal in world space at the ray hit
-              faceNormal.copy(raycastP.face.normal).transformDirection(matrixWorld);
+              faceNormal
+                .copy(raycastP.face.normal)
+                .transformDirection(matrixWorld);
 
               // if angle is not too shallow, connect at the mesh
-              if (Math.acos(Math.abs(faceNormal.dot(d))) <= Math.PI / 4 + epsilon) {
+              if (
+                Math.acos(Math.abs(faceNormal.dot(d))) <=
+                Math.PI / 4 + epsilon
+              ) {
                 target = raycastP.point;
                 dist = raycastP.distance;
               }
@@ -340,13 +361,17 @@ var SupportGenerator = (function() {
           else {
             // intersection joint may be too close to a point on the mesh - cast
             // a ray down from there, and, if it's too close, join p downward
-            var raycastIntersectionDown = octree.raycast(ray.set(intersection, down));
+            var raycastIntersectionDown = octree.raycast(
+              ray.set(intersection, down),
+            );
 
-            if (raycastIntersectionDown && raycastIntersectionDown.distance < minSupportLength) {
+            if (
+              raycastIntersectionDown &&
+              raycastIntersectionDown.distance < minSupportLength
+            ) {
               target = pointDown;
               dist = distanceDown;
-            }
-            else {
+            } else {
               q = nodes[qiFinal];
               target = intersection;
               dist = p.v.distanceTo(intersection);
@@ -385,14 +410,11 @@ var SupportGenerator = (function() {
 
       return result;
     }
+  };
 
-  }
-
-  SupportGenerator.prototype.cleanup = function() {
+  SupportGenerator.prototype.cleanup = function () {
     debug.cleanup();
-  }
-
-
+  };
 
   // a node in a tree of support nodes
   // params:
@@ -423,26 +445,26 @@ var SupportGenerator = (function() {
   }
 
   // true if at the bottom of a tree
-  SupportTreeNode.prototype.isRoot = function() {
+  SupportTreeNode.prototype.isRoot = function () {
     return this.source === null;
-  }
+  };
 
   // true if at the top of a tree
-  SupportTreeNode.prototype.isLeaf = function() {
+  SupportTreeNode.prototype.isLeaf = function () {
     return this.b0 === null && this.b1 === null;
-  }
+  };
 
   // true if one strut connecting from above and one from below
-  SupportTreeNode.prototype.isElbowJoint = function() {
+  SupportTreeNode.prototype.isElbowJoint = function () {
     return this.b0 !== null && this.b1 === null && this.source !== null;
-  }
+  };
 
   // true if two struts connecting from above and one from below
-  SupportTreeNode.prototype.isTJoint = function() {
+  SupportTreeNode.prototype.isTJoint = function () {
     return this.b0 !== null && this.b1 !== null && this.source !== null;
-  }
+  };
 
-  SupportTreeNode.prototype.writeToGeometry = function(params) {
+  SupportTreeNode.prototype.writeToGeometry = function (params) {
     if (!this.isRoot()) return null;
 
     params = params || {};
@@ -450,13 +472,13 @@ var SupportGenerator = (function() {
 
     // subdivs must be at least 4 and even
     if (subdivs === undefined || subdivs < 4) subidvs = 4;
-    subdivs -= subdivs%2;
+    subdivs -= subdivs % 2;
 
     params.subdivs = subdivs;
 
     this.makeProfiles(params);
     this.connectProfiles(params);
-  }
+  };
 
   // build the profiles of vertices where the cylindrical struts will join or end;
   // cases for nodes:
@@ -474,7 +496,7 @@ var SupportGenerator = (function() {
   //  endOffsetFactor: strut extends past its node's center by radius * endOffsetFactor
   //  radiusFn, radiusFnK: function and parameter that determine how radius
   //    grows based on supported weight
-  SupportTreeNode.prototype.makeProfiles = function(params) {
+  SupportTreeNode.prototype.makeProfiles = function (params) {
     var pi2 = Math.PI * 2;
 
     var vertices = params.geo.vertices;
@@ -516,7 +538,7 @@ var SupportGenerator = (function() {
       var ps = [];
 
       // angle increment
-      var aincr = (isRoot ? 1 : -1) * pi2 / subdivs;
+      var aincr = ((isRoot ? 1 : -1) * pi2) / subdivs;
 
       var r = this.noTaper ? r : params.taperFactor * r;
 
@@ -524,9 +546,10 @@ var SupportGenerator = (function() {
       for (var ia = 0; ia < subdivs; ia++) {
         var a = ia * aincr;
         vertices.push(
-          p.clone()
-          .addScaledVector(b, r * Math.cos(a))
-          .addScaledVector(c, r * Math.sin(a))
+          p
+            .clone()
+            .addScaledVector(b, r * Math.cos(a))
+            .addScaledVector(c, r * Math.sin(a)),
         );
         ps.push(sidx + ia);
       }
@@ -537,8 +560,7 @@ var SupportGenerator = (function() {
 
       if (isRoot) this.p0 = ps;
       else this.ps = ps;
-    }
-    else if (isElbowJoint) {
+    } else if (isElbowJoint) {
       var v = this.v;
 
       // outgoing vectors along the adjoining struts
@@ -573,9 +595,11 @@ var SupportGenerator = (function() {
       // make the profile, wound CCW looking down (against) upward branch
       for (var ia = 0; ia < subdivs; ia++) {
         var a = ia * aincr;
-        vertices.push(v.clone()
-          .addScaledVector(b, m * Math.cos(a))
-          .addScaledVector(c, n * Math.sin(a))
+        vertices.push(
+          v
+            .clone()
+            .addScaledVector(b, m * Math.cos(a))
+            .addScaledVector(c, n * Math.sin(a)),
         );
         p0.push(sidx + ia);
       }
@@ -584,8 +608,7 @@ var SupportGenerator = (function() {
       // downward-facing profile is would CW (looking up), so both are the same
       this.p0 = p0;
       this.ps = p0;
-    }
-    else {
+    } else {
       // outgoing vectors down the adjoining struts
       var v0 = this.b0.v.clone().sub(this.v).normalize();
       var v1 = this.b1.v.clone().sub(this.v).normalize();
@@ -631,7 +654,7 @@ var SupportGenerator = (function() {
       // magnitude of in/out vector is r / sin(acos(dot)), where dot is the
       // cosine of the angle between ihat and one of the strut vectors (this is
       // mathematically equivalent to the square root thing)
-      var mio = r / Math.sqrt(1 - dot*dot);
+      var mio = r / Math.sqrt(1 - dot * dot);
 
       // An ellipse is specified like so:
       //  x = m cos t
@@ -649,9 +672,9 @@ var SupportGenerator = (function() {
       // determine starting angle params for each ellipse; the major axis is at
       // 0, the intersection of the ellipse with the inward point is at the
       // starting angle, (starting angle - pi) is the ending angle
-      var s01 = acos(mio * d01 / m01);
-      var s0s = acos(mio * d0s / m0s);
-      var s1s = acos(mio * d1s / m1s);
+      var s01 = acos((mio * d01) / m01);
+      var s0s = acos((mio * d0s) / m0s);
+      var s1s = acos((mio * d1s) / m1s);
 
       // ellipse major axis length is m01... with unit vectors b01...; now
       // compute minor axes with length n01... and unit vectors c01...
@@ -662,9 +685,9 @@ var SupportGenerator = (function() {
       var c1s = projectOut(ihat, b1s).normalize();
 
       // minor axis magnitudes
-      var n01 = mio * Math.sqrt(1 - d01*d01) / Math.sin(s01);
-      var n0s = mio * Math.sqrt(1 - d0s*d0s) / Math.sin(s0s);
-      var n1s = mio * Math.sqrt(1 - d1s*d1s) / Math.sin(s1s);
+      var n01 = (mio * Math.sqrt(1 - d01 * d01)) / Math.sin(s01);
+      var n0s = (mio * Math.sqrt(1 - d0s * d0s)) / Math.sin(s0s);
+      var n1s = (mio * Math.sqrt(1 - d1s * d1s)) / Math.sin(s1s);
 
       // put the calculated points into the geometry
 
@@ -687,27 +710,30 @@ var SupportGenerator = (function() {
       // push the arc vertices, excluding inward and outward vertices (which are
       // the endpoints of all three arcs)
       for (var ia = 1; ia < scount1; ia++) {
-        var a = s01 - ia * Math.PI / scount1;
+        var a = s01 - (ia * Math.PI) / scount1;
         vertices.push(
-          this.v.clone()
-          .addScaledVector(b01, m01 * Math.cos(a))
-          .addScaledVector(c01, n01 * Math.sin(a))
+          this.v
+            .clone()
+            .addScaledVector(b01, m01 * Math.cos(a))
+            .addScaledVector(c01, n01 * Math.sin(a)),
         );
       }
       for (var ia = 1; ia < scount1; ia++) {
-        var a = s0s - ia * Math.PI / scount1;
+        var a = s0s - (ia * Math.PI) / scount1;
         vertices.push(
-          this.v.clone()
-          .addScaledVector(b0s, m0s * Math.cos(a))
-          .addScaledVector(c0s, n0s * Math.sin(a))
+          this.v
+            .clone()
+            .addScaledVector(b0s, m0s * Math.cos(a))
+            .addScaledVector(c0s, n0s * Math.sin(a)),
         );
       }
       for (var ia = 1; ia < scount1; ia++) {
-        var a = s1s - ia * Math.PI / scount1;
+        var a = s1s - (ia * Math.PI) / scount1;
         vertices.push(
-          this.v.clone()
-          .addScaledVector(b1s, m1s * Math.cos(a))
-          .addScaledVector(c1s, n1s * Math.sin(a))
+          this.v
+            .clone()
+            .addScaledVector(b1s, m1s * Math.cos(a))
+            .addScaledVector(c1s, n1s * Math.sin(a)),
         );
       }
 
@@ -759,7 +785,7 @@ var SupportGenerator = (function() {
       p1.push(outidx);
 
       // write right arcs
-      for (var ia = scount-1; ia >= 0; ia--) {
+      for (var ia = scount - 1; ia >= 0; ia--) {
         ps.push(idxsR + ia);
         p0.push(idx0R + ia);
         p1.push(idx1R + ia);
@@ -773,10 +799,10 @@ var SupportGenerator = (function() {
 
     if (this.b0) this.b0.makeProfiles(params);
     if (this.b1) this.b1.makeProfiles(params);
-  }
+  };
 
   // connect created profiles with geometry
-  SupportTreeNode.prototype.connectProfiles = function(params) {
+  SupportTreeNode.prototype.connectProfiles = function (params) {
     var geo = params.geo;
     var vertices = geo.vertices;
     var faces = geo.faces;
@@ -784,21 +810,19 @@ var SupportGenerator = (function() {
     if (this.isRoot()) {
       this.connectToBranch(this.b0, params);
       this.makeCap(params);
-    }
-    else if (this.isLeaf()) {
+    } else if (this.isLeaf()) {
       this.makeCap(params);
-    }
-    else {
+    } else {
       this.connectToBranch(this.b0, params);
       this.connectToBranch(this.b1, params);
     }
 
     if (this.b0) this.b0.connectProfiles(params);
     if (this.b1) this.b1.connectProfiles(params);
-  }
+  };
 
   // connect a node to one of its branch nodes
-  SupportTreeNode.prototype.connectToBranch = function(n, params) {
+  SupportTreeNode.prototype.connectToBranch = function (n, params) {
     if (!n) return;
 
     var geo = params.geo;
@@ -808,7 +832,7 @@ var SupportGenerator = (function() {
     var subdivs = params.subdivs;
 
     // source and target profiles
-    var sp = (n === this.b0) ? this.p0 : this.p1;
+    var sp = n === this.b0 ? this.p0 : this.p1;
     var tp = n.ps;
 
     // unit vector pointing up to other node
@@ -846,9 +870,9 @@ var SupportGenerator = (function() {
       faces.push(new THREE.Face3(a, c, d));
       faces.push(new THREE.Face3(a, d, b));
     }
-  }
+  };
 
-  SupportTreeNode.prototype.makeCap = function(params) {
+  SupportTreeNode.prototype.makeCap = function (params) {
     var geo = params.geo;
     var vertices = geo.vertices;
     var faces = geo.faces;
@@ -861,15 +885,13 @@ var SupportGenerator = (function() {
     if (this.isRoot()) {
       p = this.p0;
       vn = this.v.clone().sub(this.b0.v).normalize();
-    }
-    else if (this.isLeaf()) {
+    } else if (this.isLeaf()) {
       p = this.ps;
       vn = this.v.clone().sub(this.source.v).normalize();
-    }
-    else return;
+    } else return;
 
     // index increment (accounts for opposite winding)
-    var iincr = this.isRoot() ? subdivs - 1 : 1
+    var iincr = this.isRoot() ? subdivs - 1 : 1;
 
     // index of center vertex
     var pc = p[subdivs];
@@ -878,12 +900,12 @@ var SupportGenerator = (function() {
     for (var ii = 0; ii < subdivs; ii++) {
       faces.push(new THREE.Face3(pc, p[ii], p[(ii + iincr) % subdivs]));
     }
-  }
+  };
 
   // for root/leaf nodes, returns how far we can offset a circular profile from
   // the node such that it doesn't interfere with the other struts incident on
   // this node
-  SupportTreeNode.prototype.offsetLimit = function(radius) {
+  SupportTreeNode.prototype.offsetLimit = function (radius) {
     var isRoot = this.isRoot();
     var isLeaf = this.isLeaf();
 
@@ -912,7 +934,7 @@ var SupportGenerator = (function() {
     }
     // if leaf, a and b are n's other branch and its source
     else {
-      a = (this === n.b0) ? n.b1 : n.b0;
+      a = this === n.b0 ? n.b1 : n.b0;
       b = n.source;
     }
 
@@ -920,7 +942,8 @@ var SupportGenerator = (function() {
     var vn = this.v.clone().sub(n.v).normalize();
 
     // extents of struts a and b (due to their thickness) along n
-    var ea = 0, eb = 0;
+    var ea = 0,
+      eb = 0;
 
     if (a) {
       // unit vector along a strut
@@ -935,7 +958,7 @@ var SupportGenerator = (function() {
       // how far strut a's intersection point with n extends along n strut;
       // equal to radius / tan (acos (vn dot bna)) with
       // tan (acos x) = sqrt (1 - x*x) / x
-      var ea = radius * dna / Math.sqrt(1 - dna * dna);
+      var ea = (radius * dna) / Math.sqrt(1 - dna * dna);
     }
 
     // failsafe in case either strut is parallel to n strut
@@ -954,16 +977,16 @@ var SupportGenerator = (function() {
       // how far strut a's intersection point with n extends along n strut;
       // equal to radius / tan (acos (vn dot bna)) with
       // tan (acos x) = sqrt (1 - x*x) / x
-      b = radius * dnb / Math.sqrt(1 - dnb * dnb);
+      b = (radius * dnb) / Math.sqrt(1 - dnb * dnb);
     }
 
     // limit is strut length minus the largest of these two extents
     var limit = l - Math.max(ea, eb);
 
     return limit;
-  }
+  };
 
-  SupportTreeNode.prototype.debug = function() {
+  SupportTreeNode.prototype.debug = function () {
     if (this.b0) {
       debug.line(this.v, this.b0.v);
       this.b0.debug();
@@ -974,10 +997,7 @@ var SupportGenerator = (function() {
     }
 
     if (this.isRoot()) debug.lines(12);
-  }
-
-
+  };
 
   return SupportGenerator;
-
-}());
+})();

@@ -1,14 +1,12 @@
-var ChevronBufferGeometry = (function() {
-
+var ChevronBufferGeometry = (function () {
   function ChevronBufferGeometry(width, height, thickness, insetHeight) {
-
     THREE.BufferGeometry.call(this);
 
     this.parameters = {
       width: width,
       height: height,
       thickness: thickness,
-      insetHeight: insetHeight
+      insetHeight: insetHeight,
     };
 
     var scope = this;
@@ -28,8 +26,10 @@ var ChevronBufferGeometry = (function() {
     var halfThickness = thickness / 2;
     var halfWidth = width / 2;
     var topWallLength = Math.sqrt(halfWidth * halfWidth + height * height);
-    var insetWidth = insetHeight === 0 ? 0 : insetHeight * halfWidth / height;
-    var insetWallLength = Math.sqrt(insetHeight * insetHeight + insetWidth * insetWidth);
+    var insetWidth = insetHeight === 0 ? 0 : (insetHeight * halfWidth) / height;
+    var insetWallLength = Math.sqrt(
+      insetHeight * insetHeight + insetWidth * insetWidth,
+    );
     var botWallLength = halfWidth - insetWidth;
     var perimeterHalfLength = topWallLength + botWallLength + insetWallLength;
 
@@ -46,7 +46,10 @@ var ChevronBufferGeometry = (function() {
     }
 
     this.setIndex(indices);
-    this.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+    this.addAttribute(
+      'position',
+      new THREE.Float32BufferAttribute(vertices, 3),
+    );
     this.addAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
     this.addAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
 
@@ -91,12 +94,11 @@ var ChevronBufferGeometry = (function() {
         addVertexPair(x1, z1, normal);
         var i = index;
         if (right) {
-          indices.push(i, i+1, i+3);
-          indices.push(i, i+3, i+2);
-        }
-        else {
-          indices.push(i, i+3, i+1);
-          indices.push(i, i+2, i+3);
+          indices.push(i, i + 1, i + 3);
+          indices.push(i, i + 3, i + 2);
+        } else {
+          indices.push(i, i + 3, i + 1);
+          indices.push(i, i + 2, i + 3);
         }
 
         index += 4;
@@ -122,7 +124,7 @@ var ChevronBufferGeometry = (function() {
         addVertex(-halfWidth * sign, y, 0);
         addVertex(0, y, height);
 
-        indices.push(index, index+1, index+2);
+        indices.push(index, index + 1, index + 2);
         index += 3;
       }
       // else, make four triangle pairs
@@ -141,12 +143,11 @@ var ChevronBufferGeometry = (function() {
 
         var i = index;
         if (right) {
-          indices.push(i, i+1, i+2);
-          indices.push(i, i+2, i+3);
-        }
-        else {
-          indices.push(i, i+2, i+1);
-          indices.push(i, i+3, i+2);
+          indices.push(i, i + 1, i + 2);
+          indices.push(i, i + 2, i + 3);
+        } else {
+          indices.push(i, i + 2, i + 1);
+          indices.push(i, i + 3, i + 2);
         }
         index += 4;
       }
@@ -159,9 +160,10 @@ var ChevronBufferGeometry = (function() {
     }
   }
 
-  ChevronBufferGeometry.prototype = Object.create(THREE.BufferGeometry.prototype);
+  ChevronBufferGeometry.prototype = Object.create(
+    THREE.BufferGeometry.prototype,
+  );
   ChevronBufferGeometry.prototype.constructor = ChevronBufferGeometry;
 
   return ChevronBufferGeometry;
-
 })();

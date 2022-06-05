@@ -175,14 +175,9 @@
 
 // Anton Bovin, 2018
 
-
-
-var Measurement = (function() {
-
+var Measurement = (function () {
   var Vector3 = THREE.Vector3;
   var Plane = THREE.Plane;
-
-
 
   // utility functions
 
@@ -193,9 +188,13 @@ var Measurement = (function() {
     return x;
   }
   // compute acos, but clamp the input
-  function acos(a) { return Math.acos(clamp(a, -1, 1)); }
+  function acos(a) {
+    return Math.acos(clamp(a, -1, 1));
+  }
   // compute asin, but clamp the input
-  function asin(a) { return Math.asin(clamp(a, -1, 1)); }
+  function asin(a) {
+    return Math.asin(clamp(a, -1, 1));
+  }
 
   function axisToVector3(axis) {
     var v = new Vector3();
@@ -210,8 +209,6 @@ var Measurement = (function() {
 
     for (var i = 0; i < sourceLength; i++) target.push(source[i]);
   }
-
-
 
   // Measurement constructor
 
@@ -254,16 +251,15 @@ var Measurement = (function() {
   }
 
   Measurement.Types = {
-    none: "none",
-    length: "length",
-    angle: "angle",
-    circle: "circle",
-    crossSection: "crossSection",
-    orientedCrossSection: "orientedCrossSection"
+    none: 'none',
+    length: 'length',
+    angle: 'angle',
+    circle: 'circle',
+    crossSection: 'crossSection',
+    orientedCrossSection: 'orientedCrossSection',
   };
 
   Object.assign(Measurement.prototype, {
-
     constructor: Measurement,
 
     // prototype material for line markers
@@ -272,7 +268,7 @@ var Measurement = (function() {
       // if marker has z-fighting with a surface, prioritize the marker
       polygonOffset: true,
       polygonOffsetFactor: 2,
-      polygonOffsetUnits: 1
+      polygonOffsetUnits: 1,
     }),
 
     meshMarkerMaterial: new THREE.MeshStandardMaterial({
@@ -280,14 +276,14 @@ var Measurement = (function() {
       // if marker has z-fighting with a surface, prioritize the marker
       polygonOffset: true,
       polygonOffsetFactor: 2,
-      polygonOffsetUnits: 1
+      polygonOffsetUnits: 1,
     }),
 
-    start: function(params) {
+    start: function (params) {
       this.params = params || {};
       this.params.type = this.params.type || Measurement.Types.length;
 
-      if (!this.params.hasOwnProperty("color")) this.params.color =  0x2adeff;
+      if (!this.params.hasOwnProperty('color')) this.params.color = 0x2adeff;
 
       // if true, don't automatically calculate the measurement when there are
       // enough points - necessiatates a manual call to .calculate()
@@ -306,8 +302,8 @@ var Measurement = (function() {
 
       this.result = this.makeResult(false);
 
-      var pparams = { name: "measurementMarkerPrimary" + this.uuid };
-      var sparams = { name: "measurementMarkerSecondary" + this.uuid };
+      var pparams = { name: 'measurementMarkerPrimary' + this.uuid };
+      var sparams = { name: 'measurementMarkerSecondary' + this.uuid };
 
       var scene = this.scene;
       var type = this.params.type;
@@ -320,38 +316,37 @@ var Measurement = (function() {
         this.stype = Markers.Types.line;
         pparams.material = this.meshMarkerMaterial.clone();
         sparams.material = this.lineMarkerMaterial.clone();
-      }
-      else if (type === Measurement.Types.angle) {
+      } else if (type === Measurement.Types.angle) {
         this.pnum = 3; // 3 sphere markers
         this.snum = 2; // 2 line marker
         this.ptype = Markers.Types.sphere;
         this.stype = Markers.Types.line;
         pparams.material = this.meshMarkerMaterial.clone();
         sparams.material = this.lineMarkerMaterial.clone();
-      }
-      else if (type === Measurement.Types.circle) {
+      } else if (type === Measurement.Types.circle) {
         this.pnum = 3; // 3 sphere markers
         this.snum = 1; // 1 circle marker
         this.ptype = Markers.Types.sphere;
         this.stype = Markers.Types.circle;
         pparams.material = this.meshMarkerMaterial.clone();
         sparams.material = this.lineMarkerMaterial.clone();
-      }
-      else if (type === Measurement.Types.crossSection) {
+      } else if (type === Measurement.Types.crossSection) {
         this.pnum = 1; // 1 plane marker
         this.snum = 1; // 1 contour marker
         this.ptype = Markers.Types.plane;
         this.stype = Markers.Types.contour;
 
-        this.params.axis = this.params.axis || "z";
+        this.params.axis = this.params.axis || 'z';
         // normal of the axis-oriented plane denoting the cross-section
-        this.params.normal = this.params.normal || axisToVector3(this.params.axis);
+        this.params.normal =
+          this.params.normal || axisToVector3(this.params.axis);
         // true if selecting only the closest contour to the center of the circle
         // subtended by the markers
         this.params.nearestContour = this.params.nearestContour || false;
         // true if splitting the segment soup into an array of contiguous loops,
         // and necessarily true if finding the nearest contour
-        this.params.splitContours = this.params.nearestContour || this.params.splitContours || false;
+        this.params.splitContours =
+          this.params.nearestContour || this.params.splitContours || false;
 
         // use this normal to create the plane marker
         pparams.axis = this.params.axis;
@@ -360,11 +355,10 @@ var Measurement = (function() {
         pparams.material.setValues({
           transparent: true,
           opacity: 0.25,
-          side: THREE.DoubleSide
+          side: THREE.DoubleSide,
         });
         sparams.material = this.lineMarkerMaterial.clone();
-      }
-      else if (type === Measurement.Types.orientedCrossSection) {
+      } else if (type === Measurement.Types.orientedCrossSection) {
         this.pnum = 3; // 3 sphere markers
         this.snum = 1; // 1 contour Marker
         this.ptype = Markers.Types.sphere;
@@ -375,20 +369,24 @@ var Measurement = (function() {
         this.params.nearestContour = this.params.nearestContour || false;
         // true if splitting the segment soup into an array of contiguous loops,
         // and necessarily true if finding the nearest contour
-        this.params.splitContours = this.params.nearestContour || this.params.splitContours || false;
+        this.params.splitContours =
+          this.params.nearestContour || this.params.splitContours || false;
         // true if calculating manually and need to show an intermediate circle
         // marker while the measurement hasn't been calculated
         this.params.showPreviewMarker =
-          this.params.calculateManually && (this.params.showPreviewMarker || false);
+          this.params.calculateManually &&
+          (this.params.showPreviewMarker || false);
         // if showing preview circle marker, this is its radial offset from the
         // computed circle subtended by the 3 primary markers
-        this.params.previewMarkerRadiusOffset = this.params.previewMarkerRadiusOffset || 0.0;
-        this.params.previewMarkerColor = this.params.previewMarkerColor || this.params.color;
+        this.params.previewMarkerRadiusOffset =
+          this.params.previewMarkerRadiusOffset || 0.0;
+        this.params.previewMarkerColor =
+          this.params.previewMarkerColor || this.params.color;
 
         // make a special preview marker if necessary
         if (this.params.showPreviewMarker) {
           this.previewMarker = Markers.create(Markers.Types.circle, {
-            name: "measurementMarkerPreview" + this.uuid
+            name: 'measurementMarkerPreview' + this.uuid,
           });
           this.previewMarker.setColor(this.params.previewMarkerColor);
           this.previewMarker.addToScene(scene);
@@ -396,8 +394,7 @@ var Measurement = (function() {
 
         pparams.material = this.meshMarkerMaterial.clone();
         sparams.material = this.lineMarkerMaterial.clone();
-      }
-      else return;
+      } else return;
 
       // generate the markers and add them to the scene
       for (var ip = 0; ip < this.pnum; ip++) {
@@ -422,7 +419,10 @@ var Measurement = (function() {
         this.calculate();
       }
       // else if params.p is not an array in the right format, initialize the points
-      else if (!Array.isArray(this.params.p) || this.params.p.length !== this.pnum){
+      else if (
+        !Array.isArray(this.params.p) ||
+        this.params.p.length !== this.pnum
+      ) {
         this.params.p = [];
 
         for (var p = 0; p < this.pnum; p++) this.params.p.push(null);
@@ -443,17 +443,21 @@ var Measurement = (function() {
       this.activate();
     },
 
-    dispose: function() {
+    dispose: function () {
       this.deactivate();
 
-      var namePrimary = "measurementMarkerPrimary" + this.uuid;
-      var nameSecondary = "measurementMarkerSecondary" + this.uuid;
-      var namePreview = "measurementMarkerPreview" + this.uuid;
+      var namePrimary = 'measurementMarkerPrimary' + this.uuid;
+      var nameSecondary = 'measurementMarkerSecondary' + this.uuid;
+      var namePreview = 'measurementMarkerPreview' + this.uuid;
 
       for (var i = this.scene.children.length - 1; i >= 0; i--) {
         var child = this.scene.children[i];
 
-        if (child.name === namePrimary || child.name === nameSecondary || child.name === namePreview) {
+        if (
+          child.name === namePrimary ||
+          child.name === nameSecondary ||
+          child.name === namePreview
+        ) {
           this.scene.remove(child);
         }
       }
@@ -461,7 +465,7 @@ var Measurement = (function() {
       this.onResultChange = null;
     },
 
-    activate: function() {
+    activate: function () {
       this.pointer.activate();
 
       this.pointer.addCallback(this.uuid, this.placePoint.bind(this));
@@ -469,7 +473,7 @@ var Measurement = (function() {
       this.active = true;
     },
 
-    deactivate: function() {
+    deactivate: function () {
       // if this measurement is associated with the pointer, remove the click
       // callback and deactivate the pointer; don't deactivate if pointer isn't
       // associated with the current measurement b/c the pointer might be shared
@@ -480,11 +484,11 @@ var Measurement = (function() {
       this.active = false;
     },
 
-    getType: function() {
+    getType: function () {
       return this.params.type;
     },
 
-    placePoint: function(intersection) {
+    placePoint: function (intersection) {
       var point = intersection.point;
 
       this.params.p[this.pidx] = point;
@@ -497,18 +501,18 @@ var Measurement = (function() {
       this.positionPreviewMarker();
     },
 
-    setParams: function(params) {
+    setParams: function (params) {
       Object.assign(this.params, params);
 
       return this;
     },
 
-    getParams: function() {
+    getParams: function () {
       return this.params;
     },
 
     // return true if a sufficient number of points is given
-    isFullyDetermined: function() {
+    isFullyDetermined: function () {
       if (!this.params.p) return false;
 
       var type = this.params.type;
@@ -516,30 +520,26 @@ var Measurement = (function() {
       if (type === Measurement.Types.length) {
         // need 2 constraining points
         return this.params.p[0] && this.params.p[1];
-      }
-      else if (type === Measurement.Types.angle) {
+      } else if (type === Measurement.Types.angle) {
         // need 3 constraining points
         return this.params.p[0] && this.params.p[1] && this.params.p[2];
-      }
-      else if (type === Measurement.Types.circle) {
+      } else if (type === Measurement.Types.circle) {
         // need 3 constraining points
         return this.params.p[0] && this.params.p[1] && this.params.p[2];
-      }
-      else if (type === Measurement.Types.crossSection) {
+      } else if (type === Measurement.Types.crossSection) {
         // need 1 constraining point
         return this.params.p[0];
-      }
-      else if (type === Measurement.Types.orientedCrossSection) {
+      } else if (type === Measurement.Types.orientedCrossSection) {
         // need 3 constraining points
         return this.params.p[0] && this.params.p[1] && this.params.p[2];
-      }
-      else return true;
+      } else return true;
     },
 
-    calculateNoninteractive: function(params) {
+    calculateNoninteractive: function (params) {
       this.params = params || {};
       this.params.type = this.params.type || Measurement.Types.length;
-      this.params.normal = this.params.normal || axisToVector3(this.params.axis);
+      this.params.normal =
+        this.params.normal || axisToVector3(this.params.axis);
       this.params.p = this.params.p || [];
 
       this.calculate();
@@ -547,7 +547,7 @@ var Measurement = (function() {
       return this.result;
     },
 
-    calculate: function() {
+    calculate: function () {
       // if not enough points, do nothing
       if (!this.isFullyDetermined()) return;
 
@@ -571,8 +571,7 @@ var Measurement = (function() {
         this.result.length = diff.length();
         this.result.vector = vector3Abs(diff);
         this.result.ready = true;
-      }
-      else if (type === Measurement.Types.angle) {
+      } else if (type === Measurement.Types.angle) {
         var p0 = this.params.p[0];
         var p1 = this.params.p[1];
         var p2 = this.params.p[2];
@@ -584,15 +583,15 @@ var Measurement = (function() {
         var dot = d10.dot(d12);
 
         this.result.angle = acos(dot);
-        this.result.angleDegrees = this.result.angle * 180.0 / Math.PI;
+        this.result.angleDegrees = (this.result.angle * 180.0) / Math.PI;
         this.result.ready = true;
-      }
-      else if (type === Measurement.Types.circle) {
+      } else if (type === Measurement.Types.circle) {
         var p0 = this.params.p[0];
         var p1 = this.params.p[1];
         var p2 = this.params.p[2];
 
-        var circle = (p0 && p1 && p2) ? Calculate.circleFromThreePoints(p0, p1, p2) : null;
+        var circle =
+          p0 && p1 && p2 ? Calculate.circleFromThreePoints(p0, p1, p2) : null;
 
         if (!circle) return;
 
@@ -607,8 +606,10 @@ var Measurement = (function() {
         this.result.center = center;
         this.result.normal = normal;
         this.result.ready = true;
-      }
-      else if (type === Measurement.Types.crossSection || type === Measurement.Types.orientedCrossSection) {
+      } else if (
+        type === Measurement.Types.crossSection ||
+        type === Measurement.Types.orientedCrossSection
+      ) {
         // variables that determine the plane
         var normal, point;
 
@@ -640,11 +641,17 @@ var Measurement = (function() {
         plane.setFromNormalAndCoplanarPoint(normal, point);
 
         // having the plane, we can compute the cross-section
-        var contours = Calculate.crossSection(plane, this.pointer.objects, this.params.splitContours);
+        var contours = Calculate.crossSection(
+          plane,
+          this.pointer.objects,
+          this.params.splitContours,
+        );
 
         // if getting the nearest contour, retrieve it and use it as the measurement result
         if (this.params.nearestContour) {
-          contours = [Calculate.nearestContourToPoints(contours, this.params.p)];
+          contours = [
+            Calculate.nearestContourToPoints(contours, this.params.p),
+          ];
         }
 
         // final quantities
@@ -705,13 +712,13 @@ var Measurement = (function() {
     },
 
     // position all markers
-    positionMarkers: function() {
+    positionMarkers: function () {
       this.positionPrimaryMarkers();
       this.positionSecondaryMarkers();
     },
 
     // position the mouse-driven markers
-    positionPrimaryMarkers: function() {
+    positionPrimaryMarkers: function () {
       if (this.ptype === Markers.Types.sphere) {
         for (var m = 0; m < this.pnum; m++) {
           var pos = this.params.p[m];
@@ -723,8 +730,7 @@ var Measurement = (function() {
             marker.activate();
           }
         }
-      }
-      else if (this.ptype === Markers.Types.plane) {
+      } else if (this.ptype === Markers.Types.plane) {
         var marker = this.pmarkers[0];
 
         if (!this.result || !this.result.ready) return;
@@ -741,7 +747,7 @@ var Measurement = (function() {
     },
 
     // position secondary markers
-    positionSecondaryMarkers: function() {
+    positionSecondaryMarkers: function () {
       if (!this.smarkers || this.smarkers.length === 0) {
         return;
       }
@@ -754,13 +760,11 @@ var Measurement = (function() {
           if (ps && pt) {
             this.smarkers[m].setFromPointPair(ps, pt);
             this.smarkers[m].activate();
-          }
-          else {
+          } else {
             this.smarkers[m].deactivate();
           }
         }
-      }
-      else if (this.stype === Markers.Types.circle) {
+      } else if (this.stype === Markers.Types.circle) {
         var marker = this.smarkers[0];
 
         // if result is valid, position the marker and turn it on
@@ -779,19 +783,17 @@ var Measurement = (function() {
         else {
           marker.deactivate();
         }
-      }
-      else if (this.stype === Markers.Types.contour) {
+      } else if (this.stype === Markers.Types.contour) {
         if (this.result.ready) {
           this.smarkers[0].activate();
         }
-      }
-      else {
+      } else {
         this.smarkers[0].activate();
       }
     },
 
     // if a preview marker exists, position it
-    positionPreviewMarker: function() {
+    positionPreviewMarker: function () {
       if (!this.previewMarker || !this.isFullyDetermined()) return;
 
       var p0 = this.params.p[0];
@@ -809,18 +811,20 @@ var Measurement = (function() {
 
       this.previewMarker.setCenter(center);
       this.previewMarker.setNormal(normal);
-      this.previewMarker.setRadius(radius + this.params.previewMarkerRadiusOffset);
+      this.previewMarker.setRadius(
+        radius + this.params.previewMarkerRadiusOffset,
+      );
 
       this.previewMarker.activate();
     },
 
-    makeResult: function(ready) {
+    makeResult: function (ready) {
       return {
-        ready: ready || false
+        ready: ready || false,
       };
     },
 
-    updateFromCamera: function(camera) {
+    updateFromCamera: function (camera) {
       // only update if measurement uses non-plane markers
       if (this.ptype !== Markers.Types.sphere) return;
 
@@ -835,7 +839,7 @@ var Measurement = (function() {
       }
     },
 
-    scaleFromPoint: function(factor, point) {
+    scaleFromPoint: function (factor, point) {
       // scale measurement constraints
       for (var i = 0; i < this.params.p.length; i++) {
         var p = this.params.p[i];
@@ -875,16 +879,16 @@ var Measurement = (function() {
 
       if (this.params.type === Measurement.Types.length) {
         result.length *= f;
-      }
-      else if (this.params.type === Measurement.Types.circle) {
+      } else if (this.params.type === Measurement.Types.circle) {
         result.radius *= f;
         result.diameter *= f;
         result.circumference *= f;
         result.area *= f * f;
         result.center.sub(point).multiplyScalar(f).add(point);
-      }
-      else if (this.params.type === Measurement.Types.crossSection
-        || this.params.type === Measurement.Types.orientedCrossSection) {
+      } else if (
+        this.params.type === Measurement.Types.crossSection ||
+        this.params.type === Measurement.Types.orientedCrossSection
+      ) {
         result.area *= f * f;
         result.boundingBox.min.sub(point).multiplyScalar(f).add(point);
         result.boundingBox.max.sub(point).multiplyScalar(f).add(point);
@@ -899,7 +903,7 @@ var Measurement = (function() {
       }
     },
 
-    translate: function(delta) {
+    translate: function (delta) {
       // translate measurement constraints
       for (var i = 0; i < this.params.p.length; i++) {
         var p = this.params.p[i];
@@ -927,17 +931,14 @@ var Measurement = (function() {
 
       if (this.params.type === Measurement.Types.circle) {
         this.result.center.add(delta);
-      }
-      else if (this.params.type === Measurement.Types.crossSection
-        || this.params.type === Measurement.Types.orientedCrossSection) {
+      } else if (
+        this.params.type === Measurement.Types.crossSection ||
+        this.params.type === Measurement.Types.orientedCrossSection
+      ) {
         this.result.boundingBox.translate(delta);
       }
-    }
-
+    },
   });
 
-
-
   return Measurement;
-
 })();

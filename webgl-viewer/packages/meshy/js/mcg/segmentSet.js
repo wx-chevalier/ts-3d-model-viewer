@@ -1,5 +1,4 @@
-MCG.SegmentSet = (function() {
-
+MCG.SegmentSet = (function () {
   function SegmentSet(context) {
     MCG.GeometrySet.call(this, context);
 
@@ -9,14 +8,13 @@ MCG.SegmentSet = (function() {
   SegmentSet.prototype = Object.create(MCG.GeometrySet.prototype);
 
   Object.assign(SegmentSet.prototype, {
-
     constructor: SegmentSet,
 
-    addPointPair: function(p1, p2) {
+    addPointPair: function (p1, p2) {
       this.add(new MCG.Segment(this.context, p1, p2));
     },
 
-    forEachPointPair: function(f) {
+    forEachPointPair: function (f) {
       var segments = this.elements;
       var ct = this.count();
 
@@ -26,7 +24,7 @@ MCG.SegmentSet = (function() {
       }
     },
 
-    makeAdjacencyMap: function() {
+    makeAdjacencyMap: function () {
       var adjacencyMap = new MCG.DirectedAdjacencyMap(this.context);
 
       var segments = this.elements;
@@ -39,7 +37,7 @@ MCG.SegmentSet = (function() {
       return adjacencyMap;
     },
 
-    toPolygonSet: function() {
+    toPolygonSet: function () {
       var context = this.context;
 
       var pset = new MCG.PolygonSet(context);
@@ -55,12 +53,10 @@ MCG.SegmentSet = (function() {
       return pset;
     },
 
-    pointCount: function() {
+    pointCount: function () {
       return this.count() * 2;
-    }
-
+    },
   });
 
   return SegmentSet;
-
 })();

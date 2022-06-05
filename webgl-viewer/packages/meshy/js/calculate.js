@@ -11,18 +11,13 @@
 
 // Anton Bovin, 2018
 
-
-
-var Calculate = (function() {
-
+var Calculate = (function () {
   // shorthands for Three.js constructors
 
   var Vector3 = THREE.Vector3;
   var Line3 = THREE.Line3;
   var Box3 = THREE.Box3;
   var Plane = THREE.Plane;
-
-
 
   // internal functions - computations are performed on 3 vertices instead of
   // Face3 objects
@@ -37,8 +32,8 @@ var Calculate = (function() {
 
   function _triangleVolume(va, vb, vc) {
     var volume = 0;
-    volume += (-vc.x*vb.y*va.z + vb.x*vc.y*va.z + vc.x*va.y*vb.z);
-    volume += (-va.x*vc.y*vb.z - vb.x*va.y*vc.z + va.x*vb.y*vc.z);
+    volume += -vc.x * vb.y * va.z + vb.x * vc.y * va.z + vc.x * va.y * vb.z;
+    volume += -va.x * vc.y * vb.z - vb.x * va.y * vc.z + va.x * vb.y * vc.z;
 
     return volume / 6.0;
   }
@@ -98,15 +93,24 @@ var Calculate = (function() {
       // if 2, two of the intersection points will be coincident; return two
       // non-coincident points (but only if one of them is above the plane)
       if (iab.equals(ibc) && (da > 0 || dc > 0)) result = new Line3(iab, ica);
-      else if (ibc.equals(ica) && (db > 0 || da > 0)) result = new Line3(ibc, iab);
-      else if (ica.equals(iab) && (dc > 0 || db > 0)) result = new Line3(ica, ibc);
+      else if (ibc.equals(ica) && (db > 0 || da > 0))
+        result = new Line3(ibc, iab);
+      else if (ica.equals(iab) && (dc > 0 || db > 0))
+        result = new Line3(ica, ibc);
       else return null;
     }
     // else two intersections, so get them and set the result
     else {
       // get the first and second intersections
       var v0 = iab !== undefined ? iab : ibc !== undefined ? ibc : ica;
-      var v1 = v0 === iab ? (ibc !== undefined ? ibc : ica) : (v0 === ibc ? ica : undefined);
+      var v1 =
+        v0 === iab
+          ? ibc !== undefined
+            ? ibc
+            : ica
+          : v0 === ibc
+          ? ica
+          : undefined;
 
       // if either intersection doesn't exist, return null
       if (v0 === undefined || v1 === undefined) return null;
@@ -130,8 +134,6 @@ var Calculate = (function() {
 
     return result;
   }
-
-
 
   // external functions
 
@@ -260,9 +262,9 @@ var Calculate = (function() {
           callback(va, vb, vc, normal, i / 3);
         }
       }
-    }
-    else {
-      var faces = geo.faces, vertices = geo.vertices;
+    } else {
+      var faces = geo.faces,
+        vertices = geo.vertices;
 
       for (var f = 0; f < faces.length; f++) {
         var face = faces[f];
@@ -279,7 +281,7 @@ var Calculate = (function() {
   function _surfaceArea(mesh) {
     var area = 0;
 
-    _traverseFaces(mesh, function(va, vb, vc) {
+    _traverseFaces(mesh, function (va, vb, vc) {
       area += _triangleArea(va, vb, vc);
     });
 
@@ -290,7 +292,7 @@ var Calculate = (function() {
   function _volume(mesh) {
     var volume = 0;
 
-    _traverseFaces(mesh, function(va, vb, vc) {
+    _traverseFaces(mesh, function (va, vb, vc) {
       volume += _triangleVolume(va, vb, vc);
     });
 
@@ -302,7 +304,7 @@ var Calculate = (function() {
     var center = new Vector3();
     var volume = 0;
 
-    _traverseFaces(mesh, function(va, vb, vc) {
+    _traverseFaces(mesh, function (va, vb, vc) {
       var faceVolume = _triangleVolume(va, vb, vc);
       var faceCenterOfMass = _triangleCenterOfMass(va, vb, vc);
 
@@ -339,7 +341,7 @@ var Calculate = (function() {
     // store the segments forming the intersection
     var segments = [];
 
-    _traverseFaces(mesh, function(va, vb, vc, normal) {
+    _traverseFaces(mesh, function (va, vb, vc, normal) {
       var segment = _planeTriangleIntersection(plane, va, vb, vc, normal);
 
       // nonzero contribution if plane intersects face
@@ -348,7 +350,9 @@ var Calculate = (function() {
 
     // make an array of polygons - if not splitting, the only element will be
     // an aggregate of the all the segments of the cross-section
-    var segmentSets = splitPolygons ? _polygonsFromSegments(segments) : [segments];
+    var segmentSets = splitPolygons
+      ? _polygonsFromSegments(segments)
+      : [segments];
 
     // calculate a { segments, boundingBox, area, length } object for each poly
     var result = [];
@@ -389,7 +393,7 @@ var Calculate = (function() {
         segments: segmentSet,
         boundingBox: boundingBox,
         area: area,
-        length: length
+        length: length,
       });
     }
 
@@ -430,7 +434,10 @@ var Calculate = (function() {
           segment.closestPointToPoint(point, false, closestPoint);
 
           // update min distance from contour to this point
-          contourMinDist[p] = Math.min(contourMinDist[p], closestPoint.distanceTo(point));
+          contourMinDist[p] = Math.min(
+            contourMinDist[p],
+            closestPoint.distanceTo(point),
+          );
         }
       }
 
@@ -453,7 +460,7 @@ var Calculate = (function() {
   // returns an object like { segments, boundingBox, area, length }
   function _planarConvexHull(plane, segments) {
     if (THREE.QuickHull === undefined) {
-      console.error("Calculating the convex hull relies on THREE.QuickHull.");
+      console.error('Calculating the convex hull relies on THREE.QuickHull.');
 
       return null;
     }
@@ -556,7 +563,7 @@ var Calculate = (function() {
       segments: segments,
       boundingBox: boundingBox,
       area: area,
-      length: length
+      length: length,
     };
   }
 
@@ -596,7 +603,9 @@ var Calculate = (function() {
     if (denominator === 0) return null;
 
     // scalar parameter
-    var ta = da.clone().addScaledVector(db, -dadb).dot(pb.clone().sub(pa)) / denominator;
+    var ta =
+      da.clone().addScaledVector(db, -dadb).dot(pb.clone().sub(pa)) /
+      denominator;
 
     var center = pa.clone().addScaledVector(da, ta);
     var radius = center.distanceTo(p2);
@@ -604,18 +613,18 @@ var Calculate = (function() {
     return {
       normal: normal,
       center: center,
-      radius: radius
+      radius: radius,
     };
   }
 
   // hash map utilities for extracting polygons from segment lists
 
   function _numHash(n, p) {
-    return Math.round(n*p);
+    return Math.round(n * p);
   }
 
   function _vectorHash(v, p) {
-    return _numHash(v.x, p)+'_' + _numHash(v.y, p) + '_' + _numHash(v.z, p);
+    return _numHash(v.x, p) + '_' + _numHash(v.y, p) + '_' + _numHash(v.z, p);
   }
 
   function _objectGetKey(object) {
@@ -688,7 +697,6 @@ var Calculate = (function() {
     crossSection: _crossSection,
     nearestContourToPoints: _nearestContourToPoints,
     planarConvexHull: _planarConvexHull,
-    circleFromThreePoints: _circleFromThreePoints
+    circleFromThreePoints: _circleFromThreePoints,
   };
-
 })();

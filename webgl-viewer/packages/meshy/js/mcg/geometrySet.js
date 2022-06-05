@@ -1,5 +1,4 @@
-MCG.GeometrySet = (function() {
-
+MCG.GeometrySet = (function () {
   function GeometrySet(context) {
     this.context = context;
 
@@ -14,8 +13,7 @@ MCG.GeometrySet = (function() {
   }
 
   Object.assign(GeometrySet.prototype, {
-
-    add: function(e) {
+    add: function (e) {
       if (e.valid()) {
         this.elements.push(e);
 
@@ -25,18 +23,18 @@ MCG.GeometrySet = (function() {
       return this;
     },
 
-    initBounds: function() {
+    initBounds: function () {
       var context = this.context;
 
       this.min = new MCG.Vector(context).setScalar(Infinity);
       this.max = new MCG.Vector(context).setScalar(-Infinity);
     },
 
-    count: function() {
+    count: function () {
       return this.elements.length;
     },
 
-    forEach: function(f) {
+    forEach: function (f) {
       var elements = this.elements;
       var ct = this.elements.length;
 
@@ -45,10 +43,10 @@ MCG.GeometrySet = (function() {
       }
     },
 
-    filter: function(valid) {
+    filter: function (valid) {
       var result = [];
 
-      this.forEach(function(element) {
+      this.forEach(function (element) {
         if (valid(element)) result.push(element);
       });
 
@@ -57,11 +55,11 @@ MCG.GeometrySet = (function() {
       return this;
     },
 
-    rotate: function(angle) {
+    rotate: function (angle) {
       this.initBounds();
       var _this = this;
 
-      this.forEach(function(element) {
+      this.forEach(function (element) {
         element.rotate(angle);
         element.updateBoundsFromThis(_this.min, _this.max);
       });
@@ -69,35 +67,33 @@ MCG.GeometrySet = (function() {
       return this;
     },
 
-    clone: function(recursive) {
+    clone: function (recursive) {
       var clone = new this.constructor(this.context);
       var elements = clone.elements;
 
-      this.forEach(function(element) {
+      this.forEach(function (element) {
         elements.push(recursive ? element.clone(recursive) : element);
       });
 
       return clone;
     },
 
-    merge: function(other) {
+    merge: function (other) {
       var elements = this.elements;
 
-      other.forEach(function(element) {
+      other.forEach(function (element) {
         elements.push(element);
       });
 
       return this;
     },
 
-    setContext: function(context) {
+    setContext: function (context) {
       this.context = context;
 
       return this;
-    }
-
+    },
   });
 
   return GeometrySet;
-
 })();

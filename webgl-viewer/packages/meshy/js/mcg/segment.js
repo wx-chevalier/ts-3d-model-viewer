@@ -1,5 +1,4 @@
-MCG.Segment = (function() {
-
+MCG.Segment = (function () {
   function Segment(context, p1, p2) {
     this.context = context;
 
@@ -10,8 +9,7 @@ MCG.Segment = (function() {
   }
 
   Object.assign(Segment.prototype, {
-
-    fromVector3Pair: function(v1, v2, normal) {
+    fromVector3Pair: function (v1, v2, normal) {
       var context = this.context;
 
       var p1 = new MCG.Vector(context).fromVector3(v1);
@@ -38,43 +36,41 @@ MCG.Segment = (function() {
       return this;
     },
 
-    valid: function() {
+    valid: function () {
       if (!(this.p1 && this.p2)) return false;
 
       return !MCG.Math.coincident(this.p1, this.p2);
     },
 
-    clone: function(recursive) {
+    clone: function (recursive) {
       var p1 = recursive ? this.p1.clone() : this.p1;
       var p2 = recursive ? this.p2.clone() : this.p2;
 
       return new this.constructor(this.context, p1, p2);
     },
 
-    rotate: function(angle) {
+    rotate: function (angle) {
       this.p1.rotate(angle);
       this.p2.rotate(angle);
 
       return this;
     },
 
-    updateBoundsFromThis: function(min, max) {
+    updateBoundsFromThis: function (min, max) {
       min.min(this.p1);
       max.max(this.p1);
       min.min(this.p2);
       max.max(this.p2);
     },
 
-    lengthSq: function() {
+    lengthSq: function () {
       return this.p1.distanceToSq(this.p2);
     },
 
-    length: function() {
+    length: function () {
       return this.pq.distanceTo(this.p2);
-    }
-
+    },
   });
 
   return Segment;
-
 })();

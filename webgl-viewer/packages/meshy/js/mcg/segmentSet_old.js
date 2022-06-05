@@ -8,7 +8,7 @@ function SegmentSet(axis, epsilon) {
   this.segments = [];
 }
 
-SegmentSet.prototype.addSegment = function(v1, v2, normal) {
+SegmentSet.prototype.addSegment = function (v1, v2, normal) {
   if (coincident(v1, v2, this.epsilon)) return;
 
   var segment;
@@ -21,10 +21,10 @@ SegmentSet.prototype.addSegment = function(v1, v2, normal) {
   //debug.ray(segment.v1.clone().add(segment.v2).divideScalar(2), normal, 0.1);
 
   this.segments.push(segment);
-}
+};
 
 // do a union operation on all segments to eliminate segments inside polygons
-SegmentSet.prototype.unify = function() {
+SegmentSet.prototype.unify = function () {
   var axis = this.axis;
   var ah = this.ah;
   var av = this.av;
@@ -43,7 +43,7 @@ SegmentSet.prototype.unify = function() {
   // priority queue storing events from left to right
   var sweepEvents = new PriorityQueue({
     comparator: pqComparator,
-    strategy: PriorityQueue.BHeapStrategy
+    strategy: PriorityQueue.BHeapStrategy,
   });
   var so = 0;
   for (var s = 0; s < ns; s++) {
@@ -60,12 +60,12 @@ SegmentSet.prototype.unify = function() {
   while (sweepEvents.length > 0) {
     var event = sweepEvents.dequeue();
 
-    if (false && event.v[ah] >= 0 && event.v[ah]<=2.5) {
+    if (false && event.v[ah] >= 0 && event.v[ah] <= 2.5) {
       if (prev !== null) {
         console.log(
           compare(prev.v[ah], event.v[ah], epsilon),
           compare(prev.v[av], event.v[av], epsilon),
-          pqComparator(prev, event)
+          pqComparator(prev, event),
         );
       }
       prev = event;
@@ -85,22 +85,20 @@ SegmentSet.prototype.unify = function() {
 
       event.setDepthFromBelow(dn);
 
-      if (false && event.v[ah] >= 0 && event.v[ah]<=2.5) {
-
-        if (event.depthBelow<0 || event.depthAbove<0) {
-          eventPrint(dn, "DN", true);
-          eventPrint(up, "UP", true);
+      if (false && event.v[ah] >= 0 && event.v[ah] <= 2.5) {
+        if (event.depthBelow < 0 || event.depthAbove < 0) {
+          eventPrint(dn, 'DN', true);
+          eventPrint(up, 'UP', true);
           eventDraw(event, 0.5, undefined, true);
           var it = status.iterator();
           var e;
           while ((e = it.next()) !== null) {
-            eventPrint(e, "ST", true);
+            eventPrint(e, 'ST', true);
           }
           statusDraw(0.4, true);
         }
         printEvents = true;
-      }
-      else printEvents = false;
+      } else printEvents = false;
 
       eventPrint(event);
       eventDraw(event, o, 0x999999);
@@ -108,8 +106,7 @@ SegmentSet.prototype.unify = function() {
       if (dn !== null) {
         if (eventsCollinear(event, dn)) {
           handleEventOverlap(event, dn);
-        }
-        else {
+        } else {
           handleEventIntersection(event, dn);
         }
       }
@@ -117,13 +114,11 @@ SegmentSet.prototype.unify = function() {
       if (up !== null) {
         if (eventsCollinear(event, up)) {
           handleEventOverlap(event, up);
-        }
-        else {
+        } else {
           handleEventIntersection(event, up);
         }
       }
-    }
-    else {
+    } else {
       var te = event.twin;
 
       if (te.contributing) {
@@ -131,20 +126,28 @@ SegmentSet.prototype.unify = function() {
         if (!res) {
           te.outOfOrder = true;
 
-          var r = event, l = event.twin;
+          var r = event,
+            l = event.twin;
           console.log(r.id, l.id);
         }
       }
 
       if (eventValid(te)) {
-        debug.line(event.v, te.v, 1, false, 0.1 + (incrHeight&&!drawEvents ? o/7 : 0), axis);
+        debug.line(
+          event.v,
+          te.v,
+          1,
+          false,
+          0.1 + (incrHeight && !drawEvents ? o / 7 : 0),
+          axis,
+        );
       }
 
       eventPrint(event);
       eventDraw(event, o);
     }
 
-    statusDraw(o+0.6);
+    statusDraw(o + 0.6);
     o += 1;
   }
 
@@ -160,7 +163,8 @@ SegmentSet.prototype.unify = function() {
   function pqComparator(a, b) {
     if (a.id === b.id) return 0;
 
-    var va = a.v, vb = b.v;
+    var va = a.v,
+      vb = b.v;
 
     var hcomp = compare(va[ah], vb[ah], epsilon);
 
@@ -208,7 +212,8 @@ SegmentSet.prototype.unify = function() {
 
   // return vertical axis comparison for two left events
   function vcompare(a, b) {
-    var avh = a.v[ah], bvh = b.v[ah];
+    var avh = a.v[ah],
+      bvh = b.v[ah];
 
     // sorting by initial vertical coordinates doesn't work because the segments
     // will not generally have vertical overlap there, so find the first
@@ -217,8 +222,7 @@ SegmentSet.prototype.unify = function() {
     if (avh > bvh) {
       avv = a.v[av];
       bvv = vinterpolate(b, avh);
-    }
-    else {
+    } else {
       avv = vinterpolate(a, bvh);
       bvv = b.v[av];
     }
@@ -243,7 +247,8 @@ SegmentSet.prototype.unify = function() {
   }
 
   function addSegmentEvents(segment) {
-    var v1 = segment.v1, v2 = segment.v2;
+    var v1 = segment.v1,
+      v2 = segment.v2;
 
     // make events
     var event1 = efactory.create(v1);
@@ -254,7 +259,7 @@ SegmentSet.prototype.unify = function() {
     event2.twin = event1;
 
     var vertical = equal(v1[ah], v2[ah], epsilon);
-    var dir = vertical ? (v1[av] < v2[av]) : (v1[ah] < v2[ah]);
+    var dir = vertical ? v1[av] < v2[av] : v1[ah] < v2[ah];
 
     // assign flags
     // (v1 and v2 assigned s.t. poly interior is on left of v1 -> v2 edge;
@@ -290,7 +295,7 @@ SegmentSet.prototype.unify = function() {
     if (a === null || b === null) return;
 
     if (!a.contributing || !b.contributing) {
-      console.log("FOOOOO");
+      console.log('FOOOOO');
       return;
     }
 
@@ -307,17 +312,20 @@ SegmentSet.prototype.unify = function() {
     // 3. invalidate left event at x and its twin,
     // 4. adjust right event at y and its twin to represent the combined
     //    weights and depths of it and its redundant segment (xl and xl.twin)
-    if (printEvents) console.log("COLLINEAR");
+    if (printEvents) console.log('COLLINEAR');
 
-    eventPrint(a, "a ");
-    eventPrint(b, "b ");
+    eventPrint(a, 'a ');
+    eventPrint(b, 'b ');
 
-    eventDraw(a, o+0.1);
-    eventDraw(b, o+0.2);
+    eventDraw(a, o + 0.1);
+    eventDraw(b, o + 0.2);
 
-    var va = a.v, vb = b.v;
-    var ta = a.twin, tb = b.twin;
-    var vta = ta.v, vtb = tb.v;
+    var va = a.v,
+      vb = b.v;
+    var ta = a.twin,
+      tb = b.twin;
+    var vta = ta.v,
+      vtb = tb.v;
 
     // (if a is vertical, both are vertical)
     var vertical = a.vertical();
@@ -348,30 +356,30 @@ SegmentSet.prototype.unify = function() {
     var lsplit = null;
     if (lcomp !== 0) {
       lsplit = eventSplit(lf, vl);
-      eventPrint(lf, "lf");
-      eventPrint(lf, "ls");
+      eventPrint(lf, 'lf');
+      eventPrint(lf, 'ls');
       queue(lf.twin);
       queue(lsplit);
-      eventPrint(lf.twin, "lr");
-      eventPrint(lsplit, "ll");
+      eventPrint(lf.twin, 'lr');
+      eventPrint(lsplit, 'll');
     }
 
-    if (lcomp !== 0) eventDraw(lf, o+0.3);
+    if (lcomp !== 0) eventDraw(lf, o + 0.3);
 
     // right split left event
     var rsplit = null;
     if (rcomp !== 0) {
-      eventPrint(rf, "rf");
-      eventPrint(rs, "rs");
+      eventPrint(rf, 'rf');
+      eventPrint(rs, 'rs');
       var rst = rs.twin;
       rsplit = eventSplit(rst, vr);
       queue(rsplit);
       queue(rst.twin);
-      eventPrint(rst.twin, "rr");
-      eventPrint(rsplit, "rl");
+      eventPrint(rst.twin, 'rr');
+      eventPrint(rsplit, 'rl');
     }
 
-    if (rcomp !== 0) eventDraw(rs.twin, o+0.3);
+    if (rcomp !== 0) eventDraw(rs.twin, o + 0.3);
 
     // redundant left events; invalidate one and set the other to represent
     // the depths and weights of both
@@ -380,8 +388,7 @@ SegmentSet.prototype.unify = function() {
     if (lsplit) {
       lval = lsplit;
       linv = ls;
-    }
-    else {
+    } else {
       lval = a;
       linv = b;
     }
@@ -393,11 +400,11 @@ SegmentSet.prototype.unify = function() {
 
     if (lval.weight === 0) eventInvalidate(lval);
 
-    eventPrint(lval, "lv");
-    eventPrint(linv, "li");
+    eventPrint(lval, 'lv');
+    eventPrint(linv, 'li');
 
-    eventDraw(linv, o+0.4);
-    eventDraw(lval, o+0.5);
+    eventDraw(linv, o + 0.4);
+    eventDraw(lval, o + 0.5);
   }
 
   // handle a possible intersection between a pair of events
@@ -407,10 +414,10 @@ SegmentSet.prototype.unify = function() {
     var vi = computeEventIntersection(a, b);
 
     if (vi !== null) {
-      if (printEvents) console.log("INTERSECTION");
+      if (printEvents) console.log('INTERSECTION');
 
-      eventDraw(a, o+0.1);
-      eventDraw(b, o+0.1);
+      eventDraw(a, o + 0.1);
+      eventDraw(b, o + 0.1);
       // don't split if the intersection point is on the end of a segment
       var ita = eventSplit(a, vi);
       if (ita !== null) {
@@ -426,12 +433,12 @@ SegmentSet.prototype.unify = function() {
         queue(a);
       }
 
-      eventPrint(ita, "ia");
-      eventPrint(itb, "ib");
-      eventDraw(a, o+0.2, 0x999999);
-      eventDraw(b, o+0.2, 0x999999);
-      eventDraw(ita, o+0.3);
-      eventDraw(itb, o+0.3);
+      eventPrint(ita, 'ia');
+      eventPrint(itb, 'ib');
+      eventDraw(a, o + 0.2, 0x999999);
+      eventDraw(b, o + 0.2, 0x999999);
+      eventDraw(ita, o + 0.3);
+      eventDraw(itb, o + 0.3);
     }
   }
 
@@ -444,7 +451,14 @@ SegmentSet.prototype.unify = function() {
   function computeEventIntersection(a, b) {
     if (a.endpointsCoincident(b, epsilon)) return null;
 
-    return segmentSegmentIntersectionE(a.v, a.twin.v, b.v, b.twin.v, axis, epsilon);
+    return segmentSegmentIntersectionE(
+      a.v,
+      a.twin.v,
+      b.v,
+      b.twin.v,
+      axis,
+      epsilon,
+    );
   }
 
   // given the left endpoint e of an event pair, split it at vertex vi
@@ -452,7 +466,8 @@ SegmentSet.prototype.unify = function() {
   function eventSplit(e, vi) {
     var te = e.twin;
 
-    if (coincident(e.v, vi, epsilon) || coincident(te.v, vi, epsilon)) return null;
+    if (coincident(e.v, vi, epsilon) || coincident(te.v, vi, epsilon))
+      return null;
 
     // events left and right of intersection point
     var ei = efactory.clone(te, vi);
@@ -493,11 +508,11 @@ SegmentSet.prototype.unify = function() {
       uval = pquval && stuval;
 
       if (!uval) {
-        console.log("fail up", pquval, stuval);
+        console.log('fail up', pquval, stuval);
         console.log(pqComparator(u, e), pqComparator(ut, e));
-        eventPrint(e, "e ");
-        eventPrint(u, "u ");
-        eventPrint(ut, "ut");
+        eventPrint(e, 'e ');
+        eventPrint(u, 'u ');
+        eventPrint(ut, 'ut');
       }
     }
 
@@ -508,11 +523,11 @@ SegmentSet.prototype.unify = function() {
       dval = pqdval && stdval;
 
       if (!dval) {
-        console.log("fail down", pqdval, stdval);
+        console.log('fail down', pqdval, stdval);
         console.log(pqComparator(d, e), pqComparator(dt, e));
-        eventPrint(e, "e ");
-        eventPrint(d, "d ");
-        eventPrint(dt, "dt");
+        eventPrint(e, 'e ');
+        eventPrint(d, 'd ');
+        eventPrint(dt, 'dt');
       }
     }
 
@@ -522,52 +537,74 @@ SegmentSet.prototype.unify = function() {
   }
 
   function eventString(e) {
-    if (!e) return "null";
+    if (!e) return 'null';
 
     var src = e.isLeft ? e : e.twin;
     var d = 7;
 
-    var data =
-      [e.isLeft ? "L " : "R ", e.id, e.twin.id,
-        '(', e.v[ah].toFixed(d),
-        e.v[av].toFixed(d), ')',
-        '(', e.twin.v[ah].toFixed(d),
-        e.twin.v[av].toFixed(d), ')',
-        e.v.distanceTo(e.twin.v).toFixed(2),
-        "s", src.slope.toFixed(7),
-        "w", src.weight,
-        "d", src.depthBelow, src.depthAbove,
-        e.contributing ? "t" : "f"];
-    var p =
-      [1, 3, 3,
-        2, d+3,
-        d+3, 1,
-        2, d+3,
-        d+3, 1,
-        5,
-        2, 11,
-        2, 2,
-        2, 2, 2,
-        1]
-    var r = "";
-    for (var d=0; d<data.length; d++) r += lpad(data[d], p[d]);
+    var data = [
+      e.isLeft ? 'L ' : 'R ',
+      e.id,
+      e.twin.id,
+      '(',
+      e.v[ah].toFixed(d),
+      e.v[av].toFixed(d),
+      ')',
+      '(',
+      e.twin.v[ah].toFixed(d),
+      e.twin.v[av].toFixed(d),
+      ')',
+      e.v.distanceTo(e.twin.v).toFixed(2),
+      's',
+      src.slope.toFixed(7),
+      'w',
+      src.weight,
+      'd',
+      src.depthBelow,
+      src.depthAbove,
+      e.contributing ? 't' : 'f',
+    ];
+    var p = [
+      1,
+      3,
+      3,
+      2,
+      d + 3,
+      d + 3,
+      1,
+      2,
+      d + 3,
+      d + 3,
+      1,
+      5,
+      2,
+      11,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+    ];
+    var r = '';
+    for (var d = 0; d < data.length; d++) r += lpad(data[d], p[d]);
 
-    if (!eventValid(e.isLeft ? e : e.twin)) r += " i";
+    if (!eventValid(e.isLeft ? e : e.twin)) r += ' i';
 
     return r;
 
     function lpad(s, n) {
       n++;
-      var ss = ""+s;
+      var ss = '' + s;
       var l = ss.length;
-      return " ".repeat(Math.max(n-l, 0)) + ss;
+      return ' '.repeat(Math.max(n - l, 0)) + ss;
     }
   }
 
   function eventPrint(e, pref, force) {
     if (!force && !printEvents) return;
 
-    pref = (pref || "--");
+    pref = pref || '--';
     console.log(pref, eventString(e));
   }
 
@@ -583,8 +620,7 @@ SegmentSet.prototype.unify = function() {
     if (!e.isLeft) {
       if (eventValid(e.twin)) return 0x66ff66;
       else return 0xff0000;
-    }
-    else if (e.contributing) return 0xff6666;
+    } else if (e.contributing) return 0xff6666;
     else return 0x6666ff;
   }
 
@@ -596,7 +632,7 @@ SegmentSet.prototype.unify = function() {
       if (e.contributing) eventDraw(e, incr, 0x444444, force);
     }
   }
-}
+};
 
 function Segment(v1, v2) {
   this.v1 = v1;
@@ -619,20 +655,20 @@ function SweepEvent(v) {
   this.outOfOrder = false;
 }
 
-SweepEvent.prototype.vertical = function() {
+SweepEvent.prototype.vertical = function () {
   return Math.abs(this.slope) === Infinity;
-}
+};
 
 // for a segment's left event, given position h on the horizontal axis,
 // calculate its vertical axis position at h
-SweepEvent.prototype.vath = function(h, ah, av) {
+SweepEvent.prototype.vath = function (h, ah, av) {
   var v = this.v;
 
   if (this.vertical()) return v[av];
   else return v[av] + this.slope * (h - v[ah]);
-}
+};
 
-SweepEvent.prototype.setDepthFromBelow = function(eventBelow) {
+SweepEvent.prototype.setDepthFromBelow = function (eventBelow) {
   var depthBelow = eventBelow !== null ? eventBelow.depthAbove : 0;
 
   this.depthBelow = depthBelow;
@@ -640,16 +676,16 @@ SweepEvent.prototype.setDepthFromBelow = function(eventBelow) {
 
   this.twin.depthBelow = this.depthBelow;
   this.twin.depthAbove = this.depthAbove;
-}
+};
 
-SweepEvent.prototype.endpointsCoincident = function(other, epsilon) {
+SweepEvent.prototype.endpointsCoincident = function (other, epsilon) {
   if (coincident(this.v, other.v, epsilon)) return true;
   if (coincident(this.twin.v, other.twin.v, epsilon)) return true;
 
   return false;
-}
+};
 
-SweepEvent.prototype.clone = function(v) {
+SweepEvent.prototype.clone = function (v) {
   var e = new this.constructor();
 
   // copy properties and set v
@@ -657,27 +693,27 @@ SweepEvent.prototype.clone = function(v) {
   e.v = v;
 
   return e;
-}
+};
 
-SweepEvent.prototype.setNoncontributing = function() {
+SweepEvent.prototype.setNoncontributing = function () {
   this.contributing = false;
   this.twin.contributing = false;
-}
+};
 
 function SweepEventFactory() {
   this.id = 0;
 }
 
-SweepEventFactory.prototype.create = function(v) {
+SweepEventFactory.prototype.create = function (v) {
   var e = new SweepEvent(v);
   e.id = this.id++;
 
   return e;
-}
+};
 
-SweepEventFactory.prototype.clone = function(e, v) {
+SweepEventFactory.prototype.clone = function (e, v) {
   var ne = e.clone(v);
   ne.id = this.id++;
 
   return ne;
-}
+};

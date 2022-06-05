@@ -1,5 +1,4 @@
-MCG.AdjacencyMap = (function() {
-
+MCG.AdjacencyMap = (function () {
   function AdjacencyMap(context) {
     this.context = context;
 
@@ -7,13 +6,9 @@ MCG.AdjacencyMap = (function() {
   }
 
   return AdjacencyMap;
-
 })();
 
-
-
-MCG.DirectedAdjacencyMap = (function() {
-
+MCG.DirectedAdjacencyMap = (function () {
   function DirectedAdjacencyMap(context) {
     MCG.AdjacencyMap.call(this, context);
 
@@ -22,7 +17,7 @@ MCG.DirectedAdjacencyMap = (function() {
     this.type = MCG.Types.directedAdjacencyMap;
   }
 
-  DirectedAdjacencyMap.prototype.addSegment = function(s) {
+  DirectedAdjacencyMap.prototype.addSegment = function (s) {
     var m = this.map;
 
     var p1 = s.p1;
@@ -41,37 +36,45 @@ MCG.DirectedAdjacencyMap = (function() {
     var node2 = m[hash2];
 
     node1.addNode(node2);
-  }
+  };
 
   DirectedAdjacencyMap.NodeSelectors = {
-    noPredecessors: function(node) { return node.predcount === 0 && node.count > 0; },
-    oneNeighbor: function(node) { return node.count === 1; },
-    neighbors: function(node) { return node.count > 0; },
-    noNeighbors: function(node) { return node.count === 0; }
-  }
+    noPredecessors: function (node) {
+      return node.predcount === 0 && node.count > 0;
+    },
+    oneNeighbor: function (node) {
+      return node.count === 1;
+    },
+    neighbors: function (node) {
+      return node.count > 0;
+    },
+    noNeighbors: function (node) {
+      return node.count === 0;
+    },
+  };
 
-  DirectedAdjacencyMap.prototype.getKeyWithNoPredecessors = function() {
+  DirectedAdjacencyMap.prototype.getKeyWithNoPredecessors = function () {
     return this.getKey(DirectedAdjacencyMap.NodeSelectors.noPredecessors);
-  }
+  };
 
-  DirectedAdjacencyMap.prototype.getKeyWithOneNeighbor = function() {
+  DirectedAdjacencyMap.prototype.getKeyWithOneNeighbor = function () {
     return this.getKey(DirectedAdjacencyMap.NodeSelectors.oneNeighbor);
-  }
+  };
 
   // get a key that has some neighbors; prioritize nodes with one neighbor
-  DirectedAdjacencyMap.prototype.getKeyWithNeighbors = function() {
+  DirectedAdjacencyMap.prototype.getKeyWithNeighbors = function () {
     res = this.getKey(DirectedAdjacencyMap.NodeSelectors.oneNeighbor);
     if (res) return res;
 
     return this.getKey(DirectedAdjacencyMap.NodeSelectors.neighbors);
-  }
+  };
 
-  DirectedAdjacencyMap.prototype.getKeyWithNoNeighbors = function() {
+  DirectedAdjacencyMap.prototype.getKeyWithNoNeighbors = function () {
     return this.getKey(DirectedAdjacencyMap.NodeSelectors.noNeighbors);
-  }
+  };
 
   // get the key to a node that satisfies selector sel
-  DirectedAdjacencyMap.prototype.getKey = function(sel) {
+  DirectedAdjacencyMap.prototype.getKey = function (sel) {
     var m = this.map;
     if (sel === undefined) sel = DirectedAdjacencyMap.NodeSelectors.oneNeighbor;
 
@@ -80,13 +83,13 @@ MCG.DirectedAdjacencyMap = (function() {
     }
 
     return null;
-  }
+  };
 
   // return a loop of points
   // if allowOpen (true by default), get the open vertex loops first and count
   // them as closed, then the closed loops
   // NB: this mutates the adjacency map
-  DirectedAdjacencyMap.prototype.getLoop = function(allowOpen) {
+  DirectedAdjacencyMap.prototype.getLoop = function (allowOpen) {
     var m = this.map;
     var _this = this;
     if (allowOpen === undefined) allowOpen = true;
@@ -134,11 +137,11 @@ MCG.DirectedAdjacencyMap = (function() {
 
       return key;
     }
-  }
+  };
 
   // return as many loops as the adjacency map has
   // NB: this mutates the adjacency map
-  DirectedAdjacencyMap.prototype.getLoops = function() {
+  DirectedAdjacencyMap.prototype.getLoops = function () {
     var m = this.map;
     var loops = [];
 
@@ -149,13 +152,12 @@ MCG.DirectedAdjacencyMap = (function() {
     }
 
     return loops;
-  }
+  };
 
   return DirectedAdjacencyMap;
 })();
 
-MCG.AdjacencyMapNode = (function() {
-
+MCG.AdjacencyMapNode = (function () {
   // one node signifies one point; a neighbor is another point
   // if count == 0, the node has no neighbor and is either isolated or at the end
   // of a (directed) chain of edges
@@ -176,7 +178,7 @@ MCG.AdjacencyMapNode = (function() {
 
   // if no neighbors, set neighbor to other
   // if 1+ neighbors already exist, push to neighbors array (init if necessary)
-  AdjacencyMapNode.prototype.addNode = function(other) {
+  AdjacencyMapNode.prototype.addNode = function (other) {
     if (this.count === 0) this.neighbor = other;
     else {
       if (this.count === 1) {
@@ -191,9 +193,9 @@ MCG.AdjacencyMapNode = (function() {
 
     this.count++;
     other.predcount++;
-  }
+  };
 
-  AdjacencyMapNode.prototype.removeNode = function(node) {
+  AdjacencyMapNode.prototype.removeNode = function (node) {
     var n = null;
 
     // only one neighbor; get it and null out the current neighbor
@@ -226,16 +228,15 @@ MCG.AdjacencyMapNode = (function() {
     if (n !== null) n.predcount--;
 
     return n;
-  }
+  };
 
   // get the neighbor node:
   //  if there is one neighbor, return that
   //  if there are multiple neighbors, take the rightmost possible turn
-  AdjacencyMapNode.prototype.nextNode = function(prev) {
+  AdjacencyMapNode.prototype.nextNode = function (prev) {
     if (this.count < 1) {
       return null;
-    }
-    else {
+    } else {
       var p = null;
 
       if (this.count === 1) p = this.neighbor;
@@ -245,9 +246,9 @@ MCG.AdjacencyMapNode = (function() {
 
       return result;
     }
-  }
+  };
 
-  AdjacencyMapNode.prototype.getRightmostNode = function(prev) {
+  AdjacencyMapNode.prototype.getRightmostNode = function (prev) {
     // traversal might have started at a node with two neighbors without getting
     // there from a previous node; in that case, just pick one of the neighbors
     if (prev === null) return this.neighbors[0];
@@ -285,8 +286,7 @@ MCG.AdjacencyMapNode = (function() {
     var p = anglemaxidx > -1 ? neighbors[anglemaxidx] : null;
 
     return p;
-  }
+  };
 
   return AdjacencyMapNode;
-
 })();

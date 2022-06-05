@@ -7,20 +7,18 @@ var axisDefault = 'z';
 
 function splitFilename(fullName) {
   var idx = fullName.lastIndexOf('.');
-  if (idx==-1) {
+  if (idx == -1) {
     return {
       name: fullName,
-      extension: ""
+      extension: '',
     };
-  }
-  else {
+  } else {
     return {
       name: fullName.substr(0, idx),
-      extension: fullName.substr(idx+1).toLowerCase()
+      extension: fullName.substr(idx + 1).toLowerCase(),
     };
   }
 }
-
 
 // swapping
 function swap(arr, i, j) {
@@ -29,33 +27,36 @@ function swap(arr, i, j) {
   arr[j] = tmp;
 }
 
-
 // Vector3 stuff
 
 // for turning "x" etc. into a normalized Vector3 along axis
-var axisToVector3 = function(axis){
+var axisToVector3 = function (axis) {
   var v = new THREE.Vector3();
   v[axis] = 1;
   return v;
-}
+};
 
 // turn 0/1/2 component into 'x'/'y'/'z' label
-var vector3ComponentToAxis = function(component) {
-  if (component==0) return 'x';
-  else if (component==1) return 'y';
+var vector3ComponentToAxis = function (component) {
+  if (component == 0) return 'x';
+  else if (component == 1) return 'y';
   else return 'z';
-}
+};
 
 // cycle axis label to the next axis
 function cycleAxis(axis) {
-  if (axis=='x') return 'y';
-  else if (axis=='y') return 'z';
+  if (axis == 'x') return 'y';
+  else if (axis == 'y') return 'z';
   else return 'x';
 }
 
 // special vectors
-function getZeroVector() { return new THREE.Vector3(0,0,0); }
-function getOneVector() { return new THREE.Vector3(1,1,1); }
+function getZeroVector() {
+  return new THREE.Vector3(0, 0, 0);
+}
+function getOneVector() {
+  return new THREE.Vector3(1, 1, 1);
+}
 
 // generate unit vector along given axis
 function makeAxisUnitVector(axis) {
@@ -67,9 +68,7 @@ function makeAxisUnitVector(axis) {
   return v;
 }
 
-
-
-function eulerRadToDeg (euler) {
+function eulerRadToDeg(euler) {
   var eulerDeg = euler.clone();
   var factor = 180 / Math.PI;
 
@@ -79,7 +78,7 @@ function eulerRadToDeg (euler) {
 
   return eulerDeg;
 }
-function eulerDegToRad (euler) {
+function eulerDegToRad(euler) {
   var eulerRad = euler.clone();
   var factor = Math.PI / 180;
 
@@ -117,10 +116,10 @@ function vector3MinElement(v) {
 }
 // return 'x', 'y', or 'z' depending on which element is greater/lesser
 function vector3ArgMax(v) {
-  return v.x>v.y ? (v.x>v.z ? 'x' : 'z') : (v.y>v.z ? 'y' : 'z');
+  return v.x > v.y ? (v.x > v.z ? 'x' : 'z') : v.y > v.z ? 'y' : 'z';
 }
 function vector3ArgMin(v) {
-  return v.x<v.y ? (v.x<v.z ? 'x' : 'z') : (v.y<v.z ? 'y' : 'z');
+  return v.x < v.y ? (v.x < v.z ? 'x' : 'z') : v.y < v.z ? 'y' : 'z';
 }
 function clamp(x, minVal, maxVal) {
   if (x < minVal) x = minVal;
@@ -128,7 +127,10 @@ function clamp(x, minVal, maxVal) {
   return x;
 }
 function inRange(x, minVal, maxVal) {
-  return (minVal===undefined || x >= minVal) && (maxVal===undefined || x <= maxVal);
+  return (
+    (minVal === undefined || x >= minVal) &&
+    (maxVal === undefined || x <= maxVal)
+  );
 }
 function vector3Abs(v) {
   var result = new THREE.Vector3();
@@ -146,27 +148,26 @@ function vector3AxisMax(v1, v2, axis) {
   else return v2;
 }
 
-
 // object type bool checks and other utilities
 
 function isArray(item) {
-  return (Object.prototype.toString.call(item) === '[object Array]');
+  return Object.prototype.toString.call(item) === '[object Array]';
 }
 
 function isString(item) {
-  return (typeof item === 'string' || item instanceof String);
+  return typeof item === 'string' || item instanceof String;
 }
 
 function isNumber(item) {
-  return (typeof item === 'number');
+  return typeof item === 'number';
 }
 
 function isFunction(item) {
-  return (typeof item === 'function');
+  return typeof item === 'function';
 }
 
 function isInfinite(n) {
-  return n==Infinity || n==-Infinity;
+  return n == Infinity || n == -Infinity;
 }
 
 // check if object has properties
@@ -201,11 +202,7 @@ function cloneVector3Array(arr) {
 // THREE.Face3- and THREE.Vector3-related functions
 // get THREE.Face3 vertices
 function faceGetVerts(face, vertices) {
-  return [
-    vertices[face.a],
-    vertices[face.b],
-    vertices[face.c]
-  ];
+  return [vertices[face.a], vertices[face.b], vertices[face.c]];
 }
 function faceGetMaxAxis(face, vertices, axis) {
   var [a, b, c] = faceGetVerts(face, vertices);
@@ -220,14 +217,14 @@ function faceGetBounds(face, vertices) {
   var max = new THREE.Vector3().setScalar(-Infinity);
   var verts = faceGetVerts(face, vertices);
 
-  for (var v=0; v<3; v++) {
+  for (var v = 0; v < 3; v++) {
     min.min(verts[v]);
     max.max(verts[v]);
   }
 
   return {
     min: min,
-    max: max
+    max: max,
   };
 }
 function faceGetBoundsAxis(face, vertices, axis) {
@@ -236,7 +233,7 @@ function faceGetBoundsAxis(face, vertices, axis) {
   var verts = faceGetVerts(face, vertices);
   return {
     max: Math.max(verts[0][axis], Math.max(verts[1][axis], verts[2][axis])),
-    min: Math.min(verts[0][axis], Math.min(verts[1][axis], verts[2][axis]))
+    min: Math.min(verts[0][axis], Math.min(verts[1][axis], verts[2][axis])),
   };
 }
 // get THREE.Face3 vertices and sort them in ascending order on axis
@@ -251,32 +248,28 @@ function faceGetVertsSorted(face, vertices, axis) {
 
   if (c > a) {
     if (b > c) {
-      swap (verts, 1, 2);
+      swap(verts, 1, 2);
+      ccw = false;
+    } else if (a > b) {
+      swap(verts, 0, 1);
       ccw = false;
     }
-    else if (a > b) {
-      swap (verts, 0, 1);
-      ccw = false;
-    }
-  }
-  else {
+  } else {
     if (b > a) {
-      swap (verts, 0, 2);
-      swap (verts, 1, 2);
-    }
-    else if (c > b) {
-      swap (verts, 0, 2);
-      swap (verts, 0, 1);
-    }
-    else {
-      swap (verts, 0, 2);
+      swap(verts, 0, 2);
+      swap(verts, 1, 2);
+    } else if (c > b) {
+      swap(verts, 0, 2);
+      swap(verts, 0, 1);
+    } else {
+      swap(verts, 0, 2);
       ccw = false;
     }
   }
 
   return {
     verts: verts,
-    ccw: ccw
+    ccw: ccw,
   };
 }
 function faceGetCenter(face, vertices) {
@@ -285,7 +278,7 @@ function faceGetCenter(face, vertices) {
 }
 function faceGetArea(face, vertices) {
   var [a, b, c] = faceGetVerts(face, vertices);
-  return b.clone().sub(a).cross(c.clone().sub(a)).length()/2;
+  return b.clone().sub(a).cross(c.clone().sub(a)).length() / 2;
 }
 // compute THREE.Face3 normal
 function faceComputeNormal(face, vertices) {
@@ -300,28 +293,26 @@ function vertsComputeNormal(a, b, c) {
 }
 // Get THREE.Face3 subscript ('a', 'b', or 'c') for a given 0-2 index.
 function faceGetSubscript(idx) {
-  return (idx==0) ? 'a' : ((idx==1) ? 'b' : 'c');
+  return idx == 0 ? 'a' : idx == 1 ? 'b' : 'c';
 }
 function numHash(n, p) {
-  return Math.round(n*p);
+  return Math.round(n * p);
 }
 function vertexHash(v, p) {
-  return numHash(v.x, p)+'_'+numHash(v.y, p)+'_'+numHash(v.z, p);
+  return numHash(v.x, p) + '_' + numHash(v.y, p) + '_' + numHash(v.z, p);
 }
 
 // Remove all meshes with a particular name from a scene.
 function removeMeshByName(scene, name) {
   if (!scene) return;
 
-  for (var i=scene.children.length-1; i>=0; i--) {
+  for (var i = scene.children.length - 1; i >= 0; i--) {
     var child = scene.children[i];
     if (child.name == name) {
       scene.remove(child);
     }
   }
 }
-
-
 
 // for calculating triangle area and efficient cross-products
 
@@ -336,24 +327,24 @@ function removeMeshByName(scene, name) {
 function triangleArea(a, b, c, axis) {
   if (axis === undefined) axis = axisDefault;
 
-  return cornerCrossProduct(a, b, c, axis)/2;
+  return cornerCrossProduct(a, b, c, axis) / 2;
 }
 // calculates cross product of b-a and c-a
 function cornerCrossProduct(a, b, c, axis) {
   if (axis === undefined) axis = axisDefault;
 
-  if (axis == "x") return (b.y-a.y)*(c.z-a.z) - (b.z-a.z)*(c.y-a.y);
-  if (axis == "y") return (b.z-a.z)*(c.x-a.x) - (b.x-a.x)*(c.z-a.z);
-  if (axis == "z") return (b.x-a.x)*(c.y-a.y) - (b.y-a.y)*(c.x-a.x);
+  if (axis == 'x') return (b.y - a.y) * (c.z - a.z) - (b.z - a.z) * (c.y - a.y);
+  if (axis == 'y') return (b.z - a.z) * (c.x - a.x) - (b.x - a.x) * (c.z - a.z);
+  if (axis == 'z') return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
   return 0;
 }
 // cross product component of two vectors
 function crossProductComponent(v, w, axis) {
   if (axis === undefined) axis = axisDefault;
 
-  if (axis == "x") return v.y*w.z - v.z*w.y;
-  if (axis == "y") return v.z*w.x - v.x*w.z;
-  if (axis == "z") return v.x*w.y - v.y*w.x;
+  if (axis == 'x') return v.y * w.z - v.z * w.y;
+  if (axis == 'y') return v.z * w.x - v.x * w.z;
+  if (axis == 'z') return v.x * w.y - v.y * w.x;
   return 0;
 }
 
@@ -386,28 +377,30 @@ function raySegmentIntersectionOnHAxis(s1, s2, pt, axis) {
 
   var ah = cycleAxis(axis);
   var av = cycleAxis(ah);
-  return s1[ah] + (s2[ah] - s1[ah]) * (pt[av] - s1[av]) / (s2[av] - s1[av]);
+  return s1[ah] + ((s2[ah] - s1[ah]) * (pt[av] - s1[av])) / (s2[av] - s1[av]);
 }
 
 // flags signifying which bounds to check for intersection testing
-var BoundCheckFlags = (function() {
-  var s0 = 1, s1 = 2;
-  var t0 = 4, t1 = 8;
+var BoundCheckFlags = (function () {
+  var s0 = 1,
+    s1 = 2;
+  var t0 = 4,
+    t1 = 8;
 
   return {
-    none: 0,                // line-line
-    s0: s0,                 // ray-line
+    none: 0, // line-line
+    s0: s0, // ray-line
     s1: s1,
-    t0: t0,                 // line-ray
+    t0: t0, // line-ray
     t1: t1,
-    s0t0: s0 | t0,          // ray-ray
+    s0t0: s0 | t0, // ray-ray
     s1t1: s1 | t1,
-    s01: s0 | s1,           // segment-line
-    t01: t0 | t1,           // line-segment
-    s01t0: s0 | s1 | t0,    // segment-ray
-    s0t01: s0 | t0 | t1,    // ray-segment
-    all: s0 | s1 | t0 | t1  // segment-segment
-  }
+    s01: s0 | s1, // segment-line
+    t01: t0 | t1, // line-segment
+    s01t0: s0 | s1 | t0, // segment-ray
+    s0t01: s0 | t0 | t1, // ray-segment
+    all: s0 | s1 | t0 | t1, // segment-segment
+  };
 })();
 
 // returns the intersection (or null) of ray s with line t (both given as rays)
@@ -463,7 +456,7 @@ function calculateIntersectionParams(s, t, sd, td, checks, axis, epsilon) {
   var ah = cycleAxis(axis);
   var av = cycleAxis(ah);
 
-  var det = sd[ah]*td[av] - sd[av]*td[ah];
+  var det = sd[ah] * td[av] - sd[av] * td[ah];
   // lines are exactly parallel, so no intersection
   if (equal(det, 0, epsilon)) return null;
 
@@ -471,7 +464,7 @@ function calculateIntersectionParams(s, t, sd, td, checks, axis, epsilon) {
   var dv = t[av] - s[av];
 
   // calculate and check u (s param)
-  var u = (td[av]*dh - td[ah]*dv) / det;
+  var u = (td[av] * dh - td[ah] * dv) / det;
 
   var u0 = checks & BoundCheckFlags.s0;
   var u1 = checks & BoundCheckFlags.s1;
@@ -480,12 +473,13 @@ function calculateIntersectionParams(s, t, sd, td, checks, axis, epsilon) {
   if (u1 && greater(u, 1, epsilon)) return null;
 
   // if don't need to check v, just return u
-  if (checks & BoundCheckFlags.v01 === 0) return {
-    u: u
-  };
+  if (checks & (BoundCheckFlags.v01 === 0))
+    return {
+      u: u,
+    };
 
   // calculate and check v (t param)
-  var v = (sd[av]*dh - sd[ah]*dv) / det;
+  var v = (sd[av] * dh - sd[ah] * dv) / det;
 
   var v0 = checks & BoundCheckFlags.t0;
   var v1 = checks & BoundCheckFlags.t1;
@@ -496,7 +490,7 @@ function calculateIntersectionParams(s, t, sd, td, checks, axis, epsilon) {
   // if all successful, return params
   return {
     u: u,
-    v: v
+    v: v,
   };
 }
 
@@ -530,8 +524,10 @@ function segmentIntersectsSegment(checks, axis, epsilon) {
   if (axis === undefined) axis = axisDefault;
   if (epsilon === undefined) epsilon = epsilonDefault;
 
-  return ((left(a, b, c, axis, epsilon) ^ left(a, b, d, axis, epsilon)) &&
-          (left(c, d, a, axis, epsilon) ^ left(c, d, b, axis, epsilon)));
+  return (
+    left(a, b, c, axis, epsilon) ^ left(a, b, d, axis, epsilon) &&
+    left(c, d, a, axis, epsilon) ^ left(c, d, b, axis, epsilon)
+  );
 }
 
 // find the highest point of intersection between two cones; the cones have
@@ -554,7 +550,7 @@ function coneConeIntersection(p, q, angle, axis) {
 
   var dot = -d.dot(up);
   // if p's cone contains q or vice versa, no intersection
-  if (dot>cos || dot<cos-1) return null;
+  if (dot > cos || dot < cos - 1) return null;
 
   // horizontal (orthogonal to axis), normalized vector from p to q
   d[axis] = 0;
@@ -571,7 +567,7 @@ function coneConeIntersection(p, q, angle, axis) {
   // get the midpoint, lower it as described above, that's the intersection
   var midpoint = p.clone().add(qnew).divideScalar(2);
   var len = midpoint.distanceTo(p);
-  midpoint[axis] -= len/tan;
+  midpoint[axis] -= len / tan;
 
   return midpoint;
 }
@@ -605,7 +601,7 @@ function projectToLine(v, a, b, axis) {
   // projection of a-v vector onto line
   var projection = abhat.multiplyScalar(av.dot(abhat));
 
-  return a.clone()
+  return a.clone();
 }
 
 // given a point p, and a plane containing point d with normal n, project p to
@@ -623,7 +619,7 @@ function projectToPlaneOnAxis(p, d, n, axis) {
   if (n[axis] === 0) return p;
 
   // get the .axis component
-  var rz = (d.dot(n) - p[ah]*n[ah] - p[av]*n[av]) / n[axis];
+  var rz = (d.dot(n) - p[ah] * n[ah] - p[av] * n[av]) / n[axis];
 
   // set the component
   var pp = p.clone();
@@ -670,18 +666,22 @@ function pointInsideTriangle(p, a, b, c, axis, epsilon) {
   if (axis === undefined) axis = axisDefault;
   if (epsilon === undefined) epsilon = epsilonDefault;
 
-  return left(a, b, p, axis, epsilon) &&
-         left(b, c, p, axis, epsilon) &&
-         left(c, a, p, axis, epsilon);
+  return (
+    left(a, b, p, axis, epsilon) &&
+    left(b, c, p, axis, epsilon) &&
+    left(c, a, p, axis, epsilon)
+  );
 }
 
 // approximate coincidence testing for vectors
 function coincident(a, b, epsilon) {
   if (epsilon === undefined) epsilon = epsilonDefault;
 
-  return equal(a.x - b.x, 0, epsilon) &&
-         equal(a.y - b.y, 0, epsilon) &&
-         equal(a.z - b.z, 0, epsilon);
+  return (
+    equal(a.x - b.x, 0, epsilon) &&
+    equal(a.y - b.y, 0, epsilon) &&
+    equal(a.z - b.z, 0, epsilon)
+  );
 }
 
 // approximate collinearity testing for three vectors
@@ -700,10 +700,9 @@ function equal(i, j, epsilon) {
 
   var test = false;
   if (test) {
-    if (j===0) return Math.abs(i) < epsilon;
-    else return Math.abs(i/j - 1) < epsilon;
-  }
-  else {
+    if (j === 0) return Math.abs(i) < epsilon;
+    else return Math.abs(i / j - 1) < epsilon;
+  } else {
     return equalSimple(i, j, epsilon);
   }
 }
@@ -737,7 +736,6 @@ function compare(i, j, epsilon) {
   else return 1;
 }
 
-
 // clamps a to [-1, 1] range and returns its acos
 function acos(a) {
   return Math.acos(clamp(a, -1, 1));
@@ -746,8 +744,6 @@ function acos(a) {
 function asin(a) {
   return Math.asin(clamp(a, -1, 1));
 }
-
-
 
 // for vertex hash maps
 
@@ -761,12 +757,11 @@ function asin(a) {
 function vertexMapIdx(map, v, vertices, p) {
   var hash = vertexHash(v, p);
   var idx = -1;
-  if (map[hash]===undefined) {
+  if (map[hash] === undefined) {
     idx = vertices.length;
     map[hash] = idx;
     vertices.push(v);
-  }
-  else {
+  } else {
     idx = map[hash];
   }
   return idx;
@@ -774,11 +769,10 @@ function vertexMapIdx(map, v, vertices, p) {
 
 // make a hash map of a whole array of vertices at once
 function vertexArrayToMap(map, vertices, p) {
-  for (var v=0; v<vertices.length; v++) {
+  for (var v = 0; v < vertices.length; v++) {
     map[vertexHash(vertices[v], p)] = v;
   }
 }
-
 
 // non-blocking iterator
 // params:
@@ -794,14 +788,14 @@ function functionIterator(f, n, batchSize, onDone, onProgress, onStop) {
   this.f = f;
   this.n = n;
   this.i = 0;
-  this.batchSize = (batchSize===undefined || batchSize<1) ? 1 : batchSize;
+  this.batchSize = batchSize === undefined || batchSize < 1 ? 1 : batchSize;
   this.onStop = onStop;
   this.onProgress = onProgress;
   this.onDone = onDone;
   this.timer = 0;
 
   // begin iterating and repeat until done
-  this.start = function() {
+  this.start = function () {
     this.i = 0;
 
     this.timer = setTimeout(this.iterate.bind(this), 16);
@@ -809,11 +803,11 @@ function functionIterator(f, n, batchSize, onDone, onProgress, onStop) {
 
   // main unit of iteration: repeatedly run f, stopping after batchSize
   // repetitions (or fewer, if we've hit n)
-  this.iterate = function() {
+  this.iterate = function () {
     var i;
-    var limit = this.i+this.batchSize;
+    var limit = this.i + this.batchSize;
     var n = this.n;
-    for (i=this.i; i<limit && i<n; i++) {
+    for (i = this.i; i < limit && i < n; i++) {
       this.f(i);
     }
 
@@ -821,7 +815,7 @@ function functionIterator(f, n, batchSize, onDone, onProgress, onStop) {
 
     if (this.onProgress) this.onProgress(i);
 
-    if (i>=n) {
+    if (i >= n) {
       clearTimeout(this.timer);
       if (this.onDone) this.onDone();
       return;
@@ -831,148 +825,144 @@ function functionIterator(f, n, batchSize, onDone, onProgress, onStop) {
   };
 
   // manually terminate the iteration
-  this.stop = function() {
+  this.stop = function () {
     clearTimeout(this.timer);
 
     if (this.onStop) this.onStop(this.i);
   };
 
   // return true if there are more iterations to run
-  this.running = function() {
-    return this.i<this.n;
-  }
+  this.running = function () {
+    return this.i < this.n;
+  };
 }
 
-
-
 // timer
-var Timer = function() {
+var Timer = function () {
   this.startTime = 0;
   this.endTime = 0;
   this.running = false;
-}
-Timer.prototype.start = function() {
+};
+Timer.prototype.start = function () {
   this.startTime = new Date();
   this.running = true;
-}
-Timer.prototype.stop = function() {
+};
+Timer.prototype.stop = function () {
   this.endTime = new Date();
   this.running = false;
   return this.endTime - this.startTime;
-}
-Timer.prototype.elapsed = function() {
+};
+Timer.prototype.elapsed = function () {
   if (this.running) return new Date() - this.startTime;
   else return this.endTime - this.startTime;
-}
-
+};
 
 // chart of ring inner diameters in mm
 // (source: https://en.wikipedia.org/wiki/Ring_size)
 var ringSizes = {
-  "    0": 11.63,
-  " 0.25": 11.84,
-  "  0.5": 12.04,
-  " 0.75": 12.24,
-  "    1": 12.45,
-  " 1.25": 12.65,
-  "  1.5": 12.85,
-  " 1.75": 13.06,
-  "    2": 13.26,
-  " 2.25": 13.46,
-  "  2.5": 13.67,
-  " 2.75": 13.87,
-  "    3": 14.07,
-  " 3.25": 14.27,
-  "  3.5": 14.48,
-  " 3.75": 14.68,
-  "    4": 14.88,
-  " 4.25": 15.09,
-  "  4.5": 15.29,
-  " 4.75": 15.49,
-  "    5": 15.7,
-  " 5.25": 15.9,
-  "  5.5": 16.1,
-  " 5.75": 16.31,
-  "    6": 16.51,
-  " 6.25": 16.71,
-  "  6.5": 16.92,
-  " 6.75": 17.12,
-  "    7": 17.32,
-  " 7.25": 17.53,
-  "  7.5": 17.73,
-  " 7.75": 17.93,
-  "    8": 18.14,
-  " 8.25": 18.34,
-  "  8.5": 18.54,
-  " 8.75": 18.75,
-  "    9": 18.95,
-  " 9.25": 19.15,
-  "  9.5": 19.35,
-  " 9.75": 19.56,
-  "   10": 19.76,
-  "10.25": 19.96,
-  " 10.5": 20.17,
-  "10.75": 20.37,
-  "   11": 20.57,
-  "11.25": 20.78,
-  " 11.5": 20.98,
-  "11.75": 21.18,
-  "   12": 21.39,
-  "12.25": 21.59,
-  " 12.5": 21.79,
-  "12.75": 22,
-  "   13": 22.2,
-  "13.25": 22.4,
-  " 13.5": 22.61,
-  "13.75": 22.81,
-  "   14": 23.01,
-  "14.25": 23.22,
-  " 14.5": 23.42,
-  "14.75": 23.62,
-  "   15": 23.83,
-  "15.25": 24.03,
-  " 15.5": 24.23,
-  "15.75": 24.43,
-  "   16": 24.64
-}
-
+  '    0': 11.63,
+  ' 0.25': 11.84,
+  '  0.5': 12.04,
+  ' 0.75': 12.24,
+  '    1': 12.45,
+  ' 1.25': 12.65,
+  '  1.5': 12.85,
+  ' 1.75': 13.06,
+  '    2': 13.26,
+  ' 2.25': 13.46,
+  '  2.5': 13.67,
+  ' 2.75': 13.87,
+  '    3': 14.07,
+  ' 3.25': 14.27,
+  '  3.5': 14.48,
+  ' 3.75': 14.68,
+  '    4': 14.88,
+  ' 4.25': 15.09,
+  '  4.5': 15.29,
+  ' 4.75': 15.49,
+  '    5': 15.7,
+  ' 5.25': 15.9,
+  '  5.5': 16.1,
+  ' 5.75': 16.31,
+  '    6': 16.51,
+  ' 6.25': 16.71,
+  '  6.5': 16.92,
+  ' 6.75': 17.12,
+  '    7': 17.32,
+  ' 7.25': 17.53,
+  '  7.5': 17.73,
+  ' 7.75': 17.93,
+  '    8': 18.14,
+  ' 8.25': 18.34,
+  '  8.5': 18.54,
+  ' 8.75': 18.75,
+  '    9': 18.95,
+  ' 9.25': 19.15,
+  '  9.5': 19.35,
+  ' 9.75': 19.56,
+  '   10': 19.76,
+  10.25: 19.96,
+  ' 10.5': 20.17,
+  10.75: 20.37,
+  '   11': 20.57,
+  11.25: 20.78,
+  ' 11.5': 20.98,
+  11.75: 21.18,
+  '   12': 21.39,
+  12.25: 21.59,
+  ' 12.5': 21.79,
+  12.75: 22,
+  '   13': 22.2,
+  13.25: 22.4,
+  ' 13.5': 22.61,
+  13.75: 22.81,
+  '   14': 23.01,
+  14.25: 23.22,
+  ' 14.5': 23.42,
+  14.75: 23.62,
+  '   15': 23.83,
+  15.25: 24.03,
+  ' 15.5': 24.23,
+  15.75: 24.43,
+  '   16': 24.64,
+};
 
 // memory usage - from zensh on github: https://gist.github.com/zensh/4975495
 function memorySizeOf(obj) {
   var bytes = 0;
 
   function sizeOf(obj) {
-    if(obj !== null && obj !== undefined) {
-      switch(typeof obj) {
-      case 'number':
-        bytes += 8;
-        break;
-      case 'string':
-        bytes += obj.length * 2;
-        break;
-      case 'boolean':
-        bytes += 4;
-        break;
-      case 'object':
-        var objClass = Object.prototype.toString.call(obj).slice(8, -1);
-        if(objClass === 'Object' || objClass === 'Array') {
-          for(var key in obj) {
-            if(!obj.hasOwnProperty(key)) continue;
-            sizeOf(obj[key]);
-          }
-        } else bytes += obj.toString().length * 2;
-        break;
+    if (obj !== null && obj !== undefined) {
+      switch (typeof obj) {
+        case 'number':
+          bytes += 8;
+          break;
+        case 'string':
+          bytes += obj.length * 2;
+          break;
+        case 'boolean':
+          bytes += 4;
+          break;
+        case 'object':
+          var objClass = Object.prototype.toString.call(obj).slice(8, -1);
+          if (objClass === 'Object' || objClass === 'Array') {
+            for (var key in obj) {
+              if (!obj.hasOwnProperty(key)) continue;
+              sizeOf(obj[key]);
+            }
+          } else bytes += obj.toString().length * 2;
+          break;
       }
     }
     return bytes;
-  };
+  }
 
   function formatByteSize(bytes) {
-    if(bytes < 1024) return bytes + " bytes";
-    else if(bytes < 1048576) return(bytes / 1024).toFixed(3) + " KiB";
-    else if(bytes < 1073741824) return(bytes / 1048576).toFixed(3) + " MiB";
-    else return(bytes / 1073741824).toFixed(3) + " GiB";
-  };
+    if (bytes < 1024) return bytes + ' bytes';
+    else if (bytes < 1048576) return (bytes / 1024).toFixed(3) + ' KiB';
+    else if (bytes < 1073741824) return (bytes / 1048576).toFixed(3) + ' MiB';
+    else return (bytes / 1073741824).toFixed(3) + ' GiB';
+  }
 
   return formatByteSize(sizeOf(obj));
-};
+}

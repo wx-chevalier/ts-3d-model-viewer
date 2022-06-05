@@ -14,19 +14,25 @@ function Transform(name, start) {
   // clones values to avoid mutation
   this.clone = null;
   if (start && start.clone) {
-    this.clone = function(val) { return val.clone(); }
-  }
-  else {
-    this.clone = function(val) { return val; }
+    this.clone = function (val) {
+      return val.clone();
+    };
+  } else {
+    this.clone = function (val) {
+      return val;
+    };
   }
 
   // checks equality of values
   this.equals = null;
   if (start && start.equals) {
-    this.equals = function(va, vb) { return va.equals(vb); }
-  }
-  else {
-    this.equals = function(va, vb) { return va === vb; }
+    this.equals = function (va, vb) {
+      return va.equals(vb);
+    };
+  } else {
+    this.equals = function (va, vb) {
+      return va === vb;
+    };
   }
 
   // start and target value of transformed parameter
@@ -45,28 +51,31 @@ function Transform(name, start) {
 
   // true if this transform can be applied in reverse
   var invertible = true;
-  Object.defineProperty(this, "invertible", {
-    get: function() { return invertible; },
-    set: function(inv) { if (inv !== undefined) invertible = !!inv; }
+  Object.defineProperty(this, 'invertible', {
+    get: function () {
+      return invertible;
+    },
+    set: function (inv) {
+      if (inv !== undefined) invertible = !!inv;
+    },
   });
 }
 
 Object.assign(Transform.prototype, {
-
   constructor: Transform,
 
   // true if start value and target value are the same
-  noop: function() {
+  noop: function () {
     if (this.startVal === null || this.targetVal === null) return false;
 
     return this.equals(this.startVal, this.targetVal);
   },
 
-  getLastVal: function() {
+  getLastVal: function () {
     return this.clone(this.lastVal);
   },
 
-  apply: function(val) {
+  apply: function (val) {
     // if target value is given, record it
     if (val !== undefined) this.targetVal = this.clone(val);
 
@@ -80,7 +89,7 @@ Object.assign(Transform.prototype, {
     return this.onApply(this.targetVal);
   },
 
-  applyInverse: function() {
+  applyInverse: function () {
     if (this.startVal) {
       this.lastVal = this.clone(this.startVal);
 
@@ -92,27 +101,26 @@ Object.assign(Transform.prototype, {
     return this.onApply(this.lastVal);
   },
 
-  end: function() {
+  end: function () {
     if (this.onEnd) return this.onEnd();
     else return null;
-  }
-
+  },
 });
 
 // Constructor - initialized with a printout object.
 function EditStack() {
   // stack of transformations
   this.history = [];
-  this.pos = -1
+  this.pos = -1;
 }
 
 EditStack.prototype = {
   constructor: EditStack,
 
   // Get the inverse transform at current positition and apply it.
-  undo: function() {
+  undo: function () {
     if (this.pos < 0) {
-      throw "No undo history available.";
+      throw 'No undo history available.';
     }
 
     var entry = this.history[this.pos--];
@@ -126,9 +134,9 @@ EditStack.prototype = {
   },
 
   // Get the transform at the next position and apply it.
-  redo: function() {
-    if (this.pos >= this.history.length-1) {
-      throw "No redo history available.";
+  redo: function () {
+    if (this.pos >= this.history.length - 1) {
+      throw 'No redo history available.';
     }
 
     var entry = this.history[++this.pos];
@@ -142,21 +150,22 @@ EditStack.prototype = {
   },
 
   // Put a new transform onto the stack.
-  push: function(transform, onTransform) {
+  push: function (transform, onTransform) {
     if (this.pos < this.history.length - 1) {
       // effectively deletes all entries after this.pos
       this.history.length = this.pos + 1;
     }
-    if (transform) this.history.push({
-      transform: transform,
-      onTransform: onTransform || null
-    });
+    if (transform)
+      this.history.push({
+        transform: transform,
+        onTransform: onTransform || null,
+      });
     this.pos++;
   },
 
   // Clear the stack.
-  clear: function() {
+  clear: function () {
     this.history.length = 0;
     this.pos = -1;
-  }
-}
+  },
+};

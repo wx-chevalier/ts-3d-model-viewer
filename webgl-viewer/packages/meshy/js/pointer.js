@@ -39,14 +39,11 @@
 
 // Anton Bovin, 2018
 
-
-
-var Pointer = (function() {
-
+var Pointer = (function () {
   function Pointer(camera, domElement, scene) {
-    if (!camera) console.error("Pointer requires a THREE.Camera.");
-    if (!domElement) console.error("Pointer requires a DOM element.");
-    if (!scene) console.error("Pointer requires a THREE.Scene.");
+    if (!camera) console.error('Pointer requires a THREE.Camera.');
+    if (!domElement) console.error('Pointer requires a DOM element.');
+    if (!scene) console.error('Pointer requires a THREE.Scene.');
 
     // these are required for raycasting
     this.camera = camera;
@@ -91,7 +88,7 @@ var Pointer = (function() {
     domElement.addEventListener('touchcancel', pointerUp, false);
     domElement.addEventListener('touchleave', pointerUp, false);
 
-    this.dispose = function() {
+    this.dispose = function () {
       this.deactivate();
 
       if (this.cursor) {
@@ -124,7 +121,7 @@ var Pointer = (function() {
         coords: new THREE.Vector2(x, y),
         ctrlKey: event.ctrlKey,
         shiftKey: event.shiftKey,
-        button: event.button
+        button: event.button,
       };
     }
 
@@ -150,13 +147,12 @@ var Pointer = (function() {
   }
 
   Object.assign(Pointer.prototype, {
-
-    addObject: function(object) {
+    addObject: function (object) {
       this.objects.push(object);
       return this;
     },
 
-    removeObject: function(object) {
+    removeObject: function (object) {
       var idx = this.objects.indexOf(object);
 
       if (idx > -1) this.objects.splice(idx);
@@ -164,12 +160,12 @@ var Pointer = (function() {
       return this;
     },
 
-    removeObjects: function() {
+    removeObjects: function () {
       this.objects.length = 0;
       return this;
     },
 
-    activate: function() {
+    activate: function () {
       // if cursor is not set, default to circle
       if (this.cursor === null) {
         this.setCursorCircle();
@@ -181,7 +177,7 @@ var Pointer = (function() {
       return this;
     },
 
-    deactivate: function() {
+    deactivate: function () {
       // make inactive and invisible
       this.active = false;
 
@@ -192,7 +188,7 @@ var Pointer = (function() {
     },
 
     // set the cursor to a circle marker
-    setCursorCircle: function() {
+    setCursorCircle: function () {
       if (this.cursor) this.cursor.removeFromScene();
 
       this.cursor = new Markers.CircleMarker().setColor(this.cursorColor);
@@ -201,7 +197,7 @@ var Pointer = (function() {
     },
 
     // set the cursor to the pointer marker
-    setCursorPointer: function() {
+    setCursorPointer: function () {
       if (this.cursor) this.cursor.removeFromScene();
 
       this.cursor = new Markers.PointerMarker().setColor(this.cursorColor);
@@ -210,7 +206,7 @@ var Pointer = (function() {
     },
 
     // unset the cursor
-    setCursorNull: function() {
+    setCursorNull: function () {
       if (this.cursor) this.cursor.removeFromScene();
 
       this.cursor = null;
@@ -219,14 +215,14 @@ var Pointer = (function() {
     },
 
     // add a callback to call when the object is clicked
-    addCallback: function(key, callback) {
+    addCallback: function (key, callback) {
       this.callbacks[key] = callback;
 
       return true;
     },
 
     // remove a callback at the given key, return true if removed, else false
-    removeCallback: function(key) {
+    removeCallback: function (key) {
       if (this.callbacks.hasOwnProperty(key)) {
         delete this.callbacks[key];
         return true;
@@ -236,7 +232,7 @@ var Pointer = (function() {
     },
 
     // calculate three.js intersection object from the pointer position
-    getPointerIntersection: function(pointer) {
+    getPointerIntersection: function (pointer) {
       this.raycaster.setFromCamera(pointer.coords, this.camera);
 
       var intersects = this.raycaster.intersectObjects(this.objects, false);
@@ -245,14 +241,16 @@ var Pointer = (function() {
       else return null;
     },
 
-    pointerMove: function(pointer) {
+    pointerMove: function (pointer) {
       var intersection = this.getPointerIntersection(pointer);
       var cursor = this.cursor;
 
       // if intersecting object, position the cursor
       if (intersection) {
         // get the normal in world space
-        var rotation = new THREE.Matrix3().getNormalMatrix(intersection.object.matrixWorld);
+        var rotation = new THREE.Matrix3().getNormalMatrix(
+          intersection.object.matrixWorld,
+        );
         var normal = intersection.face.normal.clone().applyMatrix3(rotation);
         var point = intersection.point;
 
@@ -262,13 +260,12 @@ var Pointer = (function() {
         if (!cursor.active) cursor.activate();
 
         this.updateCursor();
-      }
-      else {
+      } else {
         cursor.deactivate();
       }
     },
 
-    pointerDown: function(pointer) {
+    pointerDown: function (pointer) {
       // do nothing if pressing a button but the button is not LMB
       if (pointer.button !== undefined && pointer.button !== 0) return;
 
@@ -276,10 +273,12 @@ var Pointer = (function() {
       if (this.cursor) this.cursor.setColor(this.cursorColorDown);
     },
 
-    pointerUp: function(pointer) {
+    pointerUp: function (pointer) {
       if (!this.pressedPointer) return;
 
-      var dist = pointer.pixelCoords.distanceTo(this.pressedPointer.pixelCoords);
+      var dist = pointer.pixelCoords.distanceTo(
+        this.pressedPointer.pixelCoords,
+      );
 
       if (dist < this.clickAllowance) {
         var intersection = this.getPointerIntersection(pointer);
@@ -295,7 +294,7 @@ var Pointer = (function() {
       if (this.cursor) this.cursor.setColor(this.cursorColor);
     },
 
-    updateCursor: function() {
+    updateCursor: function () {
       var cursor = this.cursor;
 
       if (!this.active || !cursor.active) return;
@@ -303,10 +302,8 @@ var Pointer = (function() {
       var dist = cursor.getPosition().distanceTo(this.camera.position);
 
       cursor.setScale(dist * 0.005);
-    }
-
+    },
   });
 
   return Pointer;
-
 })();

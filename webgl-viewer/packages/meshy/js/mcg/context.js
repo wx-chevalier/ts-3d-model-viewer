@@ -1,5 +1,4 @@
-MCG.Context = (function() {
-
+MCG.Context = (function () {
   function Context(axis, d, precision) {
     if (axis === undefined) axis = 'z';
     if (d === undefined) d = 0;
@@ -19,15 +18,12 @@ MCG.Context = (function() {
   }
 
   Object.assign(Context.prototype, {
-
     constructor: Context,
 
-    clone: function() {
+    clone: function () {
       return new this.constructor(this.axis, this.d, this.precision);
-    }
-
+    },
   });
 
   return Context;
-
 })();

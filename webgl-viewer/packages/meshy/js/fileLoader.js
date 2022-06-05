@@ -1,17 +1,14 @@
-var FileLoader = function() {
-
-  this.load = function(file, callback) {
+var FileLoader = function () {
+  this.load = function (file, callback) {
     var fSplit = splitFilename(file.name);
     var filename = fSplit.name;
     var format = fSplit.extension;
 
     var reader = new FileReader();
 
-    switch(format) {
-
+    switch (format) {
       case 'obj':
-
-        reader.addEventListener("load", function(event) {
+        reader.addEventListener('load', function (event) {
           var result = event.target.result;
           var object = new THREE.OBJLoader().parse(result);
 
@@ -32,8 +29,7 @@ var FileLoader = function() {
         break;
 
       case 'stl':
-
-        reader.addEventListener("load", function(event) {
+        reader.addEventListener('load', function (event) {
           var result = event.target.result;
           var bufferGeo = new THREE.STLLoader().parse(result);
           var geo = new THREE.Geometry().fromBufferGeometry(bufferGeo);
@@ -43,16 +39,14 @@ var FileLoader = function() {
 
         if (reader.readAsBinaryString !== undefined) {
           reader.readAsBinaryString(file);
-        }
-        else {
+        } else {
           reader.readAsArrayBuffer(file);
         }
 
         break;
 
       default:
-        throw "Unsupported format " + format;
+        throw 'Unsupported format ' + format;
     }
   };
-
 };

@@ -16,7 +16,7 @@ MCG.Types = {
   segmentSet: 23,
 
   abstractAdjacencyMap: 31,
-  directedAdjacencyMap: 32
+  directedAdjacencyMap: 32,
 };
 
 // namespaces

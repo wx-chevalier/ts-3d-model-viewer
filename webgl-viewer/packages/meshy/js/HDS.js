@@ -2,11 +2,10 @@
 
 function HDSHalfedge(node, face) {
   // node at the start of this halfedge
-  if (node!==undefined) {
+  if (node !== undefined) {
     this.node = node;
     node.halfedge = this;
-  }
-  else {
+  } else {
     this.node = null;
   }
   // next halfedge CCW around the same face
@@ -17,7 +16,7 @@ function HDSHalfedge(node, face) {
   this.face = face;
 }
 
-HDSHalfedge.prototype.prev = function() {
+HDSHalfedge.prototype.prev = function () {
   var twin = this.twin;
 
   while (twin.next != this) {
@@ -26,50 +25,44 @@ HDSHalfedge.prototype.prev = function() {
   }
 
   return twin;
-}
+};
 
-HDSHalfedge.prototype.nstart = function() {
+HDSHalfedge.prototype.nstart = function () {
   return this.node;
-}
+};
 
-HDSHalfedge.prototype.nend = function() {
+HDSHalfedge.prototype.nend = function () {
   if (!this.next) return null;
   return this.next.node;
-}
+};
 
-HDSHalfedge.prototype.rotated = function() {
+HDSHalfedge.prototype.rotated = function () {
   if (!this.twin) return null;
   return this.twin.next;
-}
-
-
+};
 
 function HDSNode(v) {
   // vertex
-  this.v = v!==undefined ? v : null;
+  this.v = v !== undefined ? v : null;
   // one of the 1+ halfedges starting at this node
   this.halfedge = null;
 }
 
-HDSNode.prototype.isolated = function() {
+HDSNode.prototype.isolated = function () {
   return this.halfedge == null;
-}
+};
 
-HDSNode.prototype.terminal = function() {
+HDSNode.prototype.terminal = function () {
   return this.halfedge.twin.next == this.halfedge;
-}
-
-
+};
 
 function HDSFace(he, face3) {
   this.id = -1;
   // one of the halfedges on this face
-  this.halfedge = he!==undefined ? he : null;
+  this.halfedge = he !== undefined ? he : null;
   // THREE.Face3 object
   this.face3 = face3;
 }
-
-
 
 function HDSFaceArray(vs) {
   this.vs = vs;
@@ -78,14 +71,12 @@ function HDSFaceArray(vs) {
   this.area = 0;
 }
 
-HDSFaceArray.prototype.addFace = function(face) {
+HDSFaceArray.prototype.addFace = function (face) {
   // add face
   this.faces.push(face);
   this.count++;
   this.area += faceGetArea(face.face3, this.vs);
-}
-
-
+};
 
 function HDS(sourceVertices, sourceFaces) {
   var vs = sourceVertices;
@@ -162,12 +153,17 @@ function HDS(sourceVertices, sourceFaces) {
     return he;
   }
 
-  function tupleHash(i, j) { return i+"_"+j; }
+  function tupleHash(i, j) {
+    return i + '_' + j;
+  }
 }
 
 // extract groups of connected faces that satisfy the given criterion
-HDS.prototype.groupIntoIslands = function(valid) {
-  if (valid===undefined) valid = function() { return true; }
+HDS.prototype.groupIntoIslands = function (valid) {
+  if (valid === undefined)
+    valid = function () {
+      return true;
+    };
 
   var faces = this.faces;
   var vs = this.vs;
@@ -189,8 +185,7 @@ HDS.prototype.groupIntoIslands = function(valid) {
       var island = search(fstart);
 
       if (island.count > 0) islands.push(island);
-    }
-    else seen[f] = true;
+    } else seen[f] = true;
   }
 
   return islands;
@@ -225,9 +220,9 @@ HDS.prototype.groupIntoIslands = function(valid) {
 
     return island;
   }
-}
+};
 
-HDS.prototype.filterFaces = function(valid) {
+HDS.prototype.filterFaces = function (valid) {
   var faces = this.faces;
   var nf = faces.length;
 
@@ -239,4 +234,4 @@ HDS.prototype.filterFaces = function(valid) {
   }
 
   return result;
-}
+};

@@ -1,5 +1,4 @@
-MCG.Polygon = (function() {
-
+MCG.Polygon = (function () {
   // circular double-linked list representing an edge loop
   function Polygon(vertices, axis, epsilon) {
     if (axis === undefined) axis = 'z';
@@ -44,21 +43,25 @@ MCG.Polygon = (function() {
         prev: null,
         next: null,
         reflex: false,
-        ear: false
+        ear: false,
       };
 
       // insert into the linked list
       if (this.vertex) {
         node.prev = this.vertex;
         this.vertex.next = node;
-      }
-      else start = node;
+      } else start = node;
 
       this.vertex = node;
 
       this.count++;
       if (this.count > 2) {
-        this.area += triangleArea(start.v, this.vertex.prev.v, this.vertex.v, axis);
+        this.area += triangleArea(
+          start.v,
+          this.vertex.prev.v,
+          this.vertex.v,
+          axis,
+        );
       }
     }
 
@@ -72,8 +75,7 @@ MCG.Polygon = (function() {
     do {
       if (this.collinear(current)) {
         this.removeNode(current);
-      }
-      else {
+      } else {
         if (!start) start = current;
         this.updateBounds(current);
       }
@@ -105,7 +107,7 @@ MCG.Polygon = (function() {
     this.setIndices();
   }
 
-  Polygon.prototype.getVertexArray = function() {
+  Polygon.prototype.getVertexArray = function () {
     var vertices = [];
 
     var start = this.vertex;
@@ -117,9 +119,9 @@ MCG.Polygon = (function() {
     } while (current != start);
 
     return vertices;
-  }
+  };
 
-  Polygon.prototype.updateBounds = function(n) {
+  Polygon.prototype.updateBounds = function (n) {
     var ah = this.ah;
     var av = this.av;
 
@@ -128,16 +130,15 @@ MCG.Polygon = (function() {
       this.maxh = n;
       this.minv = n;
       this.maxv = n;
-    }
-    else {
+    } else {
       this.minh = this.minh.v[ah] < n.v[ah] ? this.minh : n;
       this.maxh = this.maxh.v[ah] > n.v[ah] ? this.maxh : n;
       this.minv = this.minv.v[av] < n.v[av] ? this.minv : n;
       this.maxv = this.maxv.v[av] > n.v[av] ? this.maxv : n;
     }
-  }
+  };
 
-  Polygon.prototype.setIndices = function() {
+  Polygon.prototype.setIndices = function () {
     var idx = 0;
 
     var start = this.vertex;
@@ -147,23 +148,23 @@ MCG.Polygon = (function() {
 
       current = current.next;
     } while (current != start);
-  }
+  };
 
-  Polygon.prototype.collinear = function(node) {
+  Polygon.prototype.collinear = function (node) {
     var p = node.prev;
     var n = node.next;
-    return collinear(p.v, node.v, n.v, this.axis, this.epsilon)
-  }
+    return collinear(p.v, node.v, n.v, this.axis, this.epsilon);
+  };
 
-  Polygon.prototype.removeNode = function(node) {
+  Polygon.prototype.removeNode = function (node) {
     node.prev.next = node.next;
     node.next.prev = node.prev;
 
     this.count--;
-  }
+  };
 
   // test if this edge loop contains the other edge loop
-  Polygon.prototype.contains = function(other) {
+  Polygon.prototype.contains = function (other) {
     // horizontal and vertical axes; the convention is that we're looking along
     // negative this.axis, ah points right and av points up - we'll call
     // pt[ah] h and pt[av] v
@@ -171,10 +172,16 @@ MCG.Polygon = (function() {
     var av = this.av;
 
     // bounding box tests first as they are cheaper
-    if (this.maxh.v[ah] < other.minh.v[ah] || this.minh.v[ah] > other.maxh.v[ah]) {
+    if (
+      this.maxh.v[ah] < other.minh.v[ah] ||
+      this.minh.v[ah] > other.maxh.v[ah]
+    ) {
       return false;
     }
-    if (this.maxv.v[av] < other.minv.v[av] || this.minv.v[av] > other.maxv.v[av]) {
+    if (
+      this.maxv.v[av] < other.minv.v[av] ||
+      this.minv.v[av] > other.maxv.v[av]
+    ) {
       return false;
     }
 
@@ -184,11 +191,11 @@ MCG.Polygon = (function() {
     var pt = other.vertex.v;
 
     return this.containsPoint(pt);
-  }
+  };
 
   // point-in-polygon testing - see if some point of other is inside this loop;
   // see O'Rourke's book, sec. 7.4
-  Polygon.prototype.containsPoint = function(pt) {
+  Polygon.prototype.containsPoint = function (pt) {
     var axis = this.axis;
     var ah = this.ah;
     var av = this.av;
@@ -215,14 +222,14 @@ MCG.Polygon = (function() {
       current = current.next;
     } while (current != this.vertex);
 
-    return crossCount%2 != 0;
-  }
+    return crossCount % 2 != 0;
+  };
 
   // join the polygon with the holes it immediately contains so that it can be
   // triangulated as a single convex polygon
   // see David Eberly's writeup - we cast a ray to the right, see where it
   // intersects the closest segment, then check inside a triangle
-  Polygon.prototype.mergeHolesIntoPoly = function() {
+  Polygon.prototype.mergeHolesIntoPoly = function () {
     if (this.holes.length === 0) return;
 
     var axis = this.axis;
@@ -233,7 +240,7 @@ MCG.Polygon = (function() {
 
     // sort holes on maximal vertex on axis 1 in descending order
     // once sorted, start merging from rightmost hole
-    holes.sort(function(a,b) {
+    holes.sort(function (a, b) {
       var amax = a.maxh.v[ah];
       var bmax = b.maxh.v[ah];
 
@@ -242,8 +249,7 @@ MCG.Polygon = (function() {
       return 0;
     });
 
-
-    for (var i=0; i<holes.length; i++) {
+    for (var i = 0; i < holes.length; i++) {
       var hole = holes[i];
 
       var P = this.findVisiblePointFromHole(hole);
@@ -253,10 +259,10 @@ MCG.Polygon = (function() {
 
     this.setIndices();
     this.holes.length = 0;
-  }
+  };
 
   // join vertex node in polygon to given vertex node in hole
-  Polygon.prototype.mergeHoleIntoPoly = function(polyNode, hole, holeNode) {
+  Polygon.prototype.mergeHoleIntoPoly = function (polyNode, hole, holeNode) {
     // loop goes CCW around poly, exits the poly, goes around hole, exits hole,
     // enters poly
     var polyExit = polyNode;
@@ -283,9 +289,9 @@ MCG.Polygon = (function() {
 
     this.count += hole.count + 2;
     this.area += hole.area;
-  }
+  };
 
-  Polygon.prototype.findVisiblePointFromHole = function(hole) {
+  Polygon.prototype.findVisiblePointFromHole = function (hole) {
     var axis = this.axis;
     var ah = this.ah;
     var av = this.av;
@@ -330,7 +336,7 @@ MCG.Polygon = (function() {
     // smallest angle with the horizontal
     current = this.vertex;
 
-    var angle = Math.PI/2;
+    var angle = Math.PI / 2;
     var hEdge = I.clone().sub(M).normalize();
     do {
       if (current.reflex) {
@@ -352,12 +358,12 @@ MCG.Polygon = (function() {
     } while (current != this.vertex);
 
     return P;
-  }
+  };
 
   // triangulation by ear clipping
   // returns an array of 3*n indices for n new triangles
   // see O'Rourke's book for details
-  Polygon.prototype.triangulate = function() {
+  Polygon.prototype.triangulate = function () {
     this.calculateEars();
 
     var start = this.vertex;
@@ -415,39 +421,40 @@ MCG.Polygon = (function() {
     this.count = count;
 
     return indices;
-  }
+  };
 
   // calculate ear status of all ears
-  Polygon.prototype.calculateEars = function() {
+  Polygon.prototype.calculateEars = function () {
     var current = this.vertex;
     do {
       this.nodeCalculateEar(current);
 
       current = current.next;
     } while (current != this.vertex);
-  }
+  };
 
-  Polygon.prototype.nodeCalculateEar = function(node) {
+  Polygon.prototype.nodeCalculateEar = function (node) {
     node.ear = this.diagonal(node);
-  }
+  };
 
-  Polygon.prototype.diagonal = function(node) {
+  Polygon.prototype.diagonal = function (node) {
     var p = node.prev;
     var n = node.next;
 
     return this.inCone(p, n) && this.inCone(n, p) && this.nonintersection(p, n);
-  }
+  };
 
-  Polygon.prototype.inCone = function(a, b) {
+  Polygon.prototype.inCone = function (a, b) {
     var axis = this.axis;
     var apv = a.prev.v;
     var anv = a.next.v;
 
-    if (a.reflex) return !(leftOn(anv, a.v, b.v, axis) && leftOn(a.v, apv, b.v, axis));
+    if (a.reflex)
+      return !(leftOn(anv, a.v, b.v, axis) && leftOn(a.v, apv, b.v, axis));
     else return left(apv, a.v, b.v, axis) && left(a.v, anv, b.v, axis);
-  }
+  };
 
-  Polygon.prototype.nonintersection = function(a, b) {
+  Polygon.prototype.nonintersection = function (a, b) {
     var axis = this.axis;
     var epsilon = this.epsilon;
     var c = this.vertex;
@@ -456,21 +463,22 @@ MCG.Polygon = (function() {
       var d = c.next;
 
       // only segments not sharing a/b as endpoints can intersect ab segment
-      if (c!=a && c!=b && d!=a && d!=b) {
-        if (segmentSegmentIntersection(a.v, b.v, c.v, d.v, axis, epsilon)) return false;
+      if (c != a && c != b && d != a && d != b) {
+        if (segmentSegmentIntersection(a.v, b.v, c.v, d.v, axis, epsilon))
+          return false;
       }
 
       c = c.next;
     } while (c != this.vertex);
 
     return true;
-  }
+  };
 
-  Polygon.prototype.hasHoles = function() {
+  Polygon.prototype.hasHoles = function () {
     return this.holes.length > 0;
-  }
+  };
 
-  Polygon.prototype.nodeCalculateReflex = function(node) {
+  Polygon.prototype.nodeCalculateReflex = function (node) {
     var area = triangleArea(node.prev.v, node.v, node.next.v, this.axis);
 
     if (area < 0) {
@@ -479,14 +487,13 @@ MCG.Polygon = (function() {
       // than some reeeeeally small epsilon, it doesn't matter if it's reflex
       // anyway, so might as well call those vertices convex
       if (Math.abs(area) > this.epsilon) node.reflex = true;
-    }
-    else node.reflex = false;
-  }
+    } else node.reflex = false;
+  };
 
-  Polygon.prototype.writeSegments = function(vertices) {
+  Polygon.prototype.writeSegments = function (vertices) {
     var loops = [this].concat(this.holes);
 
-    for (var i=0; i<loops.length; i++) {
+    for (var i = 0; i < loops.length; i++) {
       var loop = loops[i];
       var curr = loop.vertex;
       do {
@@ -496,8 +503,7 @@ MCG.Polygon = (function() {
         curr = curr.next;
       } while (curr != loop.vertex);
     }
-  }
+  };
 
   return Polygon;
-
 })();

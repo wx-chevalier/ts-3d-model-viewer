@@ -1,5 +1,4 @@
-MCG.Polygon = (function() {
-
+MCG.Polygon = (function () {
   function Polygon(context, sourcePoints, params) {
     this.context = context;
 
@@ -32,8 +31,8 @@ MCG.Polygon = (function() {
       var ct = points.length;
 
       // if last three points are collinear, replace last point with new point
-      if (ct > 1 && collinear(points[ct-2], points[ct-1], spt)) {
-        points[ct-1] = spt;
+      if (ct > 1 && collinear(points[ct - 2], points[ct - 1], spt)) {
+        points[ct - 1] = spt;
       }
       // else, just add the new point
       else {
@@ -46,8 +45,9 @@ MCG.Polygon = (function() {
     if (this.closed) {
       // eliminate points 0 and/or 1 if they are collinear with their neighbors
       var ct = this.count();
-      if (collinear(points[ct-2], points[ct-1], points[0])) points.splice(--ct, 1);
-      if (collinear(points[ct-1], points[0], points[1])) points.splice(0, 1);
+      if (collinear(points[ct - 2], points[ct - 1], points[0]))
+        points.splice(--ct, 1);
+      if (collinear(points[ct - 1], points[0], points[1])) points.splice(0, 1);
 
       this.calculateArea();
     }
@@ -60,13 +60,12 @@ MCG.Polygon = (function() {
   }
 
   Object.assign(Polygon.prototype, {
-
-    count: function() {
+    count: function () {
       return this.points.length;
     },
 
     // for each point
-    forEach: function(f) {
+    forEach: function (f) {
       var points = this.points;
       var ct = points.length;
       var bisectors = this.bisectors;
@@ -79,21 +78,21 @@ MCG.Polygon = (function() {
     },
 
     // for each sequence of two points
-    forEachPointPair: function(f) {
+    forEachPointPair: function (f) {
       var points = this.points;
       var ct = points.length;
       var ct1 = ct - 1;
 
       for (var i = 0; i < ct; i++) {
         var p1 = points[i];
-        var p2 = points[(i < ct1) ? i+1 : (i+1+ct)%ct];
+        var p2 = points[i < ct1 ? i + 1 : (i + 1 + ct) % ct];
 
         f(p1, p2);
       }
     },
 
     // for each sequence of three points
-    forEachSegmentPair: function(f) {
+    forEachSegmentPair: function (f) {
       var points = this.points;
       var ct = points.length;
       var ct1 = ct - 1;
@@ -101,47 +100,47 @@ MCG.Polygon = (function() {
 
       for (var i = 0; i < ct; i++) {
         var p1 = points[i];
-        var p2 = points[(i < ct1) ? i+1 : (i+1+ct)%ct];
-        var p3 = points[(i < ct2) ? i+2 : (i+2+ct)%ct];
+        var p2 = points[i < ct1 ? i + 1 : (i + 1 + ct) % ct];
+        var p3 = points[i < ct2 ? i + 2 : (i + 2 + ct) % ct];
 
         f(p1, p2, p3);
       }
     },
 
-    initBounds: function() {
+    initBounds: function () {
       var context = this.context;
 
       this.min = new MCG.Vector(context).setScalar(Infinity);
       this.max = new MCG.Vector(context).setScalar(-Infinity);
     },
 
-    initArea: function() {
+    initArea: function () {
       this.area = 0;
     },
 
-    updateBounds: function(pt) {
+    updateBounds: function (pt) {
       this.min.min(pt);
       this.max.max(pt);
     },
 
-    updateBoundsFromThis: function(min, max) {
+    updateBoundsFromThis: function (min, max) {
       min.min(this.min);
       max.max(this.max);
     },
 
-    calculateBounds: function() {
+    calculateBounds: function () {
       var context = this.context;
 
       this.initBounds();
 
       var _this = this;
 
-      this.forEach(function(p) {
+      this.forEach(function (p) {
         _this.updateBounds(p);
       });
     },
 
-    calculateArea: function() {
+    calculateArea: function () {
       this.area = 0;
 
       if (!this.closed) return;
@@ -151,46 +150,46 @@ MCG.Polygon = (function() {
       var ct = this.count();
 
       for (var i = 1; i < ct - 1; i++) {
-        this.area += area(points[0], points[i], points[i+1]);
+        this.area += area(points[0], points[i], points[i + 1]);
       }
     },
 
-    perimeter: function() {
+    perimeter: function () {
       var result = 0;
 
-      this.forEachPointPair(function(p1, p2) {
+      this.forEachPointPair(function (p1, p2) {
         result += p1.distanceTo(p2);
       });
 
       return result;
     },
 
-    isSliver: function(tol) {
+    isSliver: function (tol) {
       tol = tol || this.context.p / 100;
 
       return Math.abs(this.area) / this.perimeter() < tol;
     },
 
-    fAreaGreaterThanTolerance: function(ftol) {
+    fAreaGreaterThanTolerance: function (ftol) {
       var tol = MCG.Math.ftoi(ftol, this.context);
 
       return this.areaGreaterThanTolerance(tol);
     },
 
-    areaGreaterThanTolerance: function(tol) {
+    areaGreaterThanTolerance: function (tol) {
       return Math.abs(this.area) > tol;
     },
 
-    size: function() {
+    size: function () {
       return this.min.vectorTo(this.max);
     },
 
-    valid: function() {
+    valid: function () {
       if (this.closed) return this.count() >= 3;
       else return this.count() > 1;
     },
 
-    invalidate: function() {
+    invalidate: function () {
       this.points = [];
       this.initArea();
       this.initBounds();
@@ -198,11 +197,11 @@ MCG.Polygon = (function() {
       return this;
     },
 
-    createNew: function() {
+    createNew: function () {
       return new this.constructor(this.context, undefined, this.closed);
     },
 
-    clone: function(recursive) {
+    clone: function (recursive) {
       var clone = this.createNew();
 
       Object.assign(clone, this);
@@ -223,7 +222,7 @@ MCG.Polygon = (function() {
 
     // points is an array of vectors
     // mk is an optional array of bools indicating valid points
-    fromPoints: function(points, mk) {
+    fromPoints: function (points, mk) {
       if (mk) {
         var rpoints = [];
 
@@ -232,8 +231,7 @@ MCG.Polygon = (function() {
         }
 
         this.points = rpoints;
-      }
-      else {
+      } else {
         this.points = points;
       }
 
@@ -243,8 +241,8 @@ MCG.Polygon = (function() {
       return this;
     },
 
-    rotate: function(angle) {
-      this.forEach(function(point) {
+    rotate: function (angle) {
+      this.forEach(function (point) {
         point.rotate(angle);
       });
 
@@ -254,7 +252,7 @@ MCG.Polygon = (function() {
     },
 
     // compute bisectors and angles between each edge pair and its bisector
-    computeBisectors: function() {
+    computeBisectors: function () {
       // return if bisectors already calculated or if polygon is open
       if (this.bisectors !== null || !this.closed) return;
 
@@ -268,9 +266,9 @@ MCG.Polygon = (function() {
       var ct = this.count();
 
       for (var i = 0; i < ct; i++) {
-        var p1 = points[(i-1+ct)%ct];
+        var p1 = points[(i - 1 + ct) % ct];
         var p2 = points[i];
-        var p3 = points[(i+1+ct)%ct];
+        var p3 = points[(i + 1 + ct) % ct];
 
         var b = MCG.Math.bisector(p1, p2, p3);
 
@@ -280,19 +278,19 @@ MCG.Polygon = (function() {
     },
 
     // offset, but the arguments are given in floating-point space
-    foffset: function(fdist, ftol) {
+    foffset: function (fdist, ftol) {
       var context = this.context;
       var dist = MCG.Math.ftoi(fdist, context);
-      var tol = ftol !== undefined ? MCG.Math.ftoi(ftol, context): 0;
+      var tol = ftol !== undefined ? MCG.Math.ftoi(ftol, context) : 0;
 
       return this.offset(dist, tol);
     },
 
     // offset every point in the polygon by a given distance (positive for
     // outward, negative for inward, given in integer-space units)
-    offset: function(dist, tol) {
+    offset: function (dist, tol) {
       if (dist === 0) return this;
-      
+
       var result = this.createNew();
 
       if (!this.valid()) return result;
@@ -320,7 +318,7 @@ MCG.Polygon = (function() {
 
       var pi = Math.PI;
       var pi_2 = pi / 2;
-      var capThreshold = pi * 5 / 6;
+      var capThreshold = (pi * 5) / 6;
       var orthogonalRightVector = MCG.Math.orthogonalRightVector;
       var coincident = MCG.Math.coincident;
 
@@ -331,7 +329,7 @@ MCG.Polygon = (function() {
         // angle between the offset vector and the neighboring segments (because
         // the angles array stores the angle relative to the outward-facing
         // bisector, which may be antiparallel to the offset vector)
-        var a = fdist > 0 ? angles[i] : (pi - angles[i]);
+        var a = fdist > 0 ? angles[i] : pi - angles[i];
 
         // should occur rarely - ignore this point if the angle is 0 because
         // dividing by sin(a) gives infinity
@@ -367,8 +365,7 @@ MCG.Polygon = (function() {
 
           rpoints.push(fpt);
           rpoints.push(spt);
-        }
-        else {
+        } else {
           rpoints.push(ptnew);
         }
       }
@@ -385,15 +382,14 @@ MCG.Polygon = (function() {
       // else, if previous point is to the right of bisector or next point is
       // to its left, point is invalid
       for (var i = 0; i < points.length; i++) {
-        var a = fdist > 0 ? angles[i] : (pi - angles[i]);
+        var a = fdist > 0 ? angles[i] : pi - angles[i];
 
         if (a === 0) continue;
 
         if (a > capThreshold) {
           mk[ri++] = true;
           mk[ri++] = true;
-        }
-        else {
+        } else {
           var rpprev = rpoints[ri === 0 ? rlen1 : ri - 1];
           var rpnext = rpoints[ri === rlen1 ? 0 : ri + 1];
           var rp = rpoints[ri];
@@ -420,7 +416,7 @@ MCG.Polygon = (function() {
       return result;
     },
 
-    fdecimate: function(ftol) {
+    fdecimate: function (ftol) {
       var tol = MCG.Math.ftoi(ftol, this.context);
 
       return this.decimate(tol);
@@ -429,7 +425,7 @@ MCG.Polygon = (function() {
     // reduce vertex count
     // source: http://geomalgorithms.com/a16-_decimate-1.html
     // NB: this mutates the polygon
-    decimate: function(tol) {
+    decimate: function (tol) {
       if (tol <= 0) return this;
 
       // source points
@@ -440,7 +436,7 @@ MCG.Polygon = (function() {
 
       this.fromPoints(vrpts);
 
-      if (Math.abs(this.area) < tol * tol / 4) this.invalidate();
+      if (Math.abs(this.area) < (tol * tol) / 4) this.invalidate();
 
       return this;
 
@@ -480,9 +476,9 @@ MCG.Polygon = (function() {
         var narea = MCG.Math.narea;
 
         for (var si = 0; si < ct; si++) {
-          var pt0 = si === 0 ? pts[ct1] : pts[si-1];
+          var pt0 = si === 0 ? pts[ct1] : pts[si - 1];
           var pt1 = pts[si];
-          var pt2 = si === ct1 ? pts[0] : pts[si+1];
+          var pt2 = si === ct1 ? pts[0] : pts[si + 1];
 
           if (narea(pt0, pt1, pt2) < tolsq) rpoints.push(pt1);
         }
@@ -495,10 +491,10 @@ MCG.Polygon = (function() {
 
         // marker array
         var mk = new Array(ct);
-        mk[0] = mk[ct-1] = true;
+        mk[0] = mk[ct - 1] = true;
 
         // build the mk array
-        decimateDPRecursive(pts, mk, tol, 0, ct-1);
+        decimateDPRecursive(pts, mk, tol, 0, ct - 1);
 
         // result points
         var rpts = [];
@@ -513,16 +509,17 @@ MCG.Polygon = (function() {
 
       // recursive Douglas-Peucker procedure
       function decimateDPRecursive(pts, mk, tol, i, j) {
-        if (i >= j-1) return;
+        if (i >= j - 1) return;
 
         var tolsq = tol * tol;
         var maxdistsq = 0;
         var idx = -1;
 
         var distanceToLineSq = MCG.Math.distanceToLineSq;
-        var pti = pts[i], ptj = pts[j];
+        var pti = pts[i],
+          ptj = pts[j];
 
-        for (var k = i+1; k < j; k++) {
+        for (var k = i + 1; k < j; k++) {
           var distsq = distanceToLineSq(pti, ptj, pts[k]);
           if (distsq > maxdistsq) {
             maxdistsq = distsq;
@@ -537,10 +534,8 @@ MCG.Polygon = (function() {
           decimateDPRecursive(pts, mk, tol, idx, j);
         }
       }
-    }
-
+    },
   });
 
   return Polygon;
-
 })();
