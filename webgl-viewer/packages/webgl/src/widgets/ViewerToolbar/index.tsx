@@ -8,8 +8,9 @@ import {
   SettingOutlined,
   ToolOutlined,
 } from '@ant-design/icons';
+import Dropdown from 'antd/lib/dropdown';
+import message from 'antd/lib/message';
 import cn from 'classnames';
-import Dropdown from 'rc-dropdown';
 import Menu, { Divider, Item as MenuItem } from 'rc-menu';
 import Tooltip from 'rc-tooltip';
 import React from 'react';
@@ -83,7 +84,6 @@ export const ViewerToolbar = ({
               </MenuItem>
             </Menu>
           }
-          animation="slide-up"
         >
           {renderItem(<FolderOpenOutlined />, i18nFormat('打开'))}
         </Dropdown>
@@ -110,7 +110,6 @@ export const ViewerToolbar = ({
               </MenuItem>
             </Menu>
           }
-          animation="slide-up"
         >
           {renderItem(<ExportOutlined />, i18nFormat('导出'))}
         </Dropdown>
@@ -137,6 +136,26 @@ export const ViewerToolbar = ({
           <Tooltip overlay={i18nFormat('自动生成模型截图')} placement="bottom">
             <span>{i18nFormat('截图')}</span>
           </Tooltip>,
+          {
+            key: 'snapshotDataUrl',
+            onClick: async () => {
+              if (viewerStateStore.snapshotDataUrl) {
+                return;
+              }
+
+              message.loading({
+                key: 'loading',
+                title: i18nFormat('截图中'),
+                duration: 0,
+              });
+              const dataUrl = await threeRenderer.captureSnapshot();
+              viewerStateStore.setPartialState({ snapshotDataUrl: dataUrl });
+              message.loading({
+                key: 'loading',
+                title: i18nFormat('截图成功，请自行裁剪'),
+              });
+            },
+          },
         )}
         <Dropdown
           overlayClassName="rmv-viewer-toolbar-dropdown"
@@ -167,7 +186,6 @@ export const ViewerToolbar = ({
               </MenuItem>
             </Menu>
           }
-          animation="slide-up"
         >
           {renderItem(<ToolOutlined />, i18nFormat('工具'))}
         </Dropdown>

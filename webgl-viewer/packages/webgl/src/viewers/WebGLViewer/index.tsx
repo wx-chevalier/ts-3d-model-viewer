@@ -64,10 +64,6 @@ export class WebGLViewerComp extends React.Component<IProps, IState> {
 
   id = genId();
 
-  state: IState = {
-    ...getInitialStateFromProps(this.mixedProps),
-  };
-
   $ref = React.createRef<HTMLDivElement>();
 
   componentDidMount() {

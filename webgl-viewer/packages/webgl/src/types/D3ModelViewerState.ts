@@ -21,8 +21,14 @@ export interface D3ModelViewerState
   /** 是否展示渲染参数 */
   isRenderOptionsPanelVisible?: boolean;
 
+  /** 是否显示截图选择器 */
+  isSnapshotPreviewVisible?: boolean;
+
   /** 颜色选择器，兼容 WebGLViewer 的情况 */
   isColorPickerVisible?: boolean;
+
+  /** 保存的截图信息 */
+  snapshotDataUrl?: string;
 }
 
 export const getInitialStateFromProps = (

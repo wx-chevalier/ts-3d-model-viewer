@@ -8,7 +8,7 @@ export function ErrorFallback({
   resetErrorBoundary: () => void;
 }) {
   React.useEffect(() => {
-    console.log('>>>OccWebGLViewer>>>', error.message);
+    console.log('>>>ErrorFallback>>>', error.message);
   });
 
   return (

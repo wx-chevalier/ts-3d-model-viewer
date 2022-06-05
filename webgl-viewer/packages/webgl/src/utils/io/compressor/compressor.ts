@@ -106,7 +106,7 @@ const jsZipWorkerScript = `
  * @param modelFile
  * @returns
  */
-export async function zipped(modelFile: File) {
+export async function deflateByZip(modelFile: File) {
   // 读取文件内容
   let buffer = await readFileAsArrayBufferAsync(modelFile);
   let intArray: Uint8Array = new Uint8Array(buffer);

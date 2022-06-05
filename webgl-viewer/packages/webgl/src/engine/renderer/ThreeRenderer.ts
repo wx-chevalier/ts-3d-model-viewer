@@ -1,4 +1,4 @@
-import { genId, sleep, toFixedNumber } from '@m-fe/utils';
+import * as U from '@m-fe/utils';
 import TextSprite from '@seregpie/three.text-sprite';
 import each from 'lodash/each';
 import max from 'lodash/max';
@@ -31,7 +31,7 @@ import { ThreeRendererContext } from './ThreeRendererContext';
 const fudge = 1.0;
 
 export class ThreeRenderer {
-  id = genId();
+  id = U.genId();
 
   animationId: number;
   context: ThreeRendererContext;
@@ -79,7 +79,7 @@ export class ThreeRenderer {
 
     this.onContextChange({ hasModelFileLoaded: false });
 
-    if (props.src) {
+    if (this.viewerProps.src) {
       await this.loadModel();
     }
   }
@@ -212,8 +212,25 @@ export class ThreeRenderer {
     }
   }
 
-  captureSnapshot = async () => {
-    return new Promise((resolve, reject) => {});
+  captureSnapshot: () => Promise<string> = async () => {
+    const { context } = this;
+
+    this.changeTheme('fresh');
+
+    await U.sleep(3000);
+
+    return new Promise(async resolve => {
+      new ObjectSnapshotGenerator(
+        context.mesh,
+        context.camera,
+        context.renderer,
+        (dataUrl: string) => {
+          resolve(dataUrl);
+
+          this.changeTheme('default');
+        },
+      );
+    });
   };
 
   changeMaterial = (material: THREE.Material) => {
@@ -247,6 +264,7 @@ export class ThreeRenderer {
     // 否则进行主题切换
     if (theme === 'fresh') {
       this.removePlane();
+      this.removeAxisHelper();
       this.context.renderer.setClearColor(
         new THREE.Color('rgba(255, 255, 255)'),
         1,
@@ -255,6 +273,7 @@ export class ThreeRenderer {
       this.changeModelColor('rgb(24,98,246)');
     } else {
       this.setupPlane();
+      this.setupAxisHelper();
       const state = this.getViewerState();
       this.context.renderer.setClearColor(
         new THREE.Color(state.backgroundColor),
@@ -343,7 +362,7 @@ export class ThreeRenderer {
           fillStyle: 'rgb(255, 153, 0)',
           fontSize: 2.5,
           fontStyle: 'italic',
-          text: `${toFixedNumber(len, 2)} mm`,
+          text: `${U.toFixedNumber(len, 2)} mm`,
         });
 
         return s;
@@ -586,7 +605,7 @@ export class ThreeRenderer {
   private async setupRenderer() {
     // 等待 $dom 有效，如果超时则抛出异常，最大等待 30s
     for (let i = 0; i < 30; i++) {
-      await sleep(1000);
+      await U.sleep(1000);
       if (this.$dom) {
         break;
       }
@@ -636,7 +655,6 @@ export class ThreeRenderer {
         this.$dom,
         {
           onUpdate: (camPos: Vector3) => {
-            console.log(camPos);
             pointLight.position.copy(camPos);
           },
         },

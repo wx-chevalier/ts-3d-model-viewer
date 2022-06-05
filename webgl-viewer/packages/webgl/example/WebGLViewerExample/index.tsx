@@ -5,17 +5,16 @@ import * as React from 'react';
 
 import {
   deflate,
-  ImageClipViewer,
+  deflateByZip,
   ObjectSnapshotGenerator,
   parseD3Model,
   ThreeRenderer,
   WebGLViewer,
-  zipped,
 } from '../../src';
 
 export function WebGLViewerExample() {
   const rendererRef = React.useRef<ThreeRenderer>();
-  const [imgUrl, setImgUrl] = React.useState('');
+  const [_, setImgUrl] = React.useState('');
 
   const generateSnapshot = async () => {
     const threeRenderer = rendererRef.current;
@@ -48,7 +47,7 @@ export function WebGLViewerExample() {
       let filetype: string;
       let filename: string;
       if (type === 'zip') {
-        modelArray = await zipped(modelFile);
+        modelArray = await deflateByZip(modelFile);
         filetype = 'application/zip';
         filename = `${modelFile.name}.zip`;
       }
@@ -120,7 +119,6 @@ export function WebGLViewerExample() {
         </button>
         <br />
       </div>
-      <ImageClipViewer imgUrl={imgUrl} />
     </>
   );
 }

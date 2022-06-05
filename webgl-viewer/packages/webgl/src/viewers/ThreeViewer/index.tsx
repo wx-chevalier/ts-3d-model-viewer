@@ -26,7 +26,7 @@ import {
   isSupportOcctLoader,
   isSupportThreejsLoader,
 } from '../../utils';
-import { Joystick, ViewerToolbar } from '../../widgets';
+import { Joystick, SnapshotClipViewer, ViewerToolbar } from '../../widgets';
 import { ModelAttrPanel } from '../../widgets/panels/ModelAttrPanel';
 import { RenderOptionsPanel } from '../../widgets/panels/RenderOptionsPanel';
 import { SettingsPanel } from '../../widgets/panels/SettingsPanel';
@@ -376,7 +376,6 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
       );
     }
 
-    // 非宽松方式，即上下布局
     return (
       <div
         className="rmv-three-viewer-container"
@@ -390,6 +389,7 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
         {viewerStateStore.isAttrPanelVisible && <ModelAttrPanel />}
         {viewerStateStore.isSettingsPanelVisible && <SettingsPanel />}
         {viewerStateStore.isRenderOptionsPanelVisible && <RenderOptionsPanel />}
+        <SnapshotClipViewer />
       </div>
     );
   }

@@ -50,6 +50,7 @@
   font-size: 14px;
   margin-left: 4px;
   color: white;
+  user-select: none;
 }
 
 .rmv-viewer-toolbar-item--selected .rmv-viewer-toolbar-item-label {

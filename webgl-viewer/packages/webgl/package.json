@@ -75,6 +75,7 @@
     "@storybook/addon-links": "^5.3.14",
     "@storybook/addons": "^5.3.14",
     "@storybook/react": "^5.3.14",
+    "@types/loadable__component": "^5.13.4",
     "@types/pako": "^1.0.1",
     "@types/react-color": "^3.0.4",
     "@types/tween.js": "^18.5.1",

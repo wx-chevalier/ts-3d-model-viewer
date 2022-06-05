@@ -114,6 +114,7 @@ importers:
       '@storybook/addon-links': ^5.3.14
       '@storybook/addons': ^5.3.14
       '@storybook/react': ^5.3.14
+      '@types/loadable__component': ^5.13.4
       '@types/pako': ^1.0.1
       '@types/react-color': ^3.0.4
       '@types/tween.js': ^18.5.1
@@ -179,6 +180,7 @@ importers:
       '@storybook/addon-links': 5.3.21
       '@storybook/addons': 5.3.21
       '@storybook/react': 5.3.21_eslint@7.32.0
+      '@types/loadable__component': 5.13.4
       '@types/pako': 1.0.2
       '@types/react-color': 3.0.5
       '@types/tween.js': 18.6.1
@@ -5317,6 +5319,12 @@ packages:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
       '@types/node': 16.7.1
+    dev: true
+
+  /@types/loadable__component/5.13.4:
+    resolution: {integrity: sha512-YhoCCxyuvP2XeZNbHbi8Wb9EMaUJuA2VGHxJffcQYrJKIKSkymJrhbzsf9y4zpTmr5pExAAEh5hbF628PAZ8Dg==}
+    dependencies:
+      '@types/react': 17.0.19
     dev: true
 
   /@types/lodash/4.14.172:
