@@ -96,8 +96,8 @@ export interface D3ModelViewerSourceProps {
   /** 传入的源文件类型 */
   src?: D3ModelSrc;
   fileName?: string;
-  type: D3ModelType;
-  compressType: D3ModelCompressType;
+  type?: D3ModelType;
+  compressType?: D3ModelCompressType;
 
   mesh?: THREE.Mesh;
   group?: THREE.Group;
