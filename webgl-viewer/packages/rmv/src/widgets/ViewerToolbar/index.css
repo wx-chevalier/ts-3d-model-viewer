@@ -37,6 +37,11 @@
   background-color: white;
 }
 
+.rmv-viewer-toolbar-item-icon{
+  display: flex;
+  align-items: center;
+}
+
 .rmv-viewer-toolbar-item-icon svg {
   position: inherit;
   fill: white;
