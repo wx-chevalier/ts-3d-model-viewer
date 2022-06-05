@@ -1,5 +1,7 @@
+import { useViewerStateStore } from 'packages/webgl/src/stores';
 import * as THREE from 'three';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
+import { ThreeMFLoader } from 'three/examples/jsm/loaders/3MFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
@@ -48,7 +50,12 @@ export async function loadMeshWithRetry(
     toGltf?: boolean;
     props?: D3ModelViewerProps;
   } = {},
-): Promise<{ gltf?: string; mesh?: THREE.Mesh; srcUrl: string }> {
+): Promise<{
+  gltf?: string;
+  mesh?: THREE.Mesh;
+  group?: THREE.Group;
+  srcUrl: string;
+}> {
   try {
     const resp = await loadMesh(src, type, { toGltf, props });
 
@@ -72,7 +79,13 @@ export async function loadMesh(
     toGltf = true,
     props,
   }: { toGltf?: boolean; props?: D3ModelViewerProps } = {},
-): Promise<{ gltf?: string; mesh?: THREE.Mesh; srcUrl: string }> {
+): Promise<{
+  srcUrl: string;
+
+  mesh?: THREE.Mesh;
+  gltf?: string;
+  group?: THREE.Group;
+}> {
   const material = new THREE.MeshStandardMaterial();
 
   return await new Promise(async (resolve, reject) => {
@@ -104,15 +117,15 @@ export async function loadMesh(
         const loader = new OBJLoader();
         loader.load(
           srcUrl,
-          obj => {
+          group => {
             if (toGltf) {
               const exporter = new GLTFExporter();
 
               exporter.parse(
-                obj,
+                group,
                 gltf => {
                   // 将 obj 转化为 mesh
-                  obj.traverse(child => {
+                  group.traverse(child => {
                     if (child instanceof THREE.Mesh) {
                       (child.material as THREE.Material).transparent = true;
                       const mesh = new THREE.Mesh(
@@ -127,7 +140,7 @@ export async function loadMesh(
               );
             } else {
               // 不包含 gltf 则直接返回
-              obj.traverse(child => {
+              group.traverse(child => {
                 if (child instanceof THREE.Mesh) {
                   (child.material as THREE.Material).transparent = true;
                   const mesh = new THREE.Mesh(child.geometry, child.material);
@@ -187,7 +200,30 @@ export async function loadMesh(
             reject(err);
           },
         );
+      } else if (type === '3mf') {
+        const loader = new ThreeMFLoader();
+
+        loader.load(
+          srcUrl,
+          group => {
+            group.traverse(child => {
+              if (child instanceof THREE.Mesh) {
+                (child.material as THREE.Material).transparent = true;
+                const mesh = new THREE.Mesh(child.geometry, child.material);
+                resolve({ mesh, srcUrl });
+              }
+            });
+          },
+          () => {},
+          err => {
+            reject(err);
+          },
+        );
       } else {
+        useViewerStateStore.setState({
+          loaderEvent: 'The format of the model does not support parsing!',
+        });
+
         reject('The format of the model does not support parsing!');
       }
     } catch (_) {

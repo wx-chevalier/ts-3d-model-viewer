@@ -1,13 +1,19 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 // @ts-nocheck
-
 import { Matrix4, Vector2, Vector3 } from 'three';
+
+import { OrbitControls } from './OrbitControls';
 
 class OrbitControlsGizmo {
   domElement: HTMLElement | Document;
+  lock: boolean;
+  lockX: boolean;
+  lockY: boolean;
+  update: () => void;
+  dispose: () => void;
 
-  constructor(orbitControls, options) {
+  constructor(orbitControls: OrbitControls, options: any) {
     options = Object.assign(
       {
         size: 90,
@@ -74,7 +80,7 @@ class OrbitControlsGizmo {
     // Internals
     const scoped = this;
     const orbit = orbitControls;
-    const camera = orbitControls.object;
+    const camera = orbitControls.camera;
     const invRotMat = new Matrix4();
     const mouse = new Vector3();
     const rotateStart = new Vector2();

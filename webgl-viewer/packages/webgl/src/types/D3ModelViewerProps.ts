@@ -60,7 +60,7 @@ export interface D3ModelViewerLayoutOptions {
 export interface D3ModelViewerRenderOptions {
   theme?: D3ModelViewerTheme;
   modelColor?: string;
-  backgroundColor?: string | number;
+  backgroundColor?: string;
   shadowIntensity?: number;
 
   /** 是否展示 Mesh */
@@ -95,10 +95,12 @@ export interface D3ModelViewerRenderOptions {
 export interface D3ModelViewerSourceProps {
   /** 传入的源文件类型 */
   src?: D3ModelSrc;
-  mesh?: THREE.Mesh;
   fileName?: string;
   type: D3ModelType;
   compressType: D3ModelCompressType;
+
+  mesh?: THREE.Mesh;
+  group?: THREE.Group;
 }
 
 // 公共的组件应该实现的 Props
@@ -131,7 +133,7 @@ export const defaultModelViewerProps: Partial<D3ModelViewerProps> = {
   },
   renderOptions: {
     theme: 'default',
-    modelColor: `0xb3b3b3`,
+    modelColor: 'rgb(179,179,179)',
     backgroundColor: 'rgb(55,65,92)',
 
     withMesh: true,

@@ -6,12 +6,20 @@ import { D3ModelViewerState } from '../types';
 
 export interface ViewerStateStore extends D3ModelViewerState {
   threeRenderer?: ThreeRenderer;
+  loaderEvent?: string;
   setPartialState?: (partialState: Partial<ViewerStateStore>) => void;
+  resetPanelVisible?: () => void;
 }
 
 export const useViewerStateStore = create<ViewerStateStore>(set => ({
   setPartialState: (partialState: Partial<ViewerStateStore>) =>
     set(state => ({ ...state, ...partialState })),
+  resetPanelVisible: () =>
+    set(() => ({
+      isAttrPanelVisible: false,
+      isRenderOptionsPanelVisible: false,
+      isSettingsPanelVisible: false,
+    })),
 }));
 
 export const withViewerStateStore = <T,>(

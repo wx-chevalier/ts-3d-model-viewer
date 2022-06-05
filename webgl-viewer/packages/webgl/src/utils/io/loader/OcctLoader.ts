@@ -1,11 +1,8 @@
 import * as U from '@m-fe/utils';
 
+import { useViewerStateStore } from '../../../stores';
 import { D3ModelViewerProps } from '../../../types';
-import {
-  OccEdge,
-  OccFace,
-  ShapesCombiner,
-} from '../../../viewers/OccWebGLViewer/ShapesCombiner';
+import { OccEdge, OccFace, ShapesCombiner } from '../../cad';
 
 declare global {
   interface Window {
@@ -36,6 +33,10 @@ export class OcctLoader {
 
   async initWorker() {
     if (window.Worker) {
+      useViewerStateStore.setState({
+        loaderEvent: 'Loading cad worker',
+      });
+
       window.cadWorker = new Worker(
         (window.cadWorkerBasePath || '/cad-worker') + '/cad-worker.js',
       );
@@ -66,6 +67,7 @@ export class OcctLoader {
           '>>>OcctLoader>>>componentDidMount>>>initWorker>>>successfully',
         );
 
+        useViewerStateStore.setState({ loaderEvent: 'Cad worker has loaded' });
         this.isWorkerReady = true;
       };
 
@@ -109,6 +111,10 @@ export class OcctLoader {
           '>>>cadFileText:',
           cadFileText,
         );
+
+        useViewerStateStore.setState({
+          loaderEvent: 'Start parse the cad file',
+        });
 
         window.cadWorker.postMessage({
           type: 'loadCadFiles',

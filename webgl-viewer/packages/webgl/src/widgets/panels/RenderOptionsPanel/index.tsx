@@ -1,5 +1,7 @@
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, SaveOutlined } from '@ant-design/icons';
 import Descriptions from 'antd/lib/descriptions';
+import Space from 'antd/lib/space';
+import Tooltip from 'rc-tooltip';
 import React from 'react';
 import { SketchPicker } from 'react-color';
 
@@ -31,6 +33,8 @@ export const RenderOptionsPanel = ({
     withWireframe,
     withBoundingBox,
     withClipping,
+    withPlane,
+    withAxisHelper,
   } = viewerStateStore;
 
   if (!threeRenderer || !threeRenderer.context) {
@@ -43,17 +47,28 @@ export const RenderOptionsPanel = ({
     <div className="rmv-drawer-panel">
       <div className="rmv-drawer-panel-header">
         <span>{i18nFormat('渲染参数')}</span>
-        <CloseOutlined
-          onClick={() => {
-            viewerStateStore.setPartialState({
-              isRenderOptionsPanelVisible: false,
-            });
-          }}
-        />
+        <Space>
+          <Tooltip overlay={i18nFormat('保存为默认配置')} placement="left">
+            <SaveOutlined
+              onClick={() => {
+                viewerStateStore.setPartialState({
+                  isRenderOptionsPanelVisible: false,
+                });
+              }}
+            />
+          </Tooltip>
+          <CloseOutlined
+            onClick={() => {
+              viewerStateStore.setPartialState({
+                isRenderOptionsPanelVisible: false,
+              });
+            }}
+          />
+        </Space>
       </div>
       <Divider />
       <div className="rmv-drawer-panel-body">
-        <Descriptions title={i18nFormat('可视项')} column={1}>
+        <Descriptions title={i18nFormat('可视项')} column={2}>
           <Descriptions.Item label={i18nFormat('着色')}>
             <Switch
               id={`withMaterialedMesh-${threeRenderer.id}`}
@@ -92,6 +107,34 @@ export const RenderOptionsPanel = ({
                   threeRenderer.setupBoundingBox();
                 } else {
                   threeRenderer.removeBoundingBox();
+                }
+              }}
+            />
+          </Descriptions.Item>
+          <Descriptions.Item label={i18nFormat('平面')}>
+            <Switch
+              id={`withPlane-${threeRenderer.id}`}
+              checked={withPlane}
+              onColor="#1890ff"
+              onChange={e => {
+                if (e.target.checked) {
+                  threeRenderer.setupPlane();
+                } else {
+                  threeRenderer.removePlane();
+                }
+              }}
+            />
+          </Descriptions.Item>
+          <Descriptions.Item label={i18nFormat('坐标系')}>
+            <Switch
+              id={`withAxisHelper-${threeRenderer.id}`}
+              checked={withAxisHelper}
+              onColor="#1890ff"
+              onChange={e => {
+                if (e.target.checked) {
+                  threeRenderer.setupAxisHelper();
+                } else {
+                  threeRenderer.removeAxisHelper();
                 }
               }}
             />

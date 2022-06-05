@@ -64,7 +64,7 @@ export const ViewerToolbar = ({
     <div
       id="ViewerToolbar"
       className={cn(className, 'rmv-viewer-toolbar')}
-      style={style}
+      style={{ ...(style || {}) }}
     >
       <div className="rmv-viewer-toolbar-left">
         <Dropdown
@@ -124,6 +124,8 @@ export const ViewerToolbar = ({
           {
             key: 'isRenderOptionsPanelVisible',
             onClick: () => {
+              viewerStateStore.resetPanelVisible();
+
               viewerStateStore.setPartialState({
                 isRenderOptionsPanelVisible: !viewerStateStore.isRenderOptionsPanelVisible,
               });
@@ -146,14 +148,22 @@ export const ViewerToolbar = ({
               <MenuItem key="measure" disabled={true}>
                 {i18nFormat('距离测量')}
               </MenuItem>
-              <MenuItem key="estimate" disabled={true}>
-                {i18nFormat('材料估价')}
-              </MenuItem>
               <MenuItem key="wall-thickness" disabled={true}>
                 {i18nFormat('壁厚分析')}
               </MenuItem>
               <MenuItem key="repair" disabled={true}>
                 {i18nFormat('面片修复')}
+              </MenuItem>
+              <Menu.Divider />
+              <MenuItem key="estimate" disabled={true}>
+                {i18nFormat('材料估价')}
+              </MenuItem>
+              <Menu.Divider />
+              <MenuItem key="step-editor" disabled={true}>
+                {i18nFormat('STEP 编辑器')}
+              </MenuItem>
+              <MenuItem key="iges-editor" disabled={true}>
+                {i18nFormat('IGES 编辑器')}
               </MenuItem>
             </Menu>
           }
@@ -171,6 +181,8 @@ export const ViewerToolbar = ({
           {
             key: 'isAttrPanelVisible',
             onClick: () => {
+              viewerStateStore.resetPanelVisible();
+
               viewerStateStore.setPartialState({
                 isAttrPanelVisible: !viewerStateStore.isAttrPanelVisible,
               });
@@ -191,6 +203,8 @@ export const ViewerToolbar = ({
           {
             key: 'isSettingsPanelVisible',
             onClick: () => {
+              viewerStateStore.resetPanelVisible();
+
               viewerStateStore.setPartialState({
                 isSettingsPanelVisible: !viewerStateStore.isSettingsPanelVisible,
               });

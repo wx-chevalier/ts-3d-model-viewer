@@ -5,6 +5,7 @@ import './index.css';
 
 import { ellipsis, genId, get, isLanIp } from '@m-fe/utils';
 import Button from 'antd/lib/button';
+import Divider from 'antd/lib/divider';
 import Empty from 'antd/lib/empty';
 import Space from 'antd/lib/space';
 import React from 'react';
@@ -120,7 +121,7 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
       style,
       viewerStateStore,
     } = this.mixedProps;
-    const { hasModelFileLoaded, threeRenderer } = viewerStateStore;
+    const { hasModelFileLoaded, loaderEvent, threeRenderer } = viewerStateStore;
 
     return (
       <ErrorBoundary
@@ -166,18 +167,29 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
 
                     {isSupportOcctLoader(
                       get(threeRenderer, () => threeRenderer.viewerProps.type),
-                    ) && (
+                    ) ? (
                       <div style={{ marginTop: 8 }}>
-                        {i18nFormat('CAD 文件需要加载额外解析器，请耐心等候')}
+                        {loaderEvent
+                          ? `${i18nFormat('CAD 解析中')}: ${loaderEvent}`
+                          : i18nFormat(
+                              'CAD 文件需要加载额外解析器，请耐心等候',
+                            )}
                       </div>
+                    ) : (
+                      <div style={{ marginTop: 8 }}>{loaderEvent}</div>
                     )}
                   </>
                 ) : (
                   <Empty
                     description={
                       <div>
-                        <div>{i18nFormat('暂无数据，可使用演示文件')}</div>
-                        <Space size={0}>
+                        <div>{i18nFormat('暂无数据，可使用下列演示文件')}</div>
+                        <Space
+                          size={0}
+                          split={
+                            <Divider type="vertical" style={{ margin: 0 }} />
+                          }
+                        >
                           <Button
                             type="link"
                             onClick={() => {
@@ -190,7 +202,7 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
                               });
                             }}
                           >
-                            {i18nFormat('STL 文件')}
+                            {i18nFormat('STL')}
                           </Button>
                           <Button
                             type="link"
@@ -204,7 +216,49 @@ export class ThreeViewerComp extends React.Component<IProps, IState> {
                               });
                             }}
                           >
-                            {i18nFormat('STEP 文件')}
+                            {i18nFormat('STEP')}
+                          </Button>
+                          <Button
+                            type="link"
+                            onClick={() => {
+                              threeRenderer.init({
+                                src:
+                                  'https://ufc-assets.oss-cn-shanghai.aliyuncs.com/%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%9E%8B/formats/IGES/ex1.iges',
+                                fileName: 'ex1.iges',
+                                type: undefined,
+                                compressType: 'none',
+                              });
+                            }}
+                          >
+                            {i18nFormat('IGES')}
+                          </Button>
+                          <Button
+                            type="link"
+                            onClick={() => {
+                              threeRenderer.init({
+                                src:
+                                  'https://ufc-assets.oss-cn-shanghai.aliyuncs.com/%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%9E%8B/formats/3MF/models/dodeca_chain_loop_color.3mf',
+                                fileName: 'dodeca_chain_loop_color.3mf',
+                                type: undefined,
+                                compressType: 'none',
+                              });
+                            }}
+                          >
+                            {i18nFormat('3MF')}
+                          </Button>
+                          <Button
+                            type="link"
+                            onClick={() => {
+                              threeRenderer.init({
+                                src:
+                                  'https://ufc-assets.oss-cn-shanghai.aliyuncs.com/%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%9E%8B/formats/OBJ/models/WusonOBJ.obj',
+                                fileName: 'WusonOBJ.obj',
+                                type: undefined,
+                                compressType: 'none',
+                              });
+                            }}
+                          >
+                            {i18nFormat('OBJ')}
                           </Button>
                         </Space>
                       </div>

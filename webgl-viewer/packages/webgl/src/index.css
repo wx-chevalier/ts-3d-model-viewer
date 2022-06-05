@@ -6,7 +6,7 @@
   position: absolute;
   bottom: calc(5% + 100px);
   right: 5%;
-  z-index: 1000;
+  z-index: 888;
   background-color: #FFF0;
   border-radius: 100%;
   transition: background-color .15s linear;
@@ -31,7 +31,7 @@
   right: 1px;
   top: 39px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-  z-index: 9999;
+  z-index: 999;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -42,6 +42,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 8px;
+  font-size: 16px;
+  font-weight: bolder;
 }
 
 .rmv-drawer-panel-body {
@@ -52,10 +54,14 @@
   align-items: center;
 }
 
-.ant-descriptions-row>td {
+.rmv-drawer-panel-body .ant-descriptions-row>td {
   padding-bottom: 8px !important;
 }
 
-.ant-descriptions-header {
+.rmv-drawer-panel-body .ant-descriptions-header {
   margin-bottom: 10px !important;
+}
+
+.rmv-drawer-panel-body .ant-descriptions-title{
+  font-size: 14px;
 }

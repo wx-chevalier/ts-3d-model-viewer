@@ -1,12 +1,9 @@
 import * as THREE from 'three';
 
 /** 设置灯光 */
-export function setupLights(model: THREE.Mesh, scene: THREE.Scene) {
-  // Ambient，散射灯光
-  scene.add(new THREE.AmbientLight(0x505050));
-
-  const maxGeo = model.geometry.boundingBox.max;
-  const minGeo = model.geometry.boundingBox.min;
+export function setupLights(mesh: THREE.Mesh, scene: THREE.Scene) {
+  const maxGeo = mesh.geometry.boundingBox.max;
+  const minGeo = mesh.geometry.boundingBox.min;
 
   const target = new THREE.Object3D();
   target.position.set(0, 0, 0);

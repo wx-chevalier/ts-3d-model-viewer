@@ -16,22 +16,22 @@
 
 ## A Full Live-Scripted CAD Kernel and IDE in the Browser.
 
-Use code to create 3D Models with features ranging from simple primitives + CSG to complex revolves, sweeps, and fillets.  Cascade Studio exposes the full power of the [OpenCascade](http://opencascade.com/) kernel, while providing a concise standard library for simple operations.
+Use code to create 3D Models with features ranging from simple primitives + CSG to complex revolves, sweeps, and fillets. Cascade Studio exposes the full power of the [OpenCascade](http://opencascade.com/) kernel, while providing a concise standard library for simple operations.
 
 Save your completed models to .step, .stl. or .obj, or copy the url and share it with the community.
 
 ## Features
- - A Powerful Standard Library to Simplify Model Construction
- - Intellisense Autocomplete/AutoSuggest and Documentation
- - Access to the Full OpenCASCADE Kernel (via the `oc.` namespace)
- - Automatic Caching Acceleration of Standard Library Operations
- - `.STEP`/`.IGES`/`.STL` Import - `.STEP`/`.STL`/`.OBJ` Export
- - URL Serialization of code for easy sharing and ownership
- - Save/Load Projects to preserve Code, Layout, and Imported Files
- - Integrated GUI System for Simple Customization
- - Easily Installable for Offline-use as a Progressive Web App
- - **Free and Open Source under the MIT License**
 
+- A Powerful Standard Library to Simplify Model Construction
+- Intellisense Autocomplete/AutoSuggest and Documentation
+- Access to the Full OpenCASCADE Kernel (via the `oc.` namespace)
+- Automatic Caching Acceleration of Standard Library Operations
+- `.STEP`/`.IGES`/`.STL` Import - `.STEP`/`.STL`/`.OBJ` Export
+- URL Serialization of code for easy sharing and ownership
+- Save/Load Projects to preserve Code, Layout, and Imported Files
+- Integrated GUI System for Simple Customization
+- Easily Installable for Offline-use as a Progressive Web App
+- **Free and Open Source under the MIT License**
 
 <p align="center">
   <img title="Use the OpenCASCADE Geometry Kernel to Model your toughest projects." src="./icon/CSG.gif"          height="192">
@@ -42,7 +42,6 @@ Save your completed models to .step, .stl. or .obj, or copy the url and share it
   <img title="Install Cascade Studio for working offline!"                          src="./icon/Installable.gif"  width="275">
   <img title="Use world-class intellisense with VS Code's Text Editor!"             src="./icon/Intellisense.gif" width="275">
 </p>
-
 
 ## Examples
 
@@ -57,7 +56,7 @@ Save your completed models to .step, .stl. or .obj, or copy the url and share it
 
 ## [Community](https://github.com/zalo/CascadeStudio/discussions)
 
-Model code is saved to the URL upon every successful evaluation, so you can copy and paste that link to others to view your model.  [Github Discussions](https://github.com/zalo/CascadeStudio/discussions) is out of beta! So feel free to share your creations and examples here.
+Model code is saved to the URL upon every successful evaluation, so you can copy and paste that link to others to view your model. [Github Discussions](https://github.com/zalo/CascadeStudio/discussions) is out of beta! So feel free to share your creations and examples here.
 
 ## Contributing
 
@@ -69,13 +68,13 @@ Pull Requests to this repo are automatically hosted to Vercel instances, so othe
 
 Cascade Studio uses:
 
- - [opencascade.js](https://github.com/donalffons/opencascade.js) (CAD Kernel)
- - [Golden Layout](https://github.com/golden-layout/golden-layout) (Windowing System)
- - [three.js](https://github.com/mrdoob/three.js/) (3D Rendering Engine)
- - [tweakpane.js](https://github.com/cocopon/tweakpane) (Buttons/Sliders),
- - [Monaco Editor](https://github.com/microsoft/monaco-editor) (Text Editing and Intellisense)
- - [opentype.js](https://github.com/opentypejs/opentype.js) (Font Parsing)
- - [rawinflate/rawdeflate](https://github.com/dankogai/js-deflate) (URL Code Serialization)
- - [potpack](https://github.com/mapbox/potpack) (Texture Atlas Packing)
+- [opencascade.js](https://github.com/donalffons/opencascade.js) (CAD Kernel)
+- [Golden Layout](https://github.com/golden-layout/golden-layout) (Windowing System)
+- [three.js](https://github.com/mrdoob/three.js/) (3D Rendering Engine)
+- [tweakpane.js](https://github.com/cocopon/tweakpane) (Buttons/Sliders),
+- [Monaco Editor](https://github.com/microsoft/monaco-editor) (Text Editing and Intellisense)
+- [opentype.js](https://github.com/opentypejs/opentype.js) (Font Parsing)
+- [rawinflate/rawdeflate](https://github.com/dankogai/js-deflate) (URL Code Serialization)
+- [potpack](https://github.com/mapbox/potpack) (Texture Atlas Packing)
 
 Cascade Studio is maintained by [Johnathon Selstad @zalo](https://github.com/zalo)

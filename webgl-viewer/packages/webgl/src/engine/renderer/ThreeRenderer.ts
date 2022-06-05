@@ -3,6 +3,7 @@ import TextSprite from '@seregpie/three.text-sprite';
 import each from 'lodash/each';
 import max from 'lodash/max';
 import * as THREE from 'three';
+import { Vector3 } from 'three';
 
 import {
   D3ModelViewerProps,
@@ -24,7 +25,6 @@ import {
   adjustGeometry,
   cookMeshMaterial,
   getThreeJsWebGLRenderer,
-  setupLights,
 } from '../stages';
 import { ThreeRendererContext } from './ThreeRendererContext';
 
@@ -39,6 +39,10 @@ export class ThreeRenderer {
   onContextChange: (partialViewerState: Partial<D3ModelViewerState>) => void;
   getViewerState: () => D3ModelViewerState;
   getDom: () => HTMLElement;
+
+  get $dom() {
+    return this.getDom();
+  }
 
   constructor(
     // viewerProps 相对是常量
@@ -87,10 +91,10 @@ export class ThreeRenderer {
 
       const context = this.context;
 
-      if (!!context.group && !!context.group.children) {
-        each(context.group.children, object => {
-          if (context.group) {
-            context.group.remove(object);
+      if (!!context.defaultGroup && !!context.defaultGroup.children) {
+        each(context.defaultGroup.children, object => {
+          if (context.defaultGroup) {
+            context.defaultGroup.remove(object);
           }
         });
       }
@@ -104,7 +108,7 @@ export class ThreeRenderer {
       }
 
       context.scene = null;
-      context.group = null;
+      context.defaultGroup = null;
       context.mesh = null;
       context.wireframeMesh = null;
       context.boundingBox = null;
@@ -130,6 +134,7 @@ export class ThreeRenderer {
 
     try {
       let mesh: THREE.Mesh;
+      let group: THREE.Group;
 
       if (props.mesh) {
         mesh = props.mesh;
@@ -158,7 +163,7 @@ export class ThreeRenderer {
         }
 
         // 进行模型实际加载，注意，不需要转化为
-        ({ mesh } = await loadMeshWithRetry(
+        ({ mesh, group } = await loadMeshWithRetry(
           modelFile || props.src,
           props.type,
           {
@@ -169,7 +174,32 @@ export class ThreeRenderer {
         ));
       }
 
-      await this.initGeometry(mesh.geometry as THREE.BufferGeometry);
+      this.setupScene();
+      await this.setupRenderer();
+
+      if (mesh) {
+        await this.renderMesh(mesh);
+      }
+
+      if (group) {
+        this.context.scene.add(group);
+        this.context.scene.updateMatrixWorld();
+        const pointLight = new THREE.PointLight(0xffffff, 0.6);
+        pointLight.position.set(80, 90, 150);
+        this.context.scene.add(pointLight);
+      }
+
+      this.setupEquipments();
+
+      requestAnimationFrame(async time => {
+        this.animate(time);
+
+        console.log('>>>ThreeRenderer>>>renderMesh>>>load successfully');
+
+        await this.onLoad();
+
+        this.onContextChange({ hasModelFileLoaded: true });
+      });
 
       // 根据 props 配置当前显示的主题
       this.changeTheme(props.renderOptions.theme);
@@ -182,6 +212,10 @@ export class ThreeRenderer {
     }
   }
 
+  captureSnapshot = async () => {
+    return new Promise((resolve, reject) => {});
+  };
+
   changeMaterial = (material: THREE.Material) => {
     const context = this.context;
 
@@ -191,13 +225,15 @@ export class ThreeRenderer {
   };
 
   changeModelColor = (modelColor: string) => {
-    this.context.mesh.material = new THREE.MeshPhongMaterial({
-      color: modelColor,
-      specular: 0x111111,
-      shininess: 20,
-    });
+    if (this.context.mesh) {
+      this.context.mesh.material = new THREE.MeshPhongMaterial({
+        color: modelColor,
+        specular: 0x111111,
+        shininess: 20,
+      });
 
-    this.onContextChange({ modelColor });
+      this.onContextChange({ modelColor });
+    }
   };
 
   changeBackgroundColor = (backgroundColor: string) => {
@@ -206,10 +242,6 @@ export class ThreeRenderer {
   };
 
   changeTheme(theme: D3ModelViewerTheme) {
-    if (theme === this.context.theme) {
-      return;
-    }
-
     this.context.theme = theme;
 
     // 否则进行主题切换
@@ -219,6 +251,7 @@ export class ThreeRenderer {
         new THREE.Color('rgba(255, 255, 255)'),
         1,
       );
+
       this.changeModelColor('rgb(24,98,246)');
     } else {
       this.setupPlane();
@@ -227,6 +260,7 @@ export class ThreeRenderer {
         new THREE.Color(state.backgroundColor),
         1,
       );
+
       this.changeModelColor(state.modelColor);
     }
 
@@ -237,8 +271,8 @@ export class ThreeRenderer {
   removeMaterialedMesh() {
     const context = this.context;
 
-    if (context.group) {
-      context.group.remove(this.context.mesh);
+    if (context.defaultGroup) {
+      context.defaultGroup.remove(this.context.mesh);
     }
 
     this.onContextChange({ withMaterialedMesh: false });
@@ -248,8 +282,8 @@ export class ThreeRenderer {
   setupMaterialedMesh() {
     const context = this.context;
 
-    if (context.group) {
-      context.group.add(this.context.mesh);
+    if (context.defaultGroup) {
+      context.defaultGroup.add(this.context.mesh);
 
       this.onContextChange({ withMaterialedMesh: true });
     }
@@ -259,11 +293,11 @@ export class ThreeRenderer {
   removeBoundingBox() {
     const context = this.context;
 
-    if (context.group) {
-      context.group.remove(context.boundingBox);
-      context.group.remove(context.xSprite);
-      context.group.remove(context.ySprite);
-      context.group.remove(context.zSprite);
+    if (context.defaultGroup) {
+      context.defaultGroup.remove(context.boundingBox);
+      context.defaultGroup.remove(context.xSprite);
+      context.defaultGroup.remove(context.ySprite);
+      context.defaultGroup.remove(context.zSprite);
     }
 
     context.boundingBox = null;
@@ -278,8 +312,8 @@ export class ThreeRenderer {
     const context = this.context;
 
     if (context.mesh) {
-      if (context.group) {
-        context.group.remove(context.boundingBox);
+      if (context.defaultGroup) {
+        context.defaultGroup.remove(context.boundingBox);
       }
 
       const wireframe = new THREE.WireframeGeometry(context.mesh.geometry);
@@ -296,7 +330,7 @@ export class ThreeRenderer {
 
       context.boundingBox = new THREE.BoxHelper(line);
 
-      context.group.add(context.boundingBox);
+      context.defaultGroup.add(context.boundingBox);
 
       line.updateMatrix();
       const lineBox = line.geometry.boundingBox;
@@ -324,9 +358,9 @@ export class ThreeRenderer {
         context.ySprite.position.set(lineBoxMaxVertex.x, 0, lineBoxMaxVertex.z);
         context.zSprite.position.set(lineBoxMaxVertex.x, lineBoxMaxVertex.y, 0);
 
-        context.group.add(context.xSprite);
-        context.group.add(context.ySprite);
-        context.group.add(context.zSprite);
+        context.defaultGroup.add(context.xSprite);
+        context.defaultGroup.add(context.ySprite);
+        context.defaultGroup.add(context.zSprite);
       } catch (_) {
         console.error('>>>ThreeRenderer>>>genSprite>>>error: ', _);
       }
@@ -337,8 +371,8 @@ export class ThreeRenderer {
 
   removeWireFrame() {
     const context = this.context;
-    if (context.group) {
-      context.group.remove(context.wireframeMesh);
+    if (context.defaultGroup) {
+      context.defaultGroup.remove(context.wireframeMesh);
       context.wireframeMesh = null;
 
       this.onContextChange({ withWireframe: false });
@@ -349,8 +383,8 @@ export class ThreeRenderer {
     const context = this.context;
 
     if (context.mesh) {
-      if (context.group) {
-        context.group.remove(context.wireframeMesh);
+      if (context.defaultGroup) {
+        context.defaultGroup.remove(context.wireframeMesh);
       }
 
       const material = new THREE.MeshPhongMaterial({
@@ -364,7 +398,7 @@ export class ThreeRenderer {
       mesh.material = material;
 
       context.wireframeMesh = mesh;
-      context.group.add(mesh);
+      context.defaultGroup.add(mesh);
 
       this.onContextChange({ withWireframe: true });
     }
@@ -373,8 +407,8 @@ export class ThreeRenderer {
   removeAxisHelper() {
     const { context } = this;
 
-    if (context.axisHelper && context.group) {
-      context.group.remove(context.axisHelper);
+    if (context.axisHelper && context.defaultGroup) {
+      context.defaultGroup.remove(context.axisHelper);
 
       this.onContextChange({ withAxisHelper: false });
     }
@@ -409,7 +443,7 @@ export class ThreeRenderer {
         axisHelper.position.z = 0;
 
         context.axisHelper = axisHelper;
-        context.group.add(context.axisHelper);
+        context.defaultGroup.add(context.axisHelper);
 
         this.onContextChange({ withAxisHelper: true });
       }
@@ -417,8 +451,8 @@ export class ThreeRenderer {
   }
 
   removePlane() {
-    if (this.context.plane && this.context.group) {
-      this.context.group.remove(this.context.plane);
+    if (this.context.plane && this.context.defaultGroup) {
+      this.context.defaultGroup.remove(this.context.plane);
       this.context.plane = null;
       this.onContextChange({ withPlane: false });
     }
@@ -426,8 +460,8 @@ export class ThreeRenderer {
 
   setupPlane() {
     if (this.context.mesh) {
-      if (this.context.plane && this.context.group) {
-        this.context.group.remove(this.context.plane);
+      if (this.context.plane && this.context.defaultGroup) {
+        this.context.defaultGroup.remove(this.context.plane);
       }
 
       // Getmax dimention and add 10% overlap for plane
@@ -457,7 +491,7 @@ export class ThreeRenderer {
       plane.position.y = this.context.yDims * -1;
 
       this.context.plane = plane;
-      this.context.group.add(this.context.plane);
+      this.context.defaultGroup.add(this.context.plane);
 
       this.onContextChange({ withPlane: true });
     }
@@ -506,47 +540,33 @@ export class ThreeRenderer {
     }
   }
 
-  /** 初始化几何体 */
-  private async initGeometry(geometry: THREE.BufferGeometry) {
-    this.setupScene();
-    await this.setupRenderer();
-
+  /** 渲染某个 Mesh */
+  private async renderMesh(mesh: THREE.Mesh) {
     const context = this.context;
     const viewerState = this.getViewerState();
 
+    const geometry = mesh.geometry as THREE.BufferGeometry;
     const material = cookMeshMaterial(
       context.withClipping,
       this.getViewerState().modelColor,
     );
 
-    const { mesh, xDims, yDims, zDims } = adjustGeometry(geometry, material);
+    const { xDims, yDims, zDims } = adjustGeometry(geometry, material);
 
+    context.mesh = mesh;
     context.xDims = xDims;
     context.yDims = yDims;
     context.zDims = zDims;
-    context.mesh = mesh;
 
     if (viewerState.withMaterialedMesh) {
-      context.group.add(context.mesh);
+      context.defaultGroup.add(context.mesh);
     }
 
     context.scene.updateMatrixWorld();
 
     if (context.mesh) {
-      setupLights(context.mesh, context.scene);
-      this.setupControls();
       this.setupDecorators();
     }
-
-    console.log('>>>ThreeRenderer>>>initGeometry>>>load successfully');
-
-    requestAnimationFrame(async time => {
-      this.animate(time);
-
-      await this.onLoad();
-
-      this.onContextChange({ hasModelFileLoaded: true });
-    });
   }
 
   /** 初始化场景 */
@@ -557,13 +577,9 @@ export class ThreeRenderer {
     const { context } = this;
 
     context.scene = scene;
-    context.group = group;
+    context.defaultGroup = group;
 
-    context.scene.add(context.group);
-  }
-
-  get $dom() {
-    return this.getDom();
+    context.scene.add(context.defaultGroup);
   }
 
   /** 初始化渲染器 */
@@ -602,13 +618,28 @@ export class ThreeRenderer {
   }
 
   /** 初始化控制器 */
-  private setupControls() {
+  private setupEquipments() {
     this.setupCamera();
 
+    const { scene } = this.context;
+
     if (this.context.camera && this.$dom) {
+      scene.add(new THREE.PointLight(0xffffff, 0.5));
+      // Ambient，散射灯光
+      scene.add(new THREE.AmbientLight(0xffffff, 0.1));
+
+      const pointLight = new THREE.PointLight(0xffffff, 0.5);
+      scene.add(pointLight);
+
       this.context.orbitControls = new OrbitControls(
         this.context.camera,
         this.$dom,
+        {
+          onUpdate: (camPos: Vector3) => {
+            console.log(camPos);
+            pointLight.position.copy(camPos);
+          },
+        },
       );
       this.context.orbitControls.enableKeys = false;
       this.context.orbitControls.enableZoom = true;
@@ -642,8 +673,6 @@ export class ThreeRenderer {
 
     this.context.camera = camera;
 
-    camera.add(new THREE.PointLight(0xcccccc, 2));
-
     if (mesh) {
       this.resetCamera();
     }
@@ -652,7 +681,7 @@ export class ThreeRenderer {
   private renderScene = () => {
     const context = this.context;
     // horizontal rotation
-    if (!context.group) {
+    if (!context.defaultGroup) {
       return;
     }
 

@@ -123,6 +123,10 @@ export default function Simple() {
 
 See the [open issues](https://github.com/wx-chevalier/3d-model-viewer/issues) for a list of proposed features (and known issues).
 
+- [ ] https://github.com/josdirksen/threejs-cookbook/blob/master/06-particles-postprocessing/06.06-explode-geometry-model.html 添加爆炸模式
+
+- [ ] 支持多个模型组同时加载，支持 OBJ/3MF 等原色渲染
+
 <!-- CONTRIBUTING -->
 
 ## Contributing

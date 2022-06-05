@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
 import { D3ModelViewerProps, D3ModelViewerTheme, ModelAttr } from '../../types';
+import { OrbitControls } from '../controls/OrbitControls';
 import { OrbitControlsGizmo } from '../controls/OrbitControlsGizmo';
 
 export class ThreeRendererContext {
@@ -13,10 +14,10 @@ export class ThreeRendererContext {
   withClipping?: boolean;
 
   scene: THREE.Scene;
-  group: THREE.Group;
+  defaultGroup: THREE.Group;
   renderer: THREE.WebGLRenderer;
   camera: THREE.PerspectiveCamera;
-  orbitControls: any;
+  orbitControls: OrbitControls;
   controlsGizmo: OrbitControlsGizmo;
   boundingBox: THREE.BoxHelper;
   xSprite: any;
