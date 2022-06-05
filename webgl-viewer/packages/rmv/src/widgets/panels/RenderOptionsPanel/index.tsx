@@ -4,7 +4,6 @@ import Button from 'antd/lib/button';
 import Descriptions from 'antd/lib/descriptions';
 import message from 'antd/lib/message';
 import Space from 'antd/lib/space';
-import { useInterval } from 'packages/webgl/src/types';
 import Tooltip from 'rc-tooltip';
 import React from 'react';
 import { SketchPicker } from 'react-color';
@@ -12,6 +11,7 @@ import * as THREE from 'three';
 
 import { cookMeshMaterial } from '../../../engine';
 import { useViewerStateStore } from '../../../stores';
+import { useInterval } from '../../../types';
 import { i18nFormat } from '../../../utils';
 import { Divider, Switch } from '../../decorators';
 

@@ -1,4 +1,3 @@
-import { useViewerStateStore } from 'packages/webgl/src/stores';
 import * as THREE from 'three';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { ThreeMFLoader } from 'three/examples/jsm/loaders/3MFLoader.js';
@@ -8,6 +7,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { PLYLoader } from 'three/examples/jsm/loaders/PLYLoader';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
+import { useViewerStateStore } from '../../../stores';
 import {
   D3ModelSrc,
   D3ModelType,
