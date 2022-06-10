@@ -1,0 +1,21 @@
+# Please do not add here all kind of intermediate files just by extension. 
+# Try whenever possible to match folder and to try to use 
+# building rules that put all the generated files into separate folders
+
+# QTCreator user prefs
+*.user
+
+# Directories to ignore
+debug/
+release/
+*-debug/
+*-release/
+/docs/Doxygen/html/
+
+# Intermediate Files
+*.bc
+
+# Visual Studio Project files
+*.vcxproj
+*.vcxproj.filters
+*.suo

@@ -1,0 +1,429 @@
+
+<script async type="text/javascript" src="../upload_form/filecheck.js"></script>
+<script type="text/javascript">
+
+    function uploaded() {
+        reset2();
+        var uploadform = document.getElementById("fileuploadform");
+        var filename = uploadform.files[0].name;
+        var fr = new FileReader();
+        fr.readAsArrayBuffer(uploadform.files[0]);
+
+        fr.onload = function (){
+            var stl_name = filename;
+
+            var data = new Uint8Array(fr.result); // base64 to Uint8 for emscripten
+
+            Module['FS_createDataFile'](".", stl_name, data, true, true);
+
+            Module.ccall("js_check_repair", // c function name
+                    undefined, // return
+                    ["string"], // param
+                    [stl_name]
+            );
+
+            // update_from_result(check);
+            read_report("report.txt");
+            read_report("repair_report.txt");
+        } // fr.onload
+    }
+
+    function read_report(report_name) {
+        const check = {};
+        // clean HTML
+        document.getElementById("check_data").innerHTML = "";
+
+        let res = Module['FS_readFile'](report_name, {encoding:'utf8'});
+        res = res.split("\n");
+        for (let i=0;i<res.length;i++) {
+            let x = res[i];
+            console.log(x);
+
+            x = x.split(" ");
+
+            if (x.length < 2) continue;
+
+            const key = x[1];
+            let value = x[0];
+
+            if (value.includes(".")) { // HACK
+                value = parseFloat(value);
+            } else {
+                value = parseInt(value);
+            }
+
+            check[key] = value;
+
+            // add to html
+            if (key.includes("min")
+                    || key.includes("max")
+                    || key.includes("area")
+                    || (key.includes("volume") && !key.includes("is_pos"))
+               ) {
+                const row = document.getElementsByTagName("template")[1];
+                const key_HTML = row.content.querySelector(".key");
+                key_HTML.innerHTML = key;
+                const value_HTML = row.content.querySelector(".value");
+                value_HTML.innerHTML = value;
+                const to_add = document.importNode(row.content, true);
+                document.getElementById("check_data").appendChild(to_add);
+            }
+        }
+
+        update_from_result(check);
+    }
+
+    function blob_download(stl_name) {
+        console.log("blob download");
+        let binary_data = Module['FS_readFile']('repaired.stl');
+        let blob = new Blob([binary_data], {type: 'application/sla'})
+        let url = window.URL.createObjectURL(blob);
+
+        var download_button = document.getElementById('download');
+        download_button.href = url;
+        download_button.download = 'repaired_' + stl_name;
+        set_download_text_disabled("Click to download " + download_button.download, false);
+    }
+
+    function set_download_text_disabled(text, disabled) {
+        var download_button = document.getElementById('download');
+        download_button.firstElementChild.innerHTML = text;
+        download_button.firstElementChild.disabled = disabled;
+    }
+
+    function _arrayToHeap(typedArray){
+        var numBytes = typedArray.length * typedArray.BYTES_PER_ELEMENT;
+        var ptr = Module._malloc(numBytes);
+        var heapBytes = new Uint8Array(Module.HEAPU8.buffer, ptr, numBytes);
+        heapBytes.set(new Uint8Array(typedArray.buffer));
+        return heapBytes;
+    }
+    function _freeArray(heapBytes){
+        Module._free(heapBytes.byteOffset);
+    }
+
+    function update_from_result(check) {
+
+        const repair_divs = document.getElementsByClassName("repair");
+        for (var i=0;i<repair_divs.length;i++) {
+            repair_divs[i].style.display = "None";
+        }
+
+        const num_degen_faces = check["num_degenerated_faces_removed"];
+        const num_dup_faces = check["num_duplicated_faces_removed"];
+        const is_manifold = check["is_watertight"];
+        const is_consistent_normal = check["is_coherently_oriented"];
+        const is_volume_bigger_0 = check["is_positive_volume"];
+
+        const fix_consistent_normal = check["does_make_coherent_orient"];
+        const fix_volume_bigger_0 = check["does_flip_normal_outside"];
+
+        filecheck_outint_step(num_degen_faces, degenfaces);
+
+        if (num_degen_faces >0) {
+            set_repair_bool_func(remove_num, degenfaces, num_degen_faces);
+            _repair(degenfaces);
+        }
+
+        filecheck_outint_step(num_dup_faces, dupfaces,);
+
+        if (num_dup_faces > 0) {
+            set_repair_bool_func(remove_num, dupfaces, num_dup_faces);
+            _repair(dupfaces);
+        }
+
+        filecheck_outint_step(is_manifold, manifold);
+        filecheck_outint_step(is_consistent_normal, consisnormal);
+
+        if (fix_consistent_normal !== -1) {
+            if (fix_consistent_normal) {
+                set_repair_bool_func(fix, consisnormal);
+                _repair(consisnormal);
+            } else if (fix_consistent_normal !== -1){
+                filecheck_outint_step(1, volume);
+            }
+        }
+
+        filecheck_outint_step(is_volume_bigger_0, volume);
+
+        if (fix_volume_bigger_0 !== -1) {
+            if (fix_volume_bigger_0) {
+                set_repair_bool_func(fix, volume);
+                _repair(volume);
+                filecheck_outint_step(0, volume);
+            } else if (fix_volume_bigger_0 !== -1){
+                filecheck_outint_step(1, volume);
+            }
+        }
+
+        if (is_manifold) {
+            if (
+                num_degen_faces>0 ||
+                num_dup_faces>0 ||
+                fix_consistent_normal===1 ||
+                fix_volume_bigger_0===1
+            ) {
+                blob_download(stl_name); // TODO: fix this
+            } else {
+                set_download_text_disabled("original mesh is perfect", true);
+            }
+        } else {
+            set_download_text_disabled("repair for this coming soon...", true);
+        }
+    }
+
+    function degenfaces() {return "dengenerated faces";}
+    function dupfaces() {return "duplicate faces";}
+    function manifold() {return "manifold";}
+    function consisnormal() {return "consistent normal";}
+    function volume() {return "volume bigger 0";}
+
+    function check_for(f) {return `Check for ${f()}`;}
+    function repair_for(f) {return `Repair for ${f()}`;}
+
+    function is(f) {return `Is ${f()}`;};
+    function no(f) {return `No ${f()}`;};
+    function has(f) {return `has ${f()}`;};
+    function not(f) {return `Not ${f()}`;};
+    function fix(f) {return `Fix ${f()}`;};
+
+    function _true(f) {
+        document.getElementById("condition" + f.name).style.backgroundColor = "green";
+
+        if ([degenfaces, dupfaces].includes(f))
+            return no(f);
+        else
+            return is(f);
+    }
+
+    function _false(f) {
+        document.getElementById("condition" + f.name).style.backgroundColor = "red";
+        document.getElementById("down" + f.name).style.display = "None";
+
+        if ([degenfaces, dupfaces].includes(f))
+            return has(f);
+        else
+            return not(f);
+    }
+
+    function _repair(f) {
+        document.getElementById("repair" + f.name).style.backgroundColor = "green";
+        document.getElementById("container" + f.name).style.display = "";
+    }
+
+    function remove_num(f, num) {return `removed ${num} ${f()}`};
+
+    function set_id_str(id, str) {
+        document.getElementById(id).innerHTML = str;
+        document.getElementById(id).style.display = "";
+    }
+
+    function set_name_id_str(name, bool, func, ...args) {
+        return set_id_str(name + func.name, bool(func, ...args));
+    }
+
+    function set_condition_bool_func(...args) {
+        return set_name_id_str("condition", ...args)
+    }
+
+    function set_repair_bool_func(...args) {
+        return set_name_id_str("repair", ...args)
+    }
+
+    function filecheck_outint_step(outint, func) {
+        if (outint === -1) {
+            // console.error(`${func()} check is not run`);
+            console.log(`${func()} check is not run`);
+        } else { // this is hack put the degen faces number to result array
+            if ([degenfaces, dupfaces].includes(func)) {
+                if (outint === 0) {
+                    set_condition_bool_func(_true, func);
+                } else { // outint >= 1
+                    set_condition_bool_func(_false, func);
+                }
+            } else {
+                if (outint === 0) {
+                    set_condition_bool_func(_false, func);
+                } else { // outint >= 1
+                    set_condition_bool_func(_true, func);
+                }
+            }
+        }
+    }
+
+    function reset() {
+        var res = document.getElementsByClassName("condition");
+        for (var i=0;i<res.length;i++) {
+            res[i].style.backgroundColor = "grey";
+            res[i].innerHTML = "";
+        }
+
+        var res = document.getElementsByClassName("repair");
+        for (var i=0;i<res.length;i++) {
+            res[i].style.display = "None";
+        }
+    }
+
+    function reset2() {
+        console.log("reset");
+        const to_empty = document.getElementById("content");
+        while (to_empty.firstChild) {
+            to_empty.removeChild(to_empty.firstChild);
+        }
+
+        init();
+    }
+
+    function init() {
+        const funcs = [degenfaces, dupfaces, manifold, consisnormal, volume];
+        for (let i=0; i < funcs.length; i++) {
+            const func = funcs[i];
+            const func_name = funcs[i].name;
+
+            let temp = document.getElementsByTagName("template")[0];
+
+            let container = temp.content.querySelector(".left");
+            container.id = "condition" + func_name;
+            container.innerHTML = check_for(func);
+
+            let repair_div = temp.content.querySelector(".repair");
+            repair_div.id = "container" + func_name;
+
+            let repair_right_div = temp.content.querySelector(".right");
+            repair_right_div.id = "repair" + func_name;
+            repair_right_div.innerHTML = repair_for(func);
+
+            let arrow_down = temp.content.querySelector(".a_down");
+            arrow_down.id = "down" + func_name;
+
+            const to_add = document.importNode(temp.content, true);
+            document.getElementById("content").appendChild(to_add);
+        }
+    }
+
+    // https://stackoverflow.com/questions/12710001/how-to-convert-uint8-array-to-base64-encoded-string
+    // TODO: figure out why TextDecoder doesn't work
+    // apply fail since big stack
+    function Uint8ToString(u8a){
+      var CHUNK_SZ = 0x8000;
+      var c = [];
+      for (var i=0; i < u8a.length; i+=CHUNK_SZ) {
+          c.push(String.fromCharCode.apply(null, u8a.subarray(i, i+CHUNK_SZ)));
+        }
+        return c.join("");
+    }
+
+</script>
+
+<html>
+<head>
+<style>
+
+#content {
+    width: 300px;
+}
+.condition {
+    width: 100px;
+    height: 70px;
+    background-color: grey;
+}
+.container {
+    width: 220px;
+    height: 70px;
+    display: inline-block;
+    margin: 1px;
+}
+
+.arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+.a_down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+.a_right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    margin-top:30px;
+    margin-left:3px;
+}
+
+.a_left {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    margin-top:40px;
+    margin-left:4px;
+}
+
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+
+.downArrowContainer {
+    height: 15px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    margin-left: 45px;
+}
+
+.rightArrowContainer {
+    width: 15px;
+    height: 70px; /* inherit from container */
+    float: left;
+}
+
+#download {
+    width: 200px;
+    height: 50px; /* inherit from container */
+}
+
+</style>
+</head>
+<input type="file" onChange="uploaded()" id="fileuploadform"/>
+
+<body onload="init()">
+
+    <template>
+        <div>
+            <div class="container">
+                <div class="condition left"><p></p></div>
+                <div class="repair" >
+                    <div class="rightArrowContainer">
+                        <i class="arrow a_right"></i>
+                        <i class="arrow a_left"></i>
+                    </div>
+                    <div class="condition right"></div>
+                </div>
+            </div>
+
+            <div class="downArrowContainer">
+                <i class="arrow a_down"></i>
+            </div>
+        <div>
+    </template>
+
+    <template>
+        <tr>
+            <td class="key"></td>
+            <td class="value"></td>
+        </tr>
+    </template>
+
+    <div id="content"></div>
+    <a id="download"><button disabled>Click to download repaired file</button></a>
+    <table id="check_data"></table>
+
+    <div>
+        <span><br> the gif check whether render loop is running <br></span>
+        <img src="http://i.imgur.com/fyMbwZF.gif" alt="tiger" width="215" height="120">
+    <div>
+</body>
+</html>
