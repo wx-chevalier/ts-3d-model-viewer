@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <title>AssimpJS Demo</title>
+    <script type="text/javascript" src="../dist/assimpjs.js"></script>
+    
+    <script type='text/javascript'>
+        window.onload = function () {
+            let resultDiv = document.getElementById ('result_json');
+            
+assimpjs ().then (function (ajs) {
+    // fetch the files to import
+    let files = [
+        'testfiles/cube_with_materials.obj',
+        'testfiles/cube_with_materials.mtl'
+    ];
+    Promise.all (files.map ((file) => fetch (file))).then ((responses) => {
+        return Promise.all (responses.map ((res) => res.arrayBuffer ()));
+    }).then ((arrayBuffers) => {
+        // create new file list object, and add the files
+        let fileList = new ajs.FileList ();
+        for (let i = 0; i < files.length; i++) {
+            fileList.AddFile (files[i], new Uint8Array (arrayBuffers[i]));
+        }
+        
+        // convert file list to assimp json
+        let result = ajs.ConvertFileList (fileList, 'assjson');
+        
+        // check if the conversion succeeded
+        if (!result.IsSuccess () || result.FileCount () == 0) {
+            resultDiv.innerHTML = result.GetErrorCode ();
+            return;
+        }
+
+        // get the result file, and convert to string
+        let resultFile = result.GetFile (0);
+        let jsonContent = new TextDecoder ().decode (resultFile.GetContent ());
+
+        // parse the result json
+        let resultJson = JSON.parse (jsonContent);
+        
+        resultDiv.innerHTML = JSON.stringify (resultJson, null, 4);
+    });
+});
+
+        };
+    </script>
+</head>
+
+<body>
+    <pre id="result_json"></pre>
+</body>
+
+</html>

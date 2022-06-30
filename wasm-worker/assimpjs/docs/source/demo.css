@@ -1,0 +1,58 @@
+html, body
+{
+	color: #fafafa;
+	background: #222222;
+	font-family: Arial;
+}
+
+a
+{
+	color: #008ab8;
+	text-decoration: none;
+}
+
+a:hover
+{
+	text-decoration: underline;
+}
+
+#main
+{
+	width: 920px;
+	margin: 1.0em auto;
+}
+
+#dragdrop
+{
+	color: inherit;
+	background: #282828;
+	font-size: 1.6em;
+	text-align: center;
+	padding: 1.0em;
+	border: 1px solid #444444;
+	border-radius: 0.2em;
+}
+
+#info
+{
+	color: #dddddd;
+	line-height: 1.4em;
+	margin: 1.0em 0.0em;
+}
+
+#result
+{
+	padding: 1.0em;
+	border: 1px solid #444444;
+	border-radius: 0.2em;
+}
+
+@media only screen and (max-width: 920px)
+{
+	
+#main
+{
+	width: 90%;
+}
+
+}

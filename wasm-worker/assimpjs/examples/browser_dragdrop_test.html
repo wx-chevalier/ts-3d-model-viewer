@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <title>AssimpJS Demo</title>
+    <script type="text/javascript" src="../dist/assimpjs.js"></script>
+    
+    <script type='text/javascript'>
+		function GetFileBuffer (file)
+		{
+			return new Promise ((resolve, reject) => {
+				let reader = new FileReader ();
+				reader.onloadend = function (event) {
+					if (event.target.readyState === FileReader.DONE) {
+						resolve (event.target.result);
+					}
+				};
+				reader.onerror = function () {
+					reject ();
+				};
+				reader.readAsArrayBuffer (file);
+			});		
+		}
+		
+		function LoadModel (ajs, files, onLoad)
+		{
+			let downloadFiles = [];
+			for (let i = 0; i < files.length; i++) {
+				downloadFiles.push (GetFileBuffer (files[i]));
+			}
+			Promise.all (downloadFiles).then ((arrayBuffers) => {
+				// create new file list object, and add the files
+				let fileList = new ajs.FileList ();
+				for (let i = 0; i < arrayBuffers.length; i++) {
+					fileList.AddFile (files[i].name, new Uint8Array (arrayBuffers[i]));
+				}
+
+				// convert file list to assimp json
+				let result = ajs.ConvertFileList (fileList, 'assjson');
+
+				// check if the conversion succeeded
+				if (!result.IsSuccess () || result.FileCount () == 0) {
+					onLoad (result.GetErrorCode ());
+					return;
+				}
+
+				// get the result file, and convert to string
+				let resultFile = result.GetFile (0);
+				let jsonContent = new TextDecoder ().decode (resultFile.GetContent ());				
+				
+				// parse the result json
+				let resultJson = JSON.parse (jsonContent);
+
+				onLoad (JSON.stringify (resultJson, null, 4));
+			});
+		}
+	
+        window.onload = function () {
+			let resultDiv = document.getElementById ('result');
+			resultDiv.innerHTML = 'Loading assimp.js...';
+			assimpjs ().then (function (ajs) {
+				resultDiv.innerHTML = 'Drag&Drop your models here.';
+				window.addEventListener ('dragstart', (ev) => {
+					ev.preventDefault ();
+				}, false);
+				window.addEventListener ('dragover', (ev) => {
+					ev.stopPropagation ();
+					ev.preventDefault ();
+					ev.dataTransfer.dropEffect = 'copy';
+				}, false);
+				window.addEventListener ('drop', (ev) => {
+					ev.stopPropagation ();
+					ev.preventDefault ();
+					if (ev.dataTransfer.files.length > 0) {
+						resultDiv.innerHTML = 'Loading model...';
+						LoadModel (ajs, ev.dataTransfer.files, (result) => {
+							resultDiv.innerHTML = result;
+						});
+					}
+				}, false);
+			});
+        };
+    </script>
+</head>
+
+<body>
+	<pre id="result"></pre>
+</body>
+
+</html>

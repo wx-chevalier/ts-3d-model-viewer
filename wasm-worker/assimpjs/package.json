@@ -1,0 +1,23 @@
+{
+  "name": "assimpjs",
+  "version": "0.0.8",
+  "description": "Javascript interface for the assimp library.",
+  "license": "MIT",
+  "main": "./dist/assimpjs.js",
+  "repository": "github:kovacsv/assimpjs",
+  "keywords": [
+    "assimp",
+    "3d",
+    "model",
+    "converter"
+  ],
+  "devDependencies": {
+    "http-server": "^0.12.3",
+    "mocha": "^8.3.2"
+  },
+  "scripts": {
+    "start": "http-server",
+    "test": "mocha test --timeout 30000"
+  },
+  "dependencies": {}
+}
