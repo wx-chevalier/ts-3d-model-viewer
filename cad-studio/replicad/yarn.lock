@@ -9400,9 +9400,9 @@ minimist-options@4.1.0:
     kind-of "^6.0.3"
 
 minimist@^1.2.0, minimist@^1.2.5:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
-  integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz#8637a5b759ea0d6e98702cfb3a9283323c93af44"
+  integrity sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==
 
 minipass-collect@^1.0.2:
   version "1.0.2"
@@ -13085,10 +13085,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typedoc-plugin-markdown@^3.11.3:
-  version "3.11.3"
-  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-3.11.3.tgz#be340b905903f1ce552fa2fa7d677db408ab1041"
-  integrity sha512-rWiHbEIe0oZetDIsBR24XJVxGOJ91kDcHoj2KhFKxCLoJGX659EKBQkHne9QJ4W2stGhu1fRgFyQaouSBnxukA==
+typedoc-plugin-markdown@^3.11.10:
+  version "3.13.1"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-3.13.1.tgz#f4bca4bf8c5a48d8c7f1b44071e64028d223a1e0"
+  integrity sha512-Gx7pmvFNXAxbE9N2MuQNi5RwMVSH9lPxDBAaBNftaZ+ZzMO8YkDwir6aoXcWNq50qgG/eTs5CiKvLe33OVm2iQ==
   dependencies:
     handlebars "^4.7.7"
 
