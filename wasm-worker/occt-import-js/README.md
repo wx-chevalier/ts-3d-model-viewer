@@ -33,13 +33,13 @@ First, include the `occt-import-js.js` file in your website.
 After that, download the model file, and pass them to occt-import-js.
 
 ```js
-occtimportjs ().then (async function (occt) {
-	let fileUrl = '../test/testfiles/simple-basic-cube/cube.stp';
-	let response = await fetch (fileUrl);
-	let buffer = await response.arrayBuffer ();
-	let fileBuffer = new Uint8Array (buffer);
-	let result = occt.ReadStepFile (fileBuffer);
-	console.log (result);
+occtimportjs().then(async function (occt) {
+  let fileUrl = "../test/testfiles/simple-basic-cube/cube.stp";
+  let response = await fetch(fileUrl);
+  let buffer = await response.arrayBuffer();
+  let fileBuffer = new Uint8Array(buffer);
+  let result = occt.ReadStepFile(fileBuffer);
+  console.log(result);
 });
 ```
 
@@ -48,14 +48,14 @@ occtimportjs ().then (async function (occt) {
 You should require the `occt-import-js` module in your script.
 
 ```js
-let fs = require ('fs');
-const occtimportjs = require ('occt-import-js')();
+let fs = require("fs");
+const occtimportjs = require("occt-import-js")();
 
-occtimportjs.then ((occt) => {
-	let fileUrl = '../test/testfiles/simple-basic-cube/cube.stp';
-	let fileContent = fs.readFileSync (fileUrl);
-	let result = occt.ReadStepFile (fileContent);
-	console.log (result);
+occtimportjs.then((occt) => {
+  let fileUrl = "../test/testfiles/simple-basic-cube/cube.stp";
+  let fileContent = fs.readFileSync(fileUrl);
+  let result = occt.ReadStepFile(fileContent);
+  console.log(result);
 });
 ```
 
