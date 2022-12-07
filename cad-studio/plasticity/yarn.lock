@@ -2632,10 +2632,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.6.2":
-  version: 14.18.11
-  resolution: "@types/node@npm:14.18.11"
-  checksum: 58f75d05406004b83f1fd4c72115d2c180f22812bd48187b89b27dd9ea09f90774b2261f068e94bf6a6792a1f33a585b624135be3c4b6e2acd766043148754a7
+"@types/node@npm:^16.11.26":
+  version: 16.18.3
+  resolution: "@types/node@npm:16.18.3"
+  checksum: 6b8ba2ea5d842f7986e366cb9184c54d273d492784dc62e08fd5afeae938d9b61aec6e4222d2541cd18f9b1412ba361bbcb3f4204fb003608af80a2a6af959f9
   languageName: node
   linkType: hard
 
@@ -5970,16 +5970,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^17.0.0":
-  version: 17.0.0
-  resolution: "electron@npm:17.0.0"
+"electron@npm:^18.3.7":
+  version: 18.3.15
+  resolution: "electron@npm:18.3.15"
   dependencies:
     "@electron/get": ^1.13.0
-    "@types/node": ^14.6.2
+    "@types/node": ^16.11.26
     extract-zip: ^1.0.3
   bin:
     electron: cli.js
-  checksum: c945a1a5475ba66ca70637b150b3f10ea9d28b1f2167a9d8d2137e087785f647e1153f4335f898238470392ed689e3d207b2b96928025c5dd092d6f601e21414
+  checksum: d5ff1a31cb2da292e3f1141036640cabe66563425ebe5ce9784c1945aab1f2b1a6d1b474c23c753cd46af5937702ace343d4b6f9119934bc86e3c41d4dd9fa4a
   languageName: node
   linkType: hard
 
@@ -11682,7 +11682,7 @@ __metadata:
     crypto-browserify: ^3.12.0
     css-loader: ^4.2.1
     ejs: ^3.1.6
-    electron: ^17.0.0
+    electron: ^18.3.7
     electron-rebuild: ^3.2.7
     electron-squirrel-startup: ^1.0.0
     electron-window-state: ^5.0.3
