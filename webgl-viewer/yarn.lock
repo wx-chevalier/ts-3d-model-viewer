@@ -2374,17 +2374,17 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@seregpie/three.text-sprite@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.nlark.com/@seregpie/three.text-sprite/download/@seregpie/three.text-sprite-2.0.0.tgz#4868b7084992726d78e70a0d9186bf577b3b15e0"
-  integrity sha1-SGi3CEmScm145woNkYa/V3s7FeA=
+"@seregpie/three.text-sprite@3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@seregpie/three.text-sprite/-/three.text-sprite-3.2.0.tgz#a1826392bfd5afb54d66392a3c33527f65d33628"
+  integrity sha512-ozQq7JFKGCltCvT3DG5SC77WnSJfZhYpSabhp+I1iZ9tTMxiPJqyEscmcMC+Rdxy1eYCBmZKGKBBcMLLrd5GuA==
   dependencies:
-    "@seregpie/three.text-texture" "^2.0.1"
+    "@seregpie/three.text-texture" "^3.2.0"
 
-"@seregpie/three.text-texture@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.nlark.com/@seregpie/three.text-texture/download/@seregpie/three.text-texture-2.0.1.tgz#2f0b1aaa429bfc84c8c5e3f7b0503d9faa2079ea"
-  integrity sha1-LwsaqkKb/ITIxeP3sFA9n6ogeeo=
+"@seregpie/three.text-texture@^3.2.0":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@seregpie/three.text-texture/-/three.text-texture-3.2.1.tgz#aedb9b26ec8f16c158ca59721b506d2d40f76f0d"
+  integrity sha512-+rBfu63PolUyg6WB56SxYIIGGw7BMiFMeoj6AcxGooGs1apnudu024EMY/6dr1KnpIa9lNIwSgJETeaclgT/BQ==
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
@@ -14975,9 +14975,9 @@ qs@^6.6.0:
     side-channel "^1.0.4"
 
 qs@~6.5.2:
-  version "6.5.2"
-  resolved "https://registry.nlark.com/qs/download/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
-  integrity sha1-yzroBuh0BERYTvFUzo7pjUA/PjY=
+  version "6.5.3"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.3.tgz#3aeeffc91967ef6e35c0e488ef46fb296ab76aad"
+  integrity sha512-qxXIEh4pCGfHICj1mAJQ2/2XVZkjCDTcEgfoSQxc/fYivUZxTkk7L3bDBJSoNrEzXI17oUO5Dp07ktqE5KzczA==
 
 query-string@^4.1.0:
   version "4.3.4"
