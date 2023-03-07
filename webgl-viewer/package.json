@@ -42,7 +42,7 @@
     "@react-three/fiber": "^7.0.7",
     "@seregpie/three.text-sprite": "3.2.0",
     "cropperjs": "^1.5.12",
-    "jszip": "^3.7.1",
+    "jszip": "^3.8.0",
     "lodash": "^4.17.15",
     "pako": "^1.0.11",
     "rc-tooltip": "^5.0.1",
